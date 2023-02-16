@@ -3,7 +3,7 @@ on:
     tags:
     - '*-*-*'
 
-name: Create release draft
+name: Create release draft 
 
 jobs:
   build:

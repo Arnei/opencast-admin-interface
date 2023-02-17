@@ -28,7 +28,7 @@ jobs:
       - name: create new release
         uses: softprops/action-gh-release@v1
         with:
-          files: oc-admin-ui-interface-*.tar.gz
+          files: oc-admin-ui-*.tar.gz
           draft: true
           fail_on_unmatched_files: true
           generate_release_notes: true

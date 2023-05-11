@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import Notifications from "../../../shared/Notifications";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import {
 	getCurrentLanguageInformation,
 	getTimezoneOffset,
 } from "../../../../utils/utils";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import { Field, FieldArray } from "formik";
 import RenderField from "../../../shared/wizard/RenderField";
 import { getRecordings } from "../../../../selectors/recordingSelectors";
@@ -43,7 +44,7 @@ import {
 } from "../../../../utils/dateUtils";
 
 // Style to bring date picker pop up to front
-const theme = createMuiTheme({
+const theme = createTheme({
 	props: {
 		MuiDialog: {
 			style: {
@@ -368,7 +369,7 @@ const Schedule = ({ formik, inputDevices }) => {
 	};
 
 	return (
-		<div className="obj">
+        <div className="obj">
 			<header>{t("EVENTS.EVENTS.NEW.SOURCE.DATE_TIME.CAPTION")}</header>
 			<div className="obj-container">
 				<table className="main-tbl">
@@ -383,33 +384,36 @@ const Schedule = ({ formik, inputDevices }) => {
 								<i className="required">*</i>
 							</td>
 							<td>
-								<ThemeProvider theme={theme}>
-									<MuiPickersUtilsProvider
-										utils={DateFnsUtils}
-										locale={currentLanguage.dateLocale}
-									>
-										<DatePicker
-											name="scheduleStartDate"
-											value={formik.values.scheduleStartDate}
-											onChange={(value) => {
-												if (formik.values.sourceMode === "SCHEDULE_MULTIPLE") {
-													changeStartDateMultiple(
-														value,
-														formik.values,
-														formik.setFieldValue
-													);
-												} else {
-													changeStartDate(
-														value,
-														formik.values,
-														formik.setFieldValue
-													);
-												}
-											}}
-											tabIndex="4"
-										/>
-									</MuiPickersUtilsProvider>
-								</ThemeProvider>
+								<StyledEngineProvider injectFirst>
+                                    <ThemeProvider theme={theme}>
+                                        <LocalizationProvider
+                                            dateAdapter={AdapterDateFns}
+                                            utils={DateFnsUtils}
+                                            locale={currentLanguage.dateLocale}
+                                        >
+                                            <DatePicker
+                                                name="scheduleStartDate"
+                                                value={formik.values.scheduleStartDate}
+                                                onChange={(value) => {
+                                                    if (formik.values.sourceMode === "SCHEDULE_MULTIPLE") {
+                                                        changeStartDateMultiple(
+                                                            value,
+                                                            formik.values,
+                                                            formik.setFieldValue
+                                                        );
+                                                    } else {
+                                                        changeStartDate(
+                                                            value,
+                                                            formik.values,
+                                                            formik.setFieldValue
+                                                        );
+                                                    }
+                                                }}
+                                                tabIndex="4"
+                                            />
+                                        </LocalizationProvider>
+                                    </ThemeProvider>
+                                </StyledEngineProvider>
 							</td>
 						</tr>
 						{/* Render fields specific for multiple schedule (Only if this is current source mode)*/}
@@ -421,20 +425,22 @@ const Schedule = ({ formik, inputDevices }) => {
 										<i className="required">*</i>
 									</td>
 									<td>
-										<ThemeProvider theme={theme}>
-											<DatePicker
-												name="scheduleEndDate"
-												value={formik.values.scheduleEndDate}
-												onChange={(value) =>
-													changeEndDateMultiple(
-														value,
-														formik.values,
-														formik.setFieldValue
-													)
-												}
-												tabIndex="5"
-											/>
-										</ThemeProvider>
+										<StyledEngineProvider injectFirst>
+                                            <ThemeProvider theme={theme}>
+                                                <DatePicker
+                                                    name="scheduleEndDate"
+                                                    value={formik.values.scheduleEndDate}
+                                                    onChange={(value) =>
+                                                        changeEndDateMultiple(
+                                                            value,
+                                                            formik.values,
+                                                            formik.setFieldValue
+                                                        )
+                                                    }
+                                                    tabIndex="5"
+                                                />
+                                            </ThemeProvider>
+                                        </StyledEngineProvider>
 									</td>
 								</tr>
 								<tr>
@@ -703,7 +709,7 @@ const Schedule = ({ formik, inputDevices }) => {
 				</table>
 			</div>
 		</div>
-	);
+    );
 };
 
 // Getting state data out of redux store

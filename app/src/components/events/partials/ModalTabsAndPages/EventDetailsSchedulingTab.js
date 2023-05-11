@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import cn from "classnames";
 import _ from "lodash";
-import { DatePicker } from "@material-ui/pickers";
-import { createTheme, ThemeProvider } from "@material-ui/core";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DatePicker } from "@mui/x-date-pickers";
+import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import DateFnsUtils from "@date-io/date-fns";
 import { Field, Formik } from "formik";
 import Notifications from "../../../shared/Notifications";
@@ -208,7 +209,7 @@ const EventDetailsSchedulingTab = ({
 	};
 
 	return (
-		<div className="modal-content">
+        <div className="modal-content">
 			<div className="modal-body">
 				{/* Notifications */}
 				<Notifications context="not_corner" />
@@ -243,7 +244,8 @@ const EventDetailsSchedulingTab = ({
 						/* Scheduling configuration */
 						hasSchedulingProperties && (
 							/* Initialize form */
-							<MuiPickersUtilsProvider
+							<LocalizationProvider
+                dateAdapter={AdapterDateFns}
 								utils={DateFnsUtils}
 								locale={currentLanguage.dateLocale}
 							>
@@ -286,23 +288,25 @@ const EventDetailsSchedulingTab = ({
 															<td>
 																{hasAccessRole &&
 																accessAllowed(formik.values.captureAgent) ? (
-																	/* date picker for start date */
-																	<ThemeProvider theme={theme}>
-																		<DatePicker
-																			name="scheduleStartDate"
-																			tabIndex={"1"}
-																			value={formik.values.scheduleStartDate}
-																			onChange={(value) =>
-																				changeStartDate(
-																					value,
-																					formik.values,
-																					formik.setFieldValue,
-																					eventId,
-																					checkConflicts
-																				)
-																			}
-																		/>
-																	</ThemeProvider>
+																	<StyledEngineProvider injectFirst>
+                                                                        /* date picker for start date */
+                                                                        <ThemeProvider theme={theme}>
+                                                                            <DatePicker
+                                                                                name="scheduleStartDate"
+                                                                                tabIndex={"1"}
+                                                                                value={formik.values.scheduleStartDate}
+                                                                                onChange={(value) =>
+                                                                                    changeStartDate(
+                                                                                        value,
+                                                                                        formik.values,
+                                                                                        formik.setFieldValue,
+                                                                                        eventId,
+                                                                                        checkConflicts
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                        </ThemeProvider>
+                                                                    </StyledEngineProvider>
 																) : (
 																	<>
 																		{source.start.date.toLocaleDateString(
@@ -679,13 +683,13 @@ const EventDetailsSchedulingTab = ({
 										</div>
 									)}
 								</Formik>
-							</MuiPickersUtilsProvider>
+							</LocalizationProvider>
 						)
 					}
 				</div>
 			</div>
 		</div>
-	);
+    );
 };
 
 // Getting state data out of redux store

@@ -1,10 +1,11 @@
 import React from "react";
 import moment from "moment";
 import { getCurrentLanguageInformation } from "../../utils/utils";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import DateFnsUtils from "@date-io/date-fns";
-import { DatePicker } from "@material-ui/pickers";
-import { createTheme, ThemeProvider } from "@material-ui/core";
+import { DatePicker } from "@mui/x-date-pickers";
+import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import { Field, Formik } from "formik";
 import BarChart from "./BarChart";
 import {
@@ -165,8 +166,9 @@ const TimeSeriesStatistics = ({
 	};
 
 	return (
-		/* Initialize form */
-		<MuiPickersUtilsProvider
+    /* Initialize form */
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
 			utils={DateFnsUtils}
 			locale={currentLanguage.dateLocale}
 		>
@@ -275,49 +277,53 @@ const TimeSeriesStatistics = ({
 									{/* date picker for selecting start date of the statistic */}
 									<span>{t("STATISTICS.FROM") /* From */}</span>
 									<div className="chosen-container">
-										<ThemeProvider theme={theme}>
-											<DatePicker
-												name="fromDate"
-												style={datePickerStyle}
-												value={formik.values.fromDate}
-												placeholder={t(
-													"EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.START_DATE"
-												)}
-												onChange={(value) =>
-													changeFrom(
-														value,
-														formik.setFieldValue,
-														formik.values.timeMode,
-														formik.values.toDate,
-														formik.values.dataResolution
-													)
-												}
-											/>
-										</ThemeProvider>
+										<StyledEngineProvider injectFirst>
+                                            <ThemeProvider theme={theme}>
+                                                <DatePicker
+                                                    name="fromDate"
+                                                    style={datePickerStyle}
+                                                    value={formik.values.fromDate}
+                                                    placeholder={t(
+                                                        "EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.START_DATE"
+                                                    )}
+                                                    onChange={(value) =>
+                                                        changeFrom(
+                                                            value,
+                                                            formik.setFieldValue,
+                                                            formik.values.timeMode,
+                                                            formik.values.toDate,
+                                                            formik.values.dataResolution
+                                                        )
+                                                    }
+                                                />
+                                            </ThemeProvider>
+                                        </StyledEngineProvider>
 									</div>
 
 									{/* date picker for selecting end date of the statistic */}
 									<span>{t("STATISTICS.TO") /* To */}</span>
 									<div className="chosen-container">
-										<ThemeProvider theme={theme}>
-											<DatePicker
-												name="toDate"
-												style={datePickerStyle}
-												value={formik.values.toDate}
-												placeholder={t(
-													"EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.END_DATE"
-												)}
-												onChange={(value) =>
-													changeTo(
-														value,
-														formik.setFieldValue,
-														formik.values.timeMode,
-														formik.values.fromDate,
-														formik.values.dataResolution
-													)
-												}
-											/>
-										</ThemeProvider>
+										<StyledEngineProvider injectFirst>
+                                            <ThemeProvider theme={theme}>
+                                                <DatePicker
+                                                    name="toDate"
+                                                    style={datePickerStyle}
+                                                    value={formik.values.toDate}
+                                                    placeholder={t(
+                                                        "EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.END_DATE"
+                                                    )}
+                                                    onChange={(value) =>
+                                                        changeTo(
+                                                            value,
+                                                            formik.setFieldValue,
+                                                            formik.values.timeMode,
+                                                            formik.values.fromDate,
+                                                            formik.values.dataResolution
+                                                        )
+                                                    }
+                                                />
+                                            </ThemeProvider>
+                                        </StyledEngineProvider>
 									</div>
 								</div>
 
@@ -371,8 +377,8 @@ const TimeSeriesStatistics = ({
 					</div>
 				)}
 			</Formik>
-		</MuiPickersUtilsProvider>
-	);
+		</LocalizationProvider>
+    );
 };
 
 export default TimeSeriesStatistics;

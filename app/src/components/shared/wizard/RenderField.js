@@ -1,8 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import DateFnsUtils from "@date-io/date-fns";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import cn from "classnames";
 import { useClickOutsideField } from "../../../hooks/wizardHooks";
 import { getCurrentLanguageInformation, isJson } from "../../../utils/utils";
@@ -169,7 +170,7 @@ const EditableDateValue = ({
 }) => {
 	const { t } = useTranslation();
 
-	const theme = createMuiTheme({
+	const theme = createTheme({
 		props: {
 			MuiDialog: {
 				style: {
@@ -181,20 +182,23 @@ const EditableDateValue = ({
 
 	return editMode ? (
 		<div>
-			<ThemeProvider theme={theme}>
-				<MuiPickersUtilsProvider
-					utils={DateFnsUtils}
-					locale={currentLanguage.dateLocale}
-				>
-					<DateTimePicker
-						name={field.name}
-						value={field.value}
-						onChange={(value) => setFieldValue(field.name, value)}
-						onClose={() => setEditMode(false)}
-						fullWidth
-					/>
-				</MuiPickersUtilsProvider>
-			</ThemeProvider>
+			<StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <LocalizationProvider
+                        dateAdapter={AdapterDateFns}
+                        utils={DateFnsUtils}
+                        locale={currentLanguage.dateLocale}
+                    >
+                        <DateTimePicker
+                            name={field.name}
+                            value={field.value}
+                            onChange={(value) => setFieldValue(field.name, value)}
+                            onClose={() => setEditMode(false)}
+                            fullWidth
+                        />
+                    </LocalizationProvider>
+                </ThemeProvider>
+            </StyledEngineProvider>
 		</div>
 	) : (
 		<div onClick={() => setEditMode(true)} className="show-edit">
@@ -351,7 +355,7 @@ const EditableSingleValueTime = ({
 }) => {
 	const { t } = useTranslation();
 
-	const theme = createMuiTheme({
+	const theme = createTheme({
 		props: {
 			MuiDialog: {
 				style: {
@@ -363,20 +367,23 @@ const EditableSingleValueTime = ({
 
 	return editMode ? (
 		<div>
-			<ThemeProvider theme={theme}>
-				<MuiPickersUtilsProvider
-					utils={DateFnsUtils}
-					locale={currentLanguage.dateLocale}
-				>
-					<DateTimePicker
-						name={field.name}
-						value={field.value}
-						onChange={(value) => setFieldValue(field.name, value)}
-						onClose={() => setEditMode(false)}
-						fullWidth
-					/>
-				</MuiPickersUtilsProvider>
-			</ThemeProvider>
+			<StyledEngineProvider injectFirst>
+                <ThemeProvider theme={theme}>
+                    <LocalizationProvider
+                        dateAdapter={AdapterDateFns}
+                        utils={DateFnsUtils}
+                        locale={currentLanguage.dateLocale}
+                    >
+                        <DateTimePicker
+                            name={field.name}
+                            value={field.value}
+                            onChange={(value) => setFieldValue(field.name, value)}
+                            onClose={() => setEditMode(false)}
+                            fullWidth
+                        />
+                    </LocalizationProvider>
+                </ThemeProvider>
+            </StyledEngineProvider>
 		</div>
 	) : (
 		<div onClick={() => setEditMode(true)} className="show-edit">

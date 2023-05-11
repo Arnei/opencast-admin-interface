@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import NewEventSummary from "./NewEventSummary";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import DateFnsUtils from "@date-io/date-fns";
 import { getCurrentLanguageInformation } from "../../../../utils/utils";
 import NewAssetUploadPage from "../ModalTabsAndPages/NewAssetUploadPage";
@@ -121,7 +122,8 @@ const NewEventWizard = ({
 	return (
 		<>
 			{/* Initialize overall form */}
-			<MuiPickersUtilsProvider
+			<LocalizationProvider
+        dateAdapter={AdapterDateFns}
 				utils={DateFnsUtils}
 				locale={currentLanguage.dateLocale}
 			>
@@ -209,7 +211,7 @@ const NewEventWizard = ({
 						);
 					}}
 				</Formik>
-			</MuiPickersUtilsProvider>
+			</LocalizationProvider>
 		</>
 	);
 };

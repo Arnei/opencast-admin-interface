@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
-import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import DateFnsUtils from "@date-io/date-fns";
 import {
 	getCurrentFilterResource,
@@ -388,7 +389,8 @@ const FilterSwitch = ({
 			return (
 				<div>
 					{/* Show datepicker for start date */}
-					<MuiPickersUtilsProvider
+					<LocalizationProvider
+            dateAdapter={AdapterDateFns}
 						utils={DateFnsUtils}
 						locale={currentLanguage.dateLocale}
 					>
@@ -406,7 +408,7 @@ const FilterSwitch = ({
 							format="dd/MM/yyyy"
 							onChange={(date) => handleDate(date)}
 						/>
-					</MuiPickersUtilsProvider>
+					</LocalizationProvider>
 				</div>
 			);
 	}

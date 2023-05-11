@@ -3,7 +3,8 @@ import { Formik, Field } from "formik";
 import { useTranslation } from "react-i18next";
 import { getSelectedRows } from "../../../../selectors/tableSelectors";
 import { connect } from "react-redux";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers"
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns"
 import DateFnsUtils from "@date-io/date-fns";
 import {
 	getCurrentLanguageInformation,
@@ -152,7 +153,8 @@ const EditMetadataEventsModal = ({
 				{/* todo: Request Errors View and Update Errors View (not quite sure what this is used for) */}
 
 				{!loading && fatalError.fatalError === undefined && (
-					<MuiPickersUtilsProvider
+					<LocalizationProvider
+            dateAdapter={AdapterDateFns}
 						utils={DateFnsUtils}
 						locale={currentLanguage.dateLocale}
 					>
@@ -299,7 +301,7 @@ const EditMetadataEventsModal = ({
 								</>
 							)}
 						</Formik>
-					</MuiPickersUtilsProvider>
+					</LocalizationProvider>
 				)}
 			</section>
 		</>

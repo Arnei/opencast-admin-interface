@@ -17,8 +17,6 @@ import {
 	loadUsersIntoTable,
 } from "../../thunks/tableThunks";
 import { fetchGroups } from "../../thunks/groupThunks";
-import { fetchAcls } from "../../thunks/aclThunks";
-import { getTotalAcls } from "../../selectors/aclSelectors";
 import { editTextFilter } from "../../actions/tableFilterActions";
 import { setOffset } from "../../actions/tableActions";
 import { styleNavClosed, styleNavOpen } from "../../utils/componentsUtils";
@@ -27,17 +25,17 @@ import Footer from "../Footer";
 import { hasAccess } from "../../utils/utils";
 import { getUserInformation } from "../../selectors/userInfoSelectors";
 import { getCurrentFilterResource } from "../../selectors/tableFilterSelectors";
+import { useGetACLsQuery } from "../../slices/apiSlice";
+import { getURLParams } from "../../utils/resourceUtils";
 
 /**
  * This component renders the table view of acls
  */
 const Acls = ({
-// @ts-expect-error TS(7031): Binding element 'loadingAcls' implicitly has an 'a... Remove this comment to see the full error message
-	loadingAcls,
+	// loadingAcls,
 // @ts-expect-error TS(7031): Binding element 'loadingAclsIntoTable' implicitly ... Remove this comment to see the full error message
 	loadingAclsIntoTable,
-// @ts-expect-error TS(7031): Binding element 'acls' implicitly has an 'any' typ... Remove this comment to see the full error message
-	acls,
+	// acls,
 // @ts-expect-error TS(7031): Binding element 'loadingFilters' implicitly has an... Remove this comment to see the full error message
 	loadingFilters,
 // @ts-expect-error TS(7031): Binding element 'loadingUsers' implicitly has an '... Remove this comment to see the full error message
@@ -61,9 +59,13 @@ const Acls = ({
 	const [displayNavigation, setNavigation] = useState(false);
 	const [displayNewAclModal, setNewAclModal] = useState(false);
 
+  const params = {} //getURLParams(state);
+  const { data: acls, refetch: refetchACLs } = useGetACLsQuery(params)
+
 	const loadAcls = async () => {
 		// Fetching acls from server
-		await loadingAcls();
+		// await loadingAcls();
+    refetchACLs();
 
 		// Load acls into table
 		loadingAclsIntoTable();
@@ -185,7 +187,7 @@ const Acls = ({
 				<div className="controls-container">
 					{/* Include filters component */}
 					<TableFilters
-						loadResource={loadingAcls}
+						loadResource={acls}
 						loadResourceIntoTable={loadingAclsIntoTable}
 						resource={"acls"}
 					/>
@@ -203,7 +205,7 @@ const Acls = ({
 // Getting state data out of redux store
 // @ts-expect-error TS(7006): Parameter 'state' implicitly has an 'any' type.
 const mapStateToProps = (state) => ({
-	acls: getTotalAcls(state),
+	// acls: getTotalAcls(state),
 	user: getUserInformation(state),
 	currentFilterType: getCurrentFilterResource(state),
 });
@@ -213,7 +215,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 // @ts-expect-error TS(7006): Parameter 'resource' implicitly has an 'any' type.
 	loadingFilters: (resource) => dispatch(fetchFilters(resource)),
-	loadingAcls: () => dispatch(fetchAcls()),
+	// loadingAcls: () => dispatch(fetchAcls()),
 	loadingAclsIntoTable: () => dispatch(loadAclsIntoTable()),
 	loadingUsers: () => dispatch(fetchUsers()),
 	loadingUsersIntoTable: () => dispatch(loadUsersIntoTable()),

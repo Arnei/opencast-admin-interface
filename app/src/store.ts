@@ -29,6 +29,7 @@ import themeDetails from "./reducers/themeDetailsReducer";
 import userInfo from "./reducers/userInfoReducer";
 import statistics from "./reducers/statisticsReducers";
 import { configureStore } from "@reduxjs/toolkit";
+import { api } from './slices/apiSlice'
 
 /**
  * This File contains the configuration for the store used by the reducers all over the app
@@ -36,6 +37,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 // form reducer and all other reducers used in this app
 const reducers = combineReducers({
+  [api.reducerPath]: api.reducer,
 	tableFilters,
 	tableFilterProfiles,
 	events,
@@ -79,7 +81,9 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(
+      api.middleware
+    ),
 })
 
 // Initialize typescript type inference

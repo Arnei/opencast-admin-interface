@@ -40,7 +40,6 @@ import { fetchServers } from "./serverThunks";
 import { fetchServices } from "./serviceThunks";
 import { fetchUsers } from "./userThunks";
 import { fetchGroups } from "./groupThunks";
-import { fetchAcls } from "./aclThunks";
 import { fetchThemes } from "./themeThunks";
 import { setRecordingsColumns } from "../actions/recordingActions";
 import { setJobColumns } from "../actions/jobActions";
@@ -50,6 +49,8 @@ import { setGroupColumns } from "../actions/groupActions";
 import { setACLColumns } from "../slices/aclSlice";
 import { setThemeColumns } from "../actions/themeActions";
 import { setServicesColumns } from "../actions/serviceActions";
+import { getURLParams } from "../utils/resourceUtils";
+import { api } from "../slices/apiSlice";
 
 /**
  * This file contains methods/thunks used to manage the table in the main view and its state changes
@@ -416,6 +417,9 @@ export const goToPage = (pageNumber) => async (dispatch, getState) => {
 
 	dispatch(setPageActive(pages[offset].number));
 
+  const params = getURLParams(state);
+  const [ triggerGetACLs ] = api.endpoints.getACLs.useLazyQuery()
+
 	// Get resources of page and load them into table
 	// eslint-disable-next-line default-case
 	switch (getResourceType(state)) {
@@ -461,7 +465,8 @@ export const goToPage = (pageNumber) => async (dispatch, getState) => {
 			break;
 		}
 		case "acls": {
-			await dispatch(fetchAcls());
+			// await dispatch(fetchAcls());
+      await triggerGetACLs(params).unwrap();
 			dispatch(loadAclsIntoTable());
 			break;
 		}
@@ -487,6 +492,9 @@ export const updatePages = () => async (dispatch, getState) => {
 
 	dispatch(setPages(pages));
 
+  const params = getURLParams(state);
+  const [ triggerGetACLs ] = api.endpoints.getACLs.useLazyQuery()
+
 	// Get resources of page and load them into table
 	// eslint-disable-next-line default-case
 	switch (getResourceType(state)) {
@@ -532,7 +540,8 @@ export const updatePages = () => async (dispatch, getState) => {
 			break;
 		}
 		case "acls": {
-			await dispatch(fetchAcls());
+			// await dispatch(fetchAcls());
+      await triggerGetACLs(params).unwrap();
 			dispatch(loadAclsIntoTable());
 			break;
 		}

@@ -27,9 +27,11 @@ import { fetchSeries } from "../../thunks/seriesThunks";
 import { fetchServers } from "../../thunks/serverThunks";
 import { fetchServices } from "../../thunks/serviceThunks";
 import { fetchGroups } from "../../thunks/groupThunks";
-import { fetchAcls } from "../../thunks/aclThunks";
+// import { fetchAcls } from "../../thunks/aclThunks";
 import { GlobalHotKeys } from "react-hotkeys";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
+import { api } from "../../slices/apiSlice";
+import { getURLParams } from "../../utils/resourceUtils";
 
 /**
  * This component renders the main navigation that opens when the burger button is clicked
@@ -73,8 +75,7 @@ const MainNav = ({
 	loadingGroups,
 // @ts-expect-error TS(7031): Binding element 'loadingGroupsIntoTable' implicitl... Remove this comment to see the full error message
 	loadingGroupsIntoTable,
-// @ts-expect-error TS(7031): Binding element 'loadingAcls' implicitly has an 'a... Remove this comment to see the full error message
-	loadingAcls,
+	// loadingAcls,
 // @ts-expect-error TS(7031): Binding element 'loadingAclsIntoTable' implicitly ... Remove this comment to see the full error message
 	loadingAclsIntoTable,
 // @ts-expect-error TS(7031): Binding element 'loadingThemes' implicitly has an ... Remove this comment to see the full error message
@@ -198,6 +199,9 @@ const MainNav = ({
 		loadingGroupsIntoTable();
 	};
 
+  const params = {} //getURLParams(state);
+  const [ triggerGetACLs ] = api.endpoints.getACLs.useLazyQuery()
+
 	const loadAcls = () => {
 		loadingFilters("acls");
 
@@ -205,7 +209,8 @@ const MainNav = ({
 		resetOffset();
 
 		// Fetching acls from server
-		loadingAcls();
+		// loadingAcls();
+    triggerGetACLs(params);
 
 		// Load acls into table
 		loadingAclsIntoTable();
@@ -361,7 +366,7 @@ const mapDispatchToProps = (dispatch) => ({
 	loadingUsersIntoTable: () => dispatch(loadUsersIntoTable()),
 	loadingGroups: () => dispatch(fetchGroups()),
 	loadingGroupsIntoTable: () => dispatch(loadGroupsIntoTable()),
-	loadingAcls: () => dispatch(fetchAcls()),
+	// loadingAcls: () => dispatch(fetchAcls()),
 	loadingAclsIntoTable: () => dispatch(loadAclsIntoTable()),
 	loadingThemes: () => dispatch(fetchThemes()),
 	loadingThemesIntoTable: () => dispatch(loadThemesIntoTable()),

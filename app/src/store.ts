@@ -30,6 +30,7 @@ import userInfo from "./reducers/userInfoReducer";
 import statistics from "./reducers/statisticsReducers";
 import { configureStore } from "@reduxjs/toolkit";
 import { api } from './slices/apiSlice'
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 /**
  * This File contains the configuration for the store used by the reducers all over the app
@@ -89,5 +90,9 @@ const store = configureStore({
 // Initialize typescript type inference
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+
+// Use instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 export default store;

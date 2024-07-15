@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Formik } from "formik";
 import cn from "classnames";
@@ -10,8 +10,10 @@ import RenderField from "../../../shared/wizard/RenderField";
 import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import { hasAccess, isJson } from "../../../../utils/utils";
 import { getMetadataCollectionFieldName } from "../../../../utils/resourceUtils";
-import { useAppSelector } from "../../../../store";
-import { MetadataCatalog } from "../../../../slices/eventDetailsSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store";
+import { MetadataCatalog, fetchHasActiveTransactions } from "../../../../slices/eventDetailsSlice";
+import { addNotification, removeNotificationWizardForm } from "../../../../slices/notificationSlice";
+import { NOTIFICATION_CONTEXT } from "../../../../configs/modalConfig";
 
 /**
  * This component renders metadata details of a certain event or series
@@ -30,8 +32,27 @@ const DetailsMetadataTab = ({
 	editAccessRole: string,
 }) => {
 	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
 
 	const user = useAppSelector(state => getUserInformation(state));
+
+	useEffect(() => {
+		dispatch(removeNotificationWizardForm());
+		dispatch(fetchHasActiveTransactions(resourceId)).then((fetchTransactionResult) => {
+			if (
+				fetchTransactionResult.payload.active === undefined ||
+				fetchTransactionResult.payload.active
+			) {
+				dispatch(addNotification({
+					type: "warning",
+					key: "ACTIVE_TRANSACTION",
+					duration: -1,
+					parameter: null,
+					context: NOTIFICATION_CONTEXT
+				}));
+			}
+		});
+	}, []);
 
 	const handleSubmit = (values: { [key: string]: any }) => {
 		updateResource(resourceId, values);
@@ -67,18 +88,18 @@ const DetailsMetadataTab = ({
 	};
 
 	return (
-		// initialize form
-		<Formik
-			enableReinitialize
-			initialValues={getInitialValues()}
-			onSubmit={(values) => handleSubmit(values)}
-		>
-			{(formik) => (
-				<>
-					<div className="modal-content">
-						<div className="modal-body">
-							<Notifications context="not-corner" />
-							<div className="full-col">
+		<div className="modal-content">
+			<div className="modal-body">
+			<Notifications context="not-corner" />
+				<div className="full-col">
+					{/* initialize form */}
+					<Formik
+						enableReinitialize
+						initialValues={getInitialValues()}
+						onSubmit={(values) => handleSubmit(values)}
+					>
+						{(formik) => (
+							<>
 								<div className="obj tbl-list">
 									<header className="no-expand">{t(header)}</header>
 									<div className="obj-container">
@@ -182,12 +203,12 @@ const DetailsMetadataTab = ({
 										</>
 									)}
 								</div>
-							</div>
-						</div>
-					</div>
-				</>
-			)}
-		</Formik>
+							</>
+						)}
+					</Formik>
+				</div>
+			</div>
+		</div>
 	);
 };
 

@@ -53,6 +53,20 @@ import SchedulingInputs from "../wizards/scheduling/SchedulingInputs";
 import SchedulingConflicts from "../wizards/scheduling/SchedulingConflicts";
 import { ParseKeys } from "i18next";
 
+export type InitialValues = {
+	scheduleStartDate: string;
+	scheduleStartHour: string;
+	scheduleStartMinute: string;
+	scheduleDurationHours: string;
+	scheduleDurationMinutes: string;
+	scheduleEndDate: string;
+	scheduleEndHour: string;
+	scheduleEndMinute: string;
+	captureAgent: string;
+	deviceInputs: string[];
+	locationHasInputs?: boolean;
+}
+
 /**../wizards/scheduling/SchedulingTime
  * This component manages the main assets tab of event details modal
  */
@@ -107,6 +121,22 @@ const EventDetailsSchedulingTab = ({
 		return !checkingConflicts && hasDeviceAccess(user, agentId);
 	};
 
+	// finds the inputs that has to be selected in the formik
+	const getSelectedInputs = (deviceId: Recording["id"]) => {
+		let inputs = getInputs(deviceId);
+		if (!!inputs && deviceId === source.device.id) {
+			let inputMethods = source.device.inputMethods
+			if (!!inputMethods) {
+				let values = inputMethods.map((id: string) => {
+					const input = inputs.find((input) => input.id === id);
+					return input ? input.id : "";
+				});
+				return values;
+			}
+		}
+		return [];
+	};
+
 	// finds the inputs to be displayed in the formik
 	const getInputs = (deviceId: Recording["id"]) => {
 		if (deviceId === source.device.id) {
@@ -130,7 +160,8 @@ const EventDetailsSchedulingTab = ({
 	// changes the inputs in the formik
 	const changeInputs = (deviceId: Recording["id"], setFieldValue: (field: string, value: any) => Promise<void | FormikErrors<any>>) => {
 		setFieldValue("captureAgent", deviceId);
-		setFieldValue("inputs", []);
+		setFieldValue("deviceInputs", getSelectedInputs(deviceId));
+		setFieldValue("locationHasInputs", getInputs(deviceId).length > 0);
 	};
 	const filterCaptureAgents = (agent: Recording) => {
 		return agent.id === source.agentId || hasDeviceAccess(user, agent.id);
@@ -202,6 +233,8 @@ const EventDetailsSchedulingTab = ({
 			? Array.from(source.device.inputMethods)
 			: [];
 
+		const filteredInputs = inputs.filter((input) => input !== "");
+
 		startDate.setHours(0, 0, 0);
 		endDate.setHours(0, 0, 0);
 
@@ -215,9 +248,20 @@ const EventDetailsSchedulingTab = ({
 			scheduleEndHour: source.end.hour != null ? makeTwoDigits(source.end.hour): "",
 			scheduleEndMinute: source.end.minute != null ? makeTwoDigits(source.end.minute): "",
 			captureAgent: source.device.name,
-			inputs: inputs.filter((input) => input !== ""),
+			deviceInputs: filteredInputs,
+			locationHasInputs: !!filteredInputs.length,
 		};
 	};
+
+	const convertInitialValuesToScheduleInfo = ({
+		deviceInputs,
+		locationHasInputs,
+		...rest
+	}: InitialValues): SchedulingInfo => ({
+		...rest,
+		inputs: deviceInputs,
+	});
+
 
 	return (
 		<div className="modal-content">
@@ -239,7 +283,7 @@ const EventDetailsSchedulingTab = ({
 							<Formik
 								enableReinitialize
 								initialValues={getInitialValues()}
-								onSubmit={(values) => submitForm(values).then((r) => {})}
+								onSubmit={(values) => submitForm(convertInitialValuesToScheduleInfo(values)).then((r) => {})}
 							>
 								{(formik) => (
 									<div className="obj tbl-details">
@@ -461,7 +505,7 @@ const EventDetailsSchedulingTab = ({
 																disabled={!accessAllowed(formik.values.captureAgent)}
 																title={"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.LOCATION"}
 																placeholder={"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.LOCATION"}
-																callback={(value: string) => {
+																callback={async(value: string) => {
 																	changeInputs(
 																		value,
 																		formik.setFieldValue
@@ -481,30 +525,30 @@ const EventDetailsSchedulingTab = ({
 														}
 
 													{/* inputs */}
-													<tr>
+													{formik.values.locationHasInputs &&<tr>
 														<td>
 															{t(
 																"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.INPUTS"
-															)}
+															)} <i className="required"> *</i>
 														</td>
-														<td>
-															{!!formik.values.captureAgent &&
+														<td>{
+															!!formik.values.captureAgent &&
 																!!getInputs(formik.values.captureAgent) &&
 																getInputs(formik.values.captureAgent).length >
 																	0 &&
 																(hasAccessRole &&
 																accessAllowed(formik.values.captureAgent)
 																	? <SchedulingInputs
-																			inputs={getInputs(formik.values.captureAgent)}
-																		/>
-																	: formik.values.inputs.map((input, key) => (
+																			inputs={getInputs(formik.values.captureAgent)}/>
+
+																	: formik.values.deviceInputs.map((input, key) => (
 																			<span key={key}>
 																				{getInputForAgent(formik.values.captureAgent, input)}
 																				<br />
 																			</span>
 																		)))}
 														</td>
-													</tr>
+													</tr>}
 												</tbody>
 											</table>
 										</div>

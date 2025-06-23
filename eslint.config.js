@@ -15,7 +15,6 @@ export default [
             "indent": "off",
             "max-len": "off",
             "no-tabs": "off",
-            "object-curly-spacing": "off",
             "quotes": "off",
             "semi": "off",
             "spaced-comment": "off",

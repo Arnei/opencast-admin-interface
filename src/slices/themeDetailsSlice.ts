@@ -70,7 +70,7 @@ export const fetchUsage = createAppAsyncThunk("themeDetails/fetchUsage", async (
 export const updateThemeDetails = createAppAsyncThunk("themeDetails/updateThemeDetails", async (params: {
 	id: ThemeDetailsState["details"]["id"],
 	values: ThemeDetailsInitialValues
-}, {dispatch}) => {
+}, { dispatch }) => {
 	const { values, id } = params
 	const data = buildThemeBody(values);
 

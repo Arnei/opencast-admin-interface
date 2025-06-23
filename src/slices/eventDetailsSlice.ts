@@ -1309,7 +1309,7 @@ export const performWorkflowAction = createAppAsyncThunk("eventDetails/performWo
 	action: string,
 	close?: () => void,
 }, { dispatch }) => {
-	const { eventId, workflowId, action, close} = params;
+	const { eventId, workflowId, action, close } = params;
 	const headers = {
 		headers: {
 			"Content-Type": "application/json;charset=utf-8",

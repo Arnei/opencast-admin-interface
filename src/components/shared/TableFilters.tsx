@@ -116,7 +116,7 @@ const TableFilters = ({
 		if (name === "secondFilter") {
 			const filter = filterMap.find(({ name }) => name === selectedFilter);
 			if (filter) {
-				dispatch(editFilterValue({filterName: filter.name, value: value}));
+				dispatch(editFilterValue({ filterName: filter.name, value: value }));
 				setFilterSelector(false);
 				dispatch(removeSelectedFilter());
 				dispatch(removeSecondFilter());

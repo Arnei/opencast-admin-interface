@@ -322,7 +322,7 @@ export const deleteMultipleSeries = createAppAsyncThunk("series/deleteMultipleSe
 		selected: boolean,
 		title: string,
 	}[],
-{dispatch}) => {
+{ dispatch }) => {
 	const data = [];
 
 	for (let i = 0; i < series.length; i++) {

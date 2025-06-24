@@ -97,7 +97,7 @@ const initialState: SeriesDetailsState = {
 
 // fetch metadata of certain series from server
 export const fetchSeriesDetailsMetadata = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsMetadata", async (id: Series["id"], { rejectWithValue }) => {
-	const res = await axios.get(`/admin-ng/series/${id}/metadata.json`);
+	const res = await axios.get<MetadataCatalog[]>(`/admin-ng/series/${id}/metadata.json`);
 	const metadataResponse = res.data;
 
 	const mainCatalog = "dublincore/series";
@@ -122,7 +122,14 @@ export const fetchSeriesDetailsMetadata = createAppAsyncThunk("seriesDetails/fet
 
 // fetch acls of certain series from server
 export const fetchSeriesDetailsAcls = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsAcls", async (id: Series["id"], { dispatch }) => {
-	const res = await axios.get(`/admin-ng/series/${id}/access.json`);
+	type FetchSeriesDetailsAcl = {
+		series_access: {
+			acl: Omit<TransformedAcl, "user">[]
+			current_acl: number
+			locked: boolean
+		},
+	}
+	const res = await axios.get<FetchSeriesDetailsAcl>(`/admin-ng/series/${id}/access.json`);
 	const response = res.data;
 
 	if (response.series_access.locked) {
@@ -142,7 +149,7 @@ export const fetchSeriesDetailsAcls = createAppAsyncThunk("seriesDetails/fetchSe
 
 // fetch theme of certain series from server
 export const fetchSeriesDetailsTheme = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsTheme", async (id: Series["id"]) => {
-	const res = await axios.get(`/admin-ng/series/${id}/theme.json`);
+	const res = await axios.get<{ [key: string]: string }>(`/admin-ng/series/${id}/theme.json`);
 	const themeResponse = res.data;
 
 	let seriesTheme: SeriesDetailsState["theme"] = null;
@@ -158,7 +165,7 @@ export const fetchSeriesDetailsTheme = createAppAsyncThunk("seriesDetails/fetchS
 
 // fetch names of possible themes from server
 export const fetchSeriesDetailsThemeNames = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsThemeNames", async () => {
-	const res = await axios.get("/admin-ng/resources/THEMES.NAME.json");
+	const res = await axios.get<{ [key: string]: string }>("/admin-ng/resources/THEMES.NAME.json");
 	const response = res.data;
 
 	// transform response for further use
@@ -307,7 +314,7 @@ export const updateSeriesTheme = createAppAsyncThunk("seriesDetails/updateSeries
 		data.append("themeId", themeId);
 
 		axios
-			.put(`/admin-ng/series/${id}/theme`, data)
+			.put<{ [key: string]: string }>(`/admin-ng/series/${id}/theme`, data)
 			.then(response => {
 				const themeResponse = response.data;
 
@@ -334,7 +341,7 @@ export const fetchSeriesDetailsTobira = createAppAsyncThunk("seriesDetails/fetch
 	id: Series["id"],
 	{ dispatch },
 ) => {
-	const res = await axios.get(`/admin-ng/series/${id}/tobira/pages`)
+	const res = await axios.get<SeriesDetailsState["tobiraData"]>(`/admin-ng/series/${id}/tobira/pages`)
 		.catch(response => handleTobiraError(response, dispatch));
 
 	if (!res) {
@@ -602,7 +609,7 @@ const seriesDetailsSlice = createSlice({
 				state.statusStatisticsValue = "loading";
 			})
 			.addCase(fetchSeriesStatisticsValueUpdate.fulfilled, (state, action: PayloadAction<
-				any
+				SeriesDetailsState["statistics"]
 			>) => {
 				state.statusStatisticsValue = "succeeded";
 				state.statistics = action.payload;

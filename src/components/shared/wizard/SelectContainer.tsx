@@ -7,6 +7,7 @@ import { ParseKeys } from "i18next";
 
 type Item = {
 	name: string
+	id?: string
 	[key: string]: unknown
 }
 
@@ -37,7 +38,7 @@ const SelectContainer = ({
 	const [defaultItems, setDefaultItems] = useState<Item[]>([]);
 	// arrays an item can be part of depending on its state
 	const [items, setItems] = useState<Item[]>([]);
-	const [selectedItems, setSelectedItems] = useState(field.value);
+	const [selectedItems, setSelectedItems] = useState<Item[]>(field.value);
 	const [markedForAddition, setMarkedForAddition] = useState<string[]>([]);
 	const [markedForRemoval, setMarkedForRemoval] = useState<string[]>([]);
 
@@ -264,7 +265,6 @@ const SelectContainer = ({
 							onChange={e => handleChangeRemove(e)}
 							value={markedForRemoval}
 						>
-							{/* @ts-expect-error TS(7006): Parameter 'item' implicitly has an 'any' type. */}
 							{selectedItems.map((item, key) => (
 								<option key={key} value={item.name}>
 									{item.name}

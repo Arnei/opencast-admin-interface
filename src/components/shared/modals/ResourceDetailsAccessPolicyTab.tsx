@@ -30,6 +30,7 @@ import { ParseKeys } from "i18next";
 import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { formatAclTemplatesForDropdown } from "../../../utils/dropDownUtils";
 import ModalContentTable from "./ModalContentTable";
+import { getAclDefaults } from "../../../selectors/aclSelectors";
 
 
 /**
@@ -424,17 +425,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 	const { t } = useTranslation();
 
 	const user = useAppSelector(state => getUserInformation(state));
-
-	const [aclDefaults, setAclDefaults] = useState<{ [key: string]: string }>();
-
-	useEffect(() => {
-		async function fetchData() {
-			const responseDefaults = await fetchAclDefaults();
-			setAclDefaults(responseDefaults);
-		}
-
-		fetchData();
-	}, []);
+	const aclDefaults = useAppSelector(state => getAclDefaults(state));
 
 	const createPolicy = (role: string, withUser: boolean): TransformedAcl => {
 		const user = withUser ? { username: "", name: "", email: "" } : undefined;
@@ -749,16 +740,7 @@ export const TemplateSelector = <T extends TemplateSelectorProps>({
 
 	const user = useAppSelector(state => getUserInformation(state));
 
-	const [aclDefaults, setAclDefaults] = useState<{ [key: string]: string }>();
-
-	useEffect(() => {
-		async function fetchData() {
-			const responseDefaults = await fetchAclDefaults();
-			setAclDefaults(responseDefaults);
-		}
-
-		fetchData();
-	}, []);
+	const aclDefaults = useAppSelector(state => getAclDefaults(state));
 
 	if (!hasAccess(editAccessRole, user)) {
 		return <></>;

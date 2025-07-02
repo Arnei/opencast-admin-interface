@@ -46,7 +46,6 @@ const Events = () => {
 	const editMetadataEventsModalRef = useRef<ModalHandle>(null);
 
 	const user = useAppSelector(state => getUserInformation(state));
-	const events = useAppSelector(state => getTotalEvents(state));
 	const isFetchingAssetUploadOptions = useAppSelector(state => getIsFetchingAssetUploadOptions(state));
 
 	const location = useLocation();

@@ -34,8 +34,6 @@ const Series = () => {
 
 	const location = useLocation();
 
-	const series = useAppSelector(state => getTotalSeries(state));
-
 	useEffect(() => {
 		// disable actions button
 		dispatch(showActionsSeries(false));

@@ -564,6 +564,7 @@ export const AccessPolicyTable = <T extends AccessPolicyTabFormikProps>({
 																				user,
 																			)
 																		}
+																		customCSS={{ width: "100%" }}
 																	/>
 																) : (
 																	<p>{policy.role}</p>

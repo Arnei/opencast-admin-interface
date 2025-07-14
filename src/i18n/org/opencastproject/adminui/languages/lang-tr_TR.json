@@ -103,7 +103,8 @@
 			"SELECTED_COLUMNS": "Seçili sütunlar",
 			"FOOTER_TEXT": "Sıralama ve seçim otomatik olarak kaydedilecek. Varsayılan görünümü yüklemek için \"{{resetTranslation}}\" düğmesine tıklayın.",
 			"ADD_COLUMN": "Add column",
-			"REMOVE_COLUMN": "Remove column"
+			"REMOVE_COLUMN": "Remove column",
+			"DRAG_HANDLE_USAGE_INSTRUCTIONS": "Press space bar to start a drag. When dragging you can use the arrow keys to move the item around and escape to cancel. Some screen readers may require you to be in focus mode or to use your pass through key"
 		}
 	},
 	"CONFIRMATIONS": {
@@ -208,6 +209,8 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "Dizideki mevcut etkinliklerin yeniden işlenmesi gerekecek",
 		"SERIES_ACL_LOCKED": "Dizideki etkinlikler üzerinde işlem yapılırken Erişim İlkelerinin düzenlenmesine izin verilmez",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "Erişim İlkesi en az bir Okuma ve Yazma yetkisi gerektirir.",
+		"METADATA_SAVED": "The metadata has been saved.",
+		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "İsim boş bırakılamaz",
 		"BUMPER_UPLOAD_ERROR": "Medyayı yüklerken bir hata oluştu",
 		"THEME_CREATED": "Tema oluşturuldu",
@@ -985,7 +988,6 @@
 					"ACTIONS": "Hareketler",
 					"DETAILS": "Ayrıntılar",
 					"DESCRIPTION": "Açıklama",
-					"MORE_INFO": "Daha Fazla Bilgi",
 					"ID": "KİMLİK",
 					"TYPE": "Tür",
 					"TITLE": "Başlık",
@@ -1025,11 +1027,13 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "İş akışı detayları",
-					"CONFIGURATION": "İş akışı yapılandırılması"
+					"CONFIGURATION": "İş akışı yapılandırılması",
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "İş akışı operasyonları",
-					"DETAILS_LINK": "İşlemler",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Başlık",
 						"STATUS": "Durum",
@@ -1089,7 +1093,8 @@
 						"DATE": "Tarih",
 						"HOST": "Sunucu işletme",
 						"TYPE": "Hizmet Türü",
-						"TECHNICAL_DETAILS": "Teknik Ayrıntılar"
+						"TECHNICAL_DETAILS": "Teknik Ayrıntılar",
+						"OPERATION": "Operation the error occured in"
 					}
 				}
 			}
@@ -1177,7 +1182,10 @@
 				"TOOLTIP": {
 					"SERIES": "Bu seri için etkinlikleri filtrele",
 					"DETAILS": "Seri ayrıntılarını aç",
-					"DELETE": "Seriyi sil"
+					"DELETE": "Seriyi sil",
+					"CREATION": "Filter for this creation date",
+					"ORGANIZER": "Filter for this organizer",
+					"CONTRIBUTORS": "Filter for this contributor"
 				}
 			},
 			"DETAILS": {
@@ -1986,6 +1994,8 @@
 	"TABLE_EDIT": "Düzenle",
 	"TABLE_NEXT": "Next page",
 	"TABLE_PREVIOUS": "Previous page",
+	"TABLE_CURRENT": "Current page {{pageNumber}}",
+	"TABLE_NUMBERED": "Go to page {{pageNumber}}",
 	"DASHBOARD": {
 		"RUNNING": "Çalışıyor",
 		"FINISHED": "Tamamlandı",
@@ -1993,7 +2003,8 @@
 		"FAILED": "Başarısız",
 		"FINISHED_WITH_COMMENTS": "Yapılacaklar",
 		"SCHEDULED": "Zamanlandı",
-		"RECORDING": "Kayıt ediliyor"
+		"RECORDING": "Kayıt ediliyor",
+		"BUTTON_TOOLTIP": "Apply filter {{filterName}} to the table"
 	},
 	"HOTKEYS": {
 		"CHEAT_SHEET": {

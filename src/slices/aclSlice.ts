@@ -6,7 +6,7 @@ import { transformToIdValueArray } from "../utils/utils";
 import { NOTIFICATION_CONTEXT_ACCESS } from "../configs/modalConfig";
 import { addNotification, removeNotificationWizardAccess } from "./notificationSlice";
 import { getUserInformation } from "../selectors/userInfoSelectors";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 import { initialFormValuesNewAcl } from "../configs/modalConfig";
 import { TransformedAcl } from "./aclDetailsSlice";
@@ -14,6 +14,14 @@ import { TransformedAcl } from "./aclDetailsSlice";
 /**
  * This file contains redux reducer for actions affecting the state of acls
  */
+type FetchAcls = {
+	total: AclsState["total"],
+	count: AclsState["count"],
+	limit: AclsState["limit"],
+	offset: AclsState["offset"],
+	results: AclsState["results"],
+};
+
 export type Ace = {
 	action: string,
 	allow: boolean,
@@ -75,29 +83,29 @@ const initialState: AclsState = {
 
 export const fetchAcls = createAppAsyncThunk("acls/fetchAcls", async (_, { getState }) => {
 	const state = getState();
-	let params = getURLParams(state, "acls");
+	const params = getURLParams(state, "acls");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/acl/acls.json", { params: params });
+	const res = await axios.get<FetchAcls>("/admin-ng/acl/acls.json", { params: params });
 	return res.data;
 });
 
 // todo: unite following in one fetch method (maybe also move to own file containing all fetches regarding resources endpoint)
 // get acl templates
 export const fetchAclTemplates = async () => {
-	let data = await axios.get("/admin-ng/resources/ACL.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return transformToIdValueArray(response);
 };
 
 // fetch additional actions that a policy allows user to perform on an event
 export const fetchAclActions = async () => {
-	let data = await axios.get("/admin-ng/resources/ACL.ACTIONS.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.ACTIONS.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	const actions = transformToIdValueArray(response);
 
@@ -106,40 +114,40 @@ export const fetchAclActions = async () => {
 
 // fetch defaults for the access policy tab in the details views
 export const fetchAclDefaults = async () => {
-	let data = await axios.get("/admin-ng/resources/ACL.DEFAULTS.json");
+	const data = await axios.get<{ [key: string]: string }>("/admin-ng/resources/ACL.DEFAULTS.json");
 
-	const response = await data.data;
+	const response = data.data;
 
 	return response;
 };
 
 // fetch all policies of an certain acl template
 export const fetchAclTemplateById = async (id: string) => {
-	let response = await axios.get(`/acl-manager/acl/${id}`);
+	const response = await axios.get<AclResult>(`/acl-manager/acl/${id}`);
 
-	let acl = response.data.acl;
+	const acl = response.data.acl;
 
 	return transformAclTemplatesResponse(acl);
 };
 
 // fetch roles for select dialogs and access policy pages
 export const fetchRolesWithTarget = async (target: string) => {
-	let params = {
+	const params = {
 		limit: -1,
 		target: target,
 	};
 
-	let response = await axios.get("/admin-ng/acl/roles.json", { params: params });
-	let data : Role[] = response.data;
+	const response = await axios.get<Role[]>("/admin-ng/acl/roles.json", { params: params });
+	const data = response.data;
 
 	return data;
 };
 
 // post new acl to backend
 export const postNewAcl = (values: typeof initialFormValuesNewAcl) => async (dispatch: AppDispatch) => {
-	let acls = prepareAccessPolicyRulesForPost(values.policies);
+	const acls = prepareAccessPolicyRulesForPost(values.policies);
 
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append("name", values.name);
 	data.append("acl", JSON.stringify(acls));
 
@@ -164,7 +172,7 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 		.delete(`/admin-ng/acl/${id}`)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "ACL_DELETED" }));
 		})
 		.catch(res => {
@@ -174,13 +182,13 @@ export const deleteAcl = (id: number) => async (dispatch: AppDispatch) => {
 		});
 };
 
-// @ts-expect-error TS(7006):
-export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState) => {
+
+export const checkAcls = (acls: TransformedAcl[]) => async (dispatch: AppDispatch, getState: () => RootState) => {
 	// Remove old notifications of context event-access
 	// Helps to prevent multiple notifications for same problem
 	dispatch(removeNotificationWizardAccess());
 
-	let user = getUserInformation(getState());
+	const user = getUserInformation(getState());
 
 	let check = true;
 	let bothRights = false;
@@ -245,13 +253,7 @@ const aclsSlice = createSlice({
 				state.status = "loading";
 			})
 			// Pass the generated action creators to `.addCase()`
-			.addCase(fetchAcls.fulfilled, (state, action: PayloadAction<{
-				total: AclsState["total"],
-				count: AclsState["count"],
-				limit: AclsState["limit"],
-				offset: AclsState["offset"],
-				results: AclsState["results"],
-			}>) => {
+			.addCase(fetchAcls.fulfilled, (state, action: PayloadAction<FetchAcls>) => {
 				// Same "mutating" update syntax thanks to Immer
 				state.status = "succeeded";
 				const acls = action.payload;

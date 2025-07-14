@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TableFilters from "../shared/TableFilters";
 import Table from "../shared/Table";
-import { fetchFilters, editTextFilter } from "../../slices/tableFilterSlice";
+import { fetchFilters } from "../../slices/tableFilterSlice";
 import { themesTemplateMap } from "../../configs/tableConfigs/themesTableMap";
 import { getTotalThemes } from "../../selectors/themeSelectors";
 import { loadThemesIntoTable } from "../../thunks/tableThunks";
@@ -35,9 +35,6 @@ const Themes = () => {
 
 		dispatch(fetchFilters("themes"));
 
-		// Reset text filter
-		dispatch(editTextFilter(""));
-
 		// Load themes on mount
 		const loadThemes = async () => {
 			// Fetching themes from server
@@ -51,7 +48,7 @@ const Themes = () => {
 		loadThemes();
 
 		// Fetch themes every minute
-		let fetchThemesInterval = setInterval(loadThemes, 5000);
+		const fetchThemesInterval = setInterval(loadThemes, 5000);
 
 		return () => {
 			allowLoadIntoTable = false;

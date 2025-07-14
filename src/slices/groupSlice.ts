@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { groupsTableConfig } from "../configs/tableConfigs/groupsTableConfig";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { buildGroupBody, getURLParams } from "../utils/resourceUtils";
 import { addNotification } from "./notificationSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
@@ -10,6 +10,14 @@ import { initialFormValuesNewGroup } from "../configs/modalConfig";
 /**
  * This file contains redux reducer for actions affecting the state of groups
  */
+type FetchGroups = {
+	total: GroupState["total"],
+	count: GroupState["count"],
+	limit: GroupState["limit"],
+	offset: GroupState["offset"],
+	results: GroupState["results"],
+};
+
 export type Group = {
 	description: string,
 	id: string,
@@ -50,18 +58,18 @@ const initialState: GroupState = {
 // fetch groups from server
 export const fetchGroups = createAppAsyncThunk("groups/fetchGroups", async (_, { getState }) => {
 	const state = getState();
-	let params = getURLParams(state, "groups");
+	const params = getURLParams(state, "groups");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/groups/groups.json", { params: params });
+	const res = await axios.get<FetchGroups>("/admin-ng/groups/groups.json", { params: params });
 	return res.data;
 });
 
 // post new group to backend
 export const postNewGroup = createAppAsyncThunk("groups/postNewGroup", async (values: typeof initialFormValuesNewGroup, { dispatch }) => {
 	// get URL params used for post request
-	let data = buildGroupBody(values);
+	const data = buildGroupBody(values);
 
 	// POST request
 	axios
@@ -70,12 +78,12 @@ export const postNewGroup = createAppAsyncThunk("groups/postNewGroup", async (va
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
 		})
-		.then(response => {
+		.then(() => {
 			dispatch(addNotification({ type: "success", key: "GROUP_ADDED" }));
 		})
-		.catch(response => {
-			console.error(response);
-			if (response.status === 409) {
+		.catch((error: AxiosError) => {
+			console.error(error);
+			if (error.status === 409) {
 				dispatch(addNotification({ type: "error", key: "GROUP_CONFLICT" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "GROUP_NOT_SAVED" }));
@@ -87,7 +95,7 @@ export const deleteGroup = createAppAsyncThunk("groups/deleteGroup", async (id: 
 	// API call for deleting a group
 	axios
 		.delete(`/admin-ng/groups/${id}`)
-		.then(res => {
+		.then(() => {
 			// add success notification
 			dispatch(addNotification({ type: "success", key: "GROUP_DELETED" }));
 		})
@@ -114,13 +122,7 @@ const groupSlice = createSlice({
 			.addCase(fetchGroups.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchGroups.fulfilled, (state, action: PayloadAction<{
-				total: GroupState["total"],
-				count: GroupState["count"],
-				limit: GroupState["limit"],
-				offset: GroupState["offset"],
-				results: GroupState["results"],
-			}>) => {
+			.addCase(fetchGroups.fulfilled, (state, action: PayloadAction<FetchGroups>) => {
 				state.status = "succeeded";
 				const groups = action.payload;
 				state.total = groups.total;

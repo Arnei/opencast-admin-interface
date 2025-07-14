@@ -34,7 +34,7 @@ const DeleteEventsModal = ({
 	const onChangeAllSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const selected = e.target.checked;
 		setAllChecked(selected);
-		let changedSelection = selectedEvents.map(event => {
+		const changedSelection = selectedEvents.map(event => {
 			return {
 				...event,
 				selected: selected,
@@ -46,7 +46,7 @@ const DeleteEventsModal = ({
 	// Handle change of checkboxes indicating which events to consider further
 	const onChangeSelected = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
 		const selected = e.target.checked;
-		let changedEvents = selectedEvents.map(event => {
+		const changedEvents = selectedEvents.map(event => {
 			if (isEvent(event) && event.id === id) {
 				return {
 					...event,
@@ -114,8 +114,7 @@ const DeleteEventsModal = ({
 											<td>{isEvent(event) && event.title}</td>
 											<td>
 												{/* Repeat for each presenter*/}
-{/* @ts-expect-error TS(7006): Parameter 'presenter' implicitly has an 'any' type... Remove this comment to see the full error message */}
-												{event.presenters.map((presenter, key) => (
+												{isEvent(event) && event.presenters.map((presenter, key) => (
 													<span className="metadata-entry" key={key}>
 														{presenter}
 													</span>

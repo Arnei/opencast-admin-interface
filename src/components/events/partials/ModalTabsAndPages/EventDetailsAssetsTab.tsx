@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Notifications from "../../../shared/Notifications";
 import {
 	getAssets,
@@ -62,22 +62,22 @@ const EventDetailsAssetsTab = ({
 		{
 			tabNameTranslation: "EVENTS.EVENTS.DETAILS.ASSETS.ATTACHMENTS.TITLE",
 			tabHierarchies: ["asset-attachments", "attachment-details"],
-			open: () => openSubTab("asset-attachments", "attachment"),
+			open: () => openSubTab("asset-attachments"),
 		},
 		{
 			tabNameTranslation: "EVENTS.EVENTS.DETAILS.ASSETS.CATALOGS.TITLE",
 			tabHierarchies: ["asset-catalogs", "catalog-details"],
-			open: () => openSubTab("asset-catalogs", "catalog"),
+			open: () => openSubTab("asset-catalogs"),
 		},
 		{
 			tabNameTranslation: "EVENTS.EVENTS.DETAILS.ASSETS.MEDIA.TITLE",
 			tabHierarchies: ["asset-media", "media-details"],
-			open: () => openSubTab("asset-media", "media"),
+			open: () => openSubTab("asset-media"),
 		},
 		{
 			tabNameTranslation: "EVENTS.EVENTS.DETAILS.ASSETS.PUBLICATIONS.TITLE",
 			tabHierarchies: ["asset-publications", "publication-details"],
-			open: () => openSubTab("asset-publications", "publication"),
+			open: () => openSubTab("asset-publications"),
 		},
 	];
 
@@ -91,13 +91,13 @@ const EventDetailsAssetsTab = ({
 		padding: "14px 5px",
 		fontWeight: "600",
 		minWidth: "100px",
-		color: "#5d7589",
+		color: "#435263",
 	};
 
 	const assetsTabInactive = {
 		padding: "14px 5px",
 		minWidth: "100px",
-		color: "#92a0ab",
+		color: "#646e75",
 	};
 
 	useEffect(() => {
@@ -108,7 +108,6 @@ const EventDetailsAssetsTab = ({
 
 	const openSubTab = (
 		subTabName: AssetTabHierarchy,
-		newassetupload: string,
 	) => {
 		dispatch(removeNotificationWizardForm());
 		if (subTabName === "asset-attachments") {
@@ -171,10 +170,7 @@ const EventDetailsAssetsTab = ({
 														<ButtonLikeAnchor
 															extraClassName="details-link"
 															onClick={() =>
-																openSubTab(
-																	"add-asset",
-																	"newassetupload",
-																)
+																openSubTab("add-asset")
 															}
 														>
 															{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.ADD")}
@@ -198,7 +194,7 @@ const EventDetailsAssetsTab = ({
 													<ButtonLikeAnchor
 														extraClassName="details-link"
 														onClick={() =>
-															openSubTab("asset-attachments", "attachment")
+															openSubTab("asset-attachments")
 														}
 													>
 														{
@@ -224,7 +220,7 @@ const EventDetailsAssetsTab = ({
 													<ButtonLikeAnchor
 														extraClassName="details-link"
 														onClick={() =>
-															openSubTab("asset-catalogs", "catalog")
+															openSubTab("asset-catalogs")
 														}
 													>
 														{
@@ -249,7 +245,7 @@ const EventDetailsAssetsTab = ({
 												{assets.media > 0 && (
 													<ButtonLikeAnchor
 														extraClassName="details-link"
-														onClick={() => openSubTab("asset-media", "media")}
+														onClick={() => openSubTab("asset-media")}
 													>
 														{
 															t(
@@ -274,7 +270,7 @@ const EventDetailsAssetsTab = ({
 													<ButtonLikeAnchor
 														extraClassName="details-link"
 														onClick={() =>
-															openSubTab("asset-publications", "publication")
+															openSubTab("asset-publications")
 														}
 													>
 														{

@@ -13,7 +13,7 @@ export const renderValidDate = (date: string) => {
 
 // transform relative date to an absolute date
 export const relativeToAbsoluteDate = (relative: string, type: string, from: boolean) => {
-	let localMoment = moment();
+	const localMoment = moment();
 
 	let absolute;
 	if (from) {
@@ -27,14 +27,48 @@ export const relativeToAbsoluteDate = (relative: string, type: string, from: boo
 	return absolute.toDate();
 };
 
+type RelativeDateSpanValue = {
+	relativeDateSpan: {
+		from: string;
+		to: string;
+		unit: string;
+	};
+};
+
+type UnknownWithRelativeDateSpan = {
+	relativeDateSpan: {
+		from: unknown;
+		to: unknown;
+		unit: unknown;
+	};
+};
+
+export function isRelativeDateSpanValue(
+	value: unknown,
+): value is RelativeDateSpanValue {
+	if (
+		typeof value === "object" &&
+		value !== null &&
+		"relativeDateSpan" in value
+	) {
+		const { relativeDateSpan } = value as UnknownWithRelativeDateSpan;
+		return (
+			typeof relativeDateSpan?.from === "string" &&
+			typeof relativeDateSpan?.to === "string" &&
+			typeof relativeDateSpan?.unit === "string"
+		);
+	}
+	return false;
+}
+
 // transform from relative date span to filter value containing absolute dates
 export const relativeDateSpanToFilterValue = (
 	fromRelativeDate: string,
 	toRelativeDate: string,
 	type: string,
 ) => {
-	let fromAbsoluteDate = relativeToAbsoluteDate(fromRelativeDate, type, true);
-	let toAbsoluteDate = relativeToAbsoluteDate(toRelativeDate, type, false);
+	const fromAbsoluteDate = relativeToAbsoluteDate(fromRelativeDate, type, true);
+	const toAbsoluteDate = relativeToAbsoluteDate(toRelativeDate, type, false);
 
 	return (
 		fromAbsoluteDate.toISOString() +
@@ -110,7 +144,7 @@ const changeStart = (
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	const startDate = makeDate(start.date, start.hour, start.minute);
-	let endDate = makeDate(
+	const endDate = makeDate(
 		start.date,
 		formikValues.scheduleEndHour,
 		formikValues.scheduleEndMinute,

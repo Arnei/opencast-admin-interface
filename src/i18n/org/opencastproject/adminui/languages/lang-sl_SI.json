@@ -103,7 +103,8 @@
 			"SELECTED_COLUMNS": "Izbrani stolpci",
 			"FOOTER_TEXT": "Vrstni red in izbor bosta samodejno shranjena. Pritisnite »{{resetTranslation}}«, da obnovite privzeti pogled.",
 			"ADD_COLUMN": "Add column",
-			"REMOVE_COLUMN": "Remove column"
+			"REMOVE_COLUMN": "Remove column",
+			"DRAG_HANDLE_USAGE_INSTRUCTIONS": "Press space bar to start a drag. When dragging you can use the arrow keys to move the item around and escape to cancel. Some screen readers may require you to be in focus mode or to use your pass through key"
 		}
 	},
 	"CONFIRMATIONS": {
@@ -208,6 +209,8 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "Obstoječe dogodke v tej seriji bo treba znova obdelati",
 		"SERIES_ACL_LOCKED": "Urejanje pravilnikov o dostopu ni dovoljeno, ko se v dogodku, ki je del serije, izvajajo postopki",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "Pravilnik o dostopu zahteva vsaj eno vlogo z dovoljenji za branje in pisanje.",
+		"METADATA_SAVED": "The metadata has been saved.",
+		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "Ime ne sme biti prazno",
 		"BUMPER_UPLOAD_ERROR": "Napaka pri nalaganju predstavnosti",
 		"THEME_CREATED": "Tema je ustvarjena",
@@ -985,7 +988,6 @@
 					"ACTIONS": "Dejanja",
 					"DETAILS": "Podrobnosti",
 					"DESCRIPTION": "Opis",
-					"MORE_INFO": "More Information",
 					"ID": "ID",
 					"TYPE": "Vrsta",
 					"TITLE": "Naslov",
@@ -1025,11 +1027,13 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "Podrobnosti poteka dela",
-					"CONFIGURATION": "Konfiguracija poteka dela"
+					"CONFIGURATION": "Konfiguracija poteka dela",
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "Postopki poteka dela",
-					"DETAILS_LINK": "Postopki",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "Naslov",
 						"STATUS": "Stanje",
@@ -1089,7 +1093,8 @@
 						"DATE": "Datum",
 						"HOST": "Gostitelj za obdelavo",
 						"TYPE": "Vrsta storitve",
-						"TECHNICAL_DETAILS": "Tehnične podrobnosti"
+						"TECHNICAL_DETAILS": "Tehnične podrobnosti",
+						"OPERATION": "Operation the error occured in"
 					}
 				}
 			}
@@ -1177,7 +1182,10 @@
 				"TOOLTIP": {
 					"SERIES": "Filtriraj posnetke za to zbirko",
 					"DETAILS": "Odpri podrobnosti zbirke",
-					"DELETE": "Izbriši zbirko"
+					"DELETE": "Izbriši zbirko",
+					"CREATION": "Filter for this creation date",
+					"ORGANIZER": "Filter for this organizer",
+					"CONTRIBUTORS": "Filter for this contributor"
 				}
 			},
 			"DETAILS": {
@@ -1986,6 +1994,8 @@
 	"TABLE_EDIT": "Uredi",
 	"TABLE_NEXT": "Next page",
 	"TABLE_PREVIOUS": "Previous page",
+	"TABLE_CURRENT": "Current page {{pageNumber}}",
+	"TABLE_NUMBERED": "Go to page {{pageNumber}}",
 	"DASHBOARD": {
 		"RUNNING": "Izvajanje",
 		"FINISHED": "Dokončano",
@@ -1993,7 +2003,8 @@
 		"FAILED": "Ni uspelo",
 		"FINISHED_WITH_COMMENTS": "Opravila",
 		"SCHEDULED": "Načrtovano",
-		"RECORDING": "Posnetek"
+		"RECORDING": "Posnetek",
+		"BUTTON_TOOLTIP": "Apply filter {{filterName}} to the table"
 	},
 	"HOTKEYS": {
 		"CHEAT_SHEET": {

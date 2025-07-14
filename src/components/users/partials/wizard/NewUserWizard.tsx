@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
@@ -60,7 +60,7 @@ const NewUserWizard = ({
 
 	return (
 		<>
-			{/*Head navigation*/}
+			{/* Head navigation*/}
 			<nav className="modal-nav" id="modal-nav" style={navStyle}>
 				<ButtonLikeAnchor
 					extraClassName={cn("wider", { active: tab === 0 })}

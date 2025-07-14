@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Notifications from "../../../shared/Notifications";
 import {
 	getAssetMediaDetails,
@@ -21,7 +21,7 @@ const EventDetailsAssetMediaDetails = () => {
 	const media = useAppSelector(state => getAssetMediaDetails(state));
 	const isFetching = useAppSelector(state => isFetchingAssetMediaDetails(state));
 
-	const PlayerType = media.has_video ? "video" : "audio";
+	const PlayerType = media.hasVideo ? "video" : "audio";
 
 	const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -360,7 +360,7 @@ const EventDetailsAssetMediaDetails = () => {
 			</div>
 
 			{/* preview video/audio player (only if we actually have video/audio) */}
-			{(media.has_video || media.has_audio) && (
+			{(media.hasVideo || media.hasAudio) && (
 				<div className="obj tbl-container media-stream-details">
 					<header>
 						{t("EVENTS.EVENTS.DETAILS.ASSETS.PREVIEW") /* Preview */}

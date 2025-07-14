@@ -109,7 +109,7 @@ const NewSourcePage = <T extends RequiredFormProps>({
 	return (
 		<>
 			<ModalContentTable>
-				{/*Show notifications with context events-form*/}
+				{/* Show notifications with context events-form*/}
 				<Notifications context="not_corner" />
 				{
 					<SchedulingConflicts
@@ -259,9 +259,10 @@ const Upload = <T extends RequiredFormPropsUpload>({
 				<div className="obj-container">
 					<table className="main-tbl">
 						<tbody>
-							<FieldArray name="uploadAssetsTrack">
-								{/*File upload button for each upload asset*/}
-								{({ insert, remove, push }) =>
+							{/* File upload button for each upload asset */}
+							<FieldArray
+								name="uploadAssetsTrack"
+								render={arrayHelpers => (
 									formik.values.uploadAssetsTrack &&
 									formik.values.uploadAssetsTrack.length > 0 &&
 									formik.values.uploadAssetsTrack.map((asset, key) => (
@@ -294,7 +295,7 @@ const Upload = <T extends RequiredFormPropsUpload>({
 												<ButtonLikeAnchor
 													style={{ visibility: asset.file ? "visible" : "hidden" }}
 													extraClassName="remove"
-													onClick={e => {
+													onClick={() => {
 														formik.setFieldValue(
 															`uploadAssetsTrack.${key}.file`,
 															null,
@@ -305,8 +306,8 @@ const Upload = <T extends RequiredFormPropsUpload>({
 											</td>
 										</tr>
 									))
-								}
-							</FieldArray>
+								)}
+							/>
 						</tbody>
 					</table>
 				</div>
@@ -368,7 +369,7 @@ const Schedule = <T extends {
 
 	const renderInputDeviceOptions = () => {
 		if (formik.values.location) {
-			let inputDevice = inputDevices.find(
+			const inputDevice = inputDevices.find(
 				({ name }) => name === formik.values.location,
 			);
 			if (!inputDevice) {
@@ -403,17 +404,21 @@ const Schedule = <T extends {
 									selected={typeof formik.values.scheduleStartDate === "string" ? parseISO(formik.values.scheduleStartDate) : formik.values.scheduleStartDate}
 									onChange={value => {
 										if (formik.values.sourceMode === "SCHEDULE_MULTIPLE") {
-											value && changeStartDateMultiple(
-												value,
-												formik.values,
-												formik.setFieldValue,
-											);
+											if (value) {
+												changeStartDateMultiple(
+													value,
+													formik.values,
+													formik.setFieldValue,
+												);
+											}
 										} else {
-											value && changeStartDate(
-												value,
-												formik.values,
-												formik.setFieldValue,
-											);
+											if (value) {
+												changeStartDate(
+													value,
+													formik.values,
+													formik.setFieldValue,
+												);
+											}
 										}
 									}}
 									showYearDropdown

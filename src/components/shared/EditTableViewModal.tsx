@@ -221,9 +221,10 @@ const EditTableViewModalContent = ({
 								<li>
 									<DragDropContext
 										onDragEnd={onDragEnd}
+										dragHandleUsageInstructions={t("PREFERENCES.TABLE.DRAG_HANDLE_USAGE_INSTRUCTIONS")}
 									>
 										<Droppable droppableId="droppable">
-											{(provided, snapshot) => (
+											{(provided, _snapshot) => (
 												<div
 													{...provided.droppableProps}
 													ref={provided.innerRef}
@@ -232,7 +233,7 @@ const EditTableViewModalContent = ({
 													{activeCols.filter(col => col).map((column, key) =>
 														(
 															<Draggablee key={column.name} draggableId={column.name} index={key}>
-																{(provided, snapshot) => (
+																{(provided, _snapshot) => (
 																	<div
 																		ref={provided.innerRef}
 																		{...provided.draggableProps}
@@ -280,7 +281,7 @@ const EditTableViewModalContent = ({
 			<footer>
 				{/* Render buttons for updating table data */}
 					<button onClick={() => clearData()} className="cancel active">
-						{t("CANCEL") /*Cancel*/}
+						{t("CANCEL") /* Cancel*/}
 					</button>
 					<button onClick={() => save()} className="submit active">
 						{t("SAVE") /* Save As Default */}

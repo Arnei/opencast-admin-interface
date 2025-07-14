@@ -10,6 +10,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of users
  */
+type FetchUsers = {
+	total: UsersState["total"],
+	count: UsersState["count"],
+	limit: UsersState["limit"],
+	offset: UsersState["offset"],
+	results: UsersState["results"],
+};
+
 export type UserRole = {
 	name: string
 	type: string
@@ -64,11 +72,11 @@ const initialState: UsersState = {
 // fetch users from server
 export const fetchUsers = createAppAsyncThunk("users/fetchUsers", async (_, { getState }) => {
 	const state = getState();
-	let params = getURLParams(state, "users");
+	const params = getURLParams(state, "users");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/users/users.json", { params: params });
+	const res = await axios.get<FetchUsers>("/admin-ng/users/users.json", { params: params });
 	return res.data;
 });
 
@@ -81,7 +89,7 @@ export const fetchUsersForTemplate = async (roles: string[]) => {
 // new user to backend
 export const postNewUser = createAppAsyncThunk("users/postNewUser", async (values: NewUser, { dispatch }) => {
 	// get URL params used for post request
-	let data = buildUserBody(values);
+	const data = buildUserBody(values);
 
 	axios
 		.post("/admin-ng/users", data, {
@@ -121,11 +129,11 @@ export const deleteUser = createAppAsyncThunk("users/deleteUser", async (id: str
 
 // get users and their user names
 export const fetchUsersAndUsernames = async () => {
-	let data = await axios.get(
+	const data = await axios.get<{ [key: string]: string }>(
 		"/admin-ng/resources/USERS.NAME.AND.USERNAME.json",
 	);
 
-	const response = await data.data;
+	const response = data.data;
 
 	return transformToIdValueArray(response);
 };
@@ -147,13 +155,7 @@ const usersSlice = createSlice({
 			.addCase(fetchUsers.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<{
-				total: UsersState["total"],
-				count: UsersState["count"],
-				limit: UsersState["limit"],
-				offset: UsersState["offset"],
-				results: UsersState["results"],
-			}>) => {
+			.addCase(fetchUsers.fulfilled, (state, action: PayloadAction<FetchUsers>) => {
 				state.status = "succeeded";
 				const users = action.payload;
 				state.total = users.total;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Formik } from "formik";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
 import AclMetadataPage from "./AclMetadataPage";
@@ -88,8 +88,8 @@ const NewAclWizard = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
-								hasAccessPage
+								isValid={formik.isValid}
+								acls={formik.values.policies}
 							/>
 							<div>
 								{steps[page].name === "metadata" && (

@@ -8,6 +8,14 @@ import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 /**
  * This file contains redux reducer for actions affecting the state of jobs
  */
+type FetchJobs = {
+	total: JobState["total"],
+	count: JobState["count"],
+	limit: JobState["limit"],
+	offset: JobState["offset"],
+	results: JobState["results"],
+};
+
 export type Job = {
 	creator: string,
 	id: number,
@@ -51,12 +59,12 @@ const initialState: JobState = {
 
 export const fetchJobs = createAppAsyncThunk("jobs/fetchJobs", async (_, { getState }) => {
 	const state = getState();
-	let params = getURLParams(state, "jobs");
+	const params = getURLParams(state, "jobs");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
 	// /jobs.json?limit=0&offset=0&filter={filter}&sort={sort}
-	const res = await axios.get("/admin-ng/job/jobs.json?", { params: params });
+	const res = await axios.get<FetchJobs>("/admin-ng/job/jobs.json?", { params: params });
 	return res.data;
 });
 
@@ -76,13 +84,7 @@ const jobSlice = createSlice({
 			.addCase(fetchJobs.pending, state => {
 				state.status = "loading";
 			})
-			.addCase(fetchJobs.fulfilled, (state, action: PayloadAction<{
-				total: JobState["total"],
-				count: JobState["count"],
-				limit: JobState["limit"],
-				offset: JobState["offset"],
-				results: JobState["results"],
-			}>) => {
+			.addCase(fetchJobs.fulfilled, (state, action: PayloadAction<FetchJobs>) => {
 				state.status = "succeeded";
 				const jobs = action.payload;
 				state.total = jobs.total;

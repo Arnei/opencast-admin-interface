@@ -5,9 +5,9 @@ export const setDefaultConfig = (workflowDefinitions: Workflow[], workflowId: st
 	let defaultConfiguration: { [key: string]: unknown } = {};
 
 	// find configuration panel information about chosen workflow
-	let configPanel = workflowDefinitions.find(
+	const configPanel = workflowDefinitions.find(
 		workflow => workflow.id === workflowId,
-	)?.configuration_panel_json;
+	)?.configurationPanelJson;
 
 	// only set default values if there is an configuration panel
 	if (Array.isArray(configPanel) && configPanel.length > 0) {

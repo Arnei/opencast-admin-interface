@@ -152,7 +152,7 @@ const EventDetailsSchedulingTab = ({
 	};
 
 	// checks validity of the formik form
-	const checkValidity = (formik: FormikProps<any>) => {
+	const checkValidity = (formik: FormikProps<InitialValues>) => {
 		if (
 			formik.dirty &&
 			formik.isValid &&
@@ -250,7 +250,7 @@ const EventDetailsSchedulingTab = ({
 					<Formik<InitialValues>
 						enableReinitialize
 						initialValues={getInitialValues()}
-						onSubmit={values => submitForm(values).then(r => {})}
+						onSubmit={values => submitForm(values).then(() => {})}
 						innerRef={formikRef}
 					>
 						{formik => (

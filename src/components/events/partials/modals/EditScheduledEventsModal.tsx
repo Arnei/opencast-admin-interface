@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { initialFormValuesEditScheduledEvents } from "../../../../configs/modalConfig";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
@@ -142,7 +142,7 @@ const EditScheduledEventsModal = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
+								isValid={formik.isValid}
 							/>
 							<div>
 								{steps[page].name === "general" && (

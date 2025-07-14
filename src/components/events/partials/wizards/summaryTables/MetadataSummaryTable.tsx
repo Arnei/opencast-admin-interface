@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { getMetadataCollectionFieldName } from "../../../../../utils/resourceUtils";
 import { MetadataCatalog } from "../../../../../slices/eventSlice";
@@ -76,7 +75,7 @@ const MetadataSummaryTable = ({
 				{catalogs.map((catalog, key) => (
 					<table key={key} className="main-tbl">
 						<tbody>
-							{/*Insert row for each metadata entry user has provided*/}
+							{/* Insert row for each metadata entry user has provided*/}
 							{catalog.map((entry, key) => (
 								<tr key={key}>
 									<td>{t(entry.label as ParseKeys)}</td>

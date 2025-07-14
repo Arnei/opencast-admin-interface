@@ -39,8 +39,16 @@ const RenderField = ({
 		<div
 			onClick={() => {
 				if (editableRef.current) {
-					editableRef.current.focus && editableRef.current.focus();
-					editableRef.current.setFocus && editableRef.current.setFocus(); // For DatePicker
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+					if (editableRef.current.focus) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+						editableRef.current.focus();
+					}
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+					if (editableRef.current.setFocus) {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+						editableRef.current.setFocus(); // For DatePicker
+					}
 				}
 			}}
 			onFocus={onFocus}
@@ -117,6 +125,7 @@ const RenderField = ({
 				{!focused && showCheck && (
 					<i
 						className={cn("saved fa fa-check", {
+							// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 							active: form.initialValues[field.name] !== field.value,
 						})}
 					/>
@@ -142,7 +151,7 @@ const EditableBooleanValue = ({
 			{...field}
 			ref={ref}
 			type="checkbox"
-			checked={field.value}
+			checked={field.value as boolean}
 			autoFocus={isFirstField}
 		/>
 	);
@@ -166,7 +175,7 @@ const EditableDateValue = ({
 		<div onClick={e => { e.stopPropagation(); }}>
 			<DatePicker
 				ref={ref}
-				selected={!isNaN(Date.parse(field.value)) ? new Date(field.value) : null}
+				selected={!isNaN(Date.parse(field.value as string)) ? new Date(field.value as string) : null}
 				onChange={value => setFieldValue(field.name, value)}
 				showTimeInput
 				showYearDropdown
@@ -210,7 +219,7 @@ const EditableSingleSelect = ({
 	return (
 		<DropDown
 			ref={ref}
-			value={field.value}
+			value={field.value as string}
 			text={text}
 			options={metadataField.collection
 				? metadataField.collection.map(item => ({ label: item.label ?? item.name, value: item.value, order: item.order }))
@@ -295,7 +304,7 @@ const EditableSingleValueTime = ({
 		<div onClick={e => { e.stopPropagation(); }}>
 			<DatePicker
 				ref={ref}
-				selected={typeof field.value === "string" ? parseISO(field.value) : field.value}
+				selected={typeof field.value === "string" ? parseISO(field.value) : field.value as Date}
 				onChange={value => setFieldValue(field.name, value)}
 				showTimeSelect
 				showTimeSelectOnly

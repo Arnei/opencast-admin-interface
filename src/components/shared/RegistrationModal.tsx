@@ -76,16 +76,16 @@ const RegistrationModalContent = () => {
 	}, []);
 
 	const onClickContinue = async () => {
-		// if state is delete_submit then delete infos about adaptor else show next state
-		if (state === "delete_submit") {
-			await resetRegistrationData();
+		// if state is deleteSubmit then delete infos about adaptor else show next state
+		if (state === "deleteSubmit") {
+			resetRegistrationData();
 		} else {
 			setState(states[state].nextState[1] as keyof typeof states);
 		}
 	};
 
 	const fetchRegistrationInfos = async () => {
-		let registrationInfo = await fetchAdopterRegistration();
+		const registrationInfo = await fetchAdopterRegistration();
 
 		// merge response into initial values for formik
 		setInitialValues({ ...initialValues, ...registrationInfo });
@@ -163,7 +163,7 @@ const RegistrationModalContent = () => {
 		)}
 
 		{/* shows terms of use */}
-		{state === "legal_info" && (
+		{state === "legalInfo" && (
 			<ModalContent modalContentClassName="modal-content active">
 				<div>
 					<div className="row">
@@ -195,7 +195,7 @@ const RegistrationModalContent = () => {
 		)}
 
 		{/* shows delete confirmation */}
-		{state === "delete_submit" && (
+		{state === "deleteSubmit" && (
 			<ModalContent modalContentClassName="modal-content active">
 				<p>
 					<span>
@@ -217,7 +217,7 @@ const RegistrationModalContent = () => {
 		)}
 
 		{/* shows thank you after registration */}
-		{state === "thank_you" && (
+		{state === "thankYou" && (
 			<ModalContent modalContentClassName="modal-content active">
 				<div className="registration-header">
 					<h2>
@@ -695,6 +695,9 @@ const RegistrationModalContent = () => {
 								: state === "form" ?
 									<button
 										disabled={
+											!(formik.isValid && formik.values.agreedToPolicy)
+										}
+										aria-disabled={
 											!(formik.isValid && formik.values.agreedToPolicy)
 										}
 										onClick={() => onClickContinue()}

@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field } from "../../../shared/Field";
 import RenderField from "../../../shared/wizard/RenderField";
@@ -23,7 +22,7 @@ const NewMetadataPage = ({
 	return (
 		<ModalContentTable>
 			{
-				//iterate through metadata catalogs
+				// iterate through metadata catalogs
 				!!metadataCatalogs &&
 				metadataCatalogs.length > 0 &&
 				metadataCatalogs.map((catalog, index) => (

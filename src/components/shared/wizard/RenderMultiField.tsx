@@ -166,7 +166,6 @@ const EditMultiSelect = ({
 						onChange={(e) => handleChange(e)}
 						placeholder={t("EDITABLE.MULTI.PLACEHOLDER")}
 						list="data-list"
-						autoFocus={true}
 					/>
 					{/* Display possible options for values as some kind of dropdown */}
 					<datalist id="data-list">

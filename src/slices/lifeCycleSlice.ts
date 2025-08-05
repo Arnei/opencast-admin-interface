@@ -65,7 +65,7 @@ const initialState: LifeCycleState = {
 
 export const fetchLifeCyclePolicies = createAppAsyncThunk("lifeCycle/fetchLifeCyclePolicies", async (_, { getState }) => {
 	const state = getState();
-	let params = getURLParams(state, "lifeCyclePolicies");
+	const params = getURLParams(state, "lifeCyclePolicies");
 	const res = await axios.get("/api/lifecyclemanagement/policies", { params: params });
 	return res.data;
 });
@@ -85,7 +85,7 @@ export const postNewLifeCyclePolicy = createAppAsyncThunk("lifeCycle/postNewLife
 	},
 	{ dispatch },
 ) => {
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 
 	// Format filter collections
 	// for (const filterName in policy.targetFilters) {

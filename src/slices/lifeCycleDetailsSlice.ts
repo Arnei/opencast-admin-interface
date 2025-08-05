@@ -50,7 +50,7 @@ export const fetchLifeCyclePolicyDetails = createAppAsyncThunk("lifeCyclePolicyD
 	data.actionParameters = JSON.parse(data.actionParameters);
 	data.targetFilters = JSON.parse(data.targetFilters);
 
-	let accessPolicies : {
+	const accessPolicies : {
 		id: number,
 		allow: boolean,
 		role: string,
@@ -59,8 +59,8 @@ export const fetchLifeCyclePolicyDetails = createAppAsyncThunk("lifeCyclePolicyD
 	let acls: TransformedAcl[] = [];
 
 		const json = accessPolicies;
-		let newPolicies: { [key: string]: TransformedAcl } = {};
-		let policyRoles: string[] = [];
+		const newPolicies: { [key: string]: TransformedAcl } = {};
+		const policyRoles: string[] = [];
 		for (let i = 0; i < json.length; i++) {
 			const policy: Ace = json[i];
 			if (!newPolicies[policy.role]) {
@@ -114,7 +114,7 @@ export const updateLifeCyclePolicyAccess = createAppAsyncThunk("lifeCyclePolicyD
 }, { dispatch }) => {
 	const { id, policies } = params;
 
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 	data.append("accessControlEntries", JSON.stringify(policies.acl.ace));
 
 	axios.put(`/api/lifecyclemanagement/policies/${id}`, data)
@@ -131,7 +131,7 @@ export const updateLifeCyclePolicyAccess = createAppAsyncThunk("lifeCyclePolicyD
 });
 
 export const updateLifeCyclePolicy = createAppAsyncThunk("lifeCyclePolicyDetails/updateLifeCyclePolicy", async (policy: LifeCyclePolicy, { dispatch }) => {
-	let data = new URLSearchParams();
+	const data = new URLSearchParams();
 
 	Object.entries(policy).forEach(([key, value]) => {
 		let stringified = value;

@@ -56,7 +56,7 @@ const LifeCyclePolicies = () => {
 		loadLifeCyclePolicies();
 
 		// Fetch policies repeatedly
-		let fetchInterval = setInterval(loadLifeCyclePolicies, 5000);
+		const fetchInterval = setInterval(loadLifeCyclePolicies, 5000);
 
 		return () => {
 			allowLoadIntoTable = false;

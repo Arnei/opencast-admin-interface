@@ -61,7 +61,7 @@ const LifeCyclePolicyGeneralTab = ({
 
 	// set current values of metadata fields as initial values
 	const getInitialValues = (policy: LifeCyclePolicy) => {
-		let initialValues: LifeCyclePolicy & {workflowParameters: ConfigurationPanelField[], targetFiltersArray: (TargetFilter & { filter: string })[]} = {
+		const initialValues: LifeCyclePolicy & {workflowParameters: ConfigurationPanelField[], targetFiltersArray: (TargetFilter & { filter: string })[]} = {
 			workflowParameters: [],
 			targetFiltersArray: [],
 			...policy,

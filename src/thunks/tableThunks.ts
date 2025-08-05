@@ -127,7 +127,7 @@ export const loadLifeCyclePoliciesIntoTable = (): AppThunk => (dispatch, getStat
 
 	const pages = calculatePages(total / pagination.limit, pagination.offset);
 
-	let tableData = {
+	const tableData = {
 		resource: "lifeCyclePolicies" as const,
 		rows: resource.map(obj => {
 			return { ...obj, selected: false };

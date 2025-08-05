@@ -58,7 +58,7 @@ const NewLifeCyclePolicyWizard = ({
 		setSnapshot(values);
 
 		// set page as completely filled out
-		let updatedPageCompleted = pageCompleted;
+		const updatedPageCompleted = pageCompleted;
 		updatedPageCompleted[page] = true;
 		setPageCompleted(updatedPageCompleted);
 
@@ -164,7 +164,7 @@ const NewLifeCyclePolicyWizard = ({
 const getInitialValues = (
 	user: UserInfoState,
 ) => {
-	let initialValues = initialFormValuesNewLifeCyclePolicy;
+	const initialValues = initialFormValuesNewLifeCyclePolicy;
 
 	initialValues["policies"] = [
 		{

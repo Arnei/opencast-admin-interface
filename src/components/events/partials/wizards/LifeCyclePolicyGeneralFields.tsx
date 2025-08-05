@@ -449,7 +449,9 @@ const DropdownField = ({
 			required={true}
 			handleChange={element => {
 				setFieldValue(clearFieldName, undefined);
-				element && setFieldValue(field.name, element.value);
+				if (element) {
+					setFieldValue(field.name, element.value);
+				}
 			}}
 			placeholder={`-- ${t("SELECT_NO_OPTION_SELECTED")} --`}
 			creatable={creatable}

@@ -195,7 +195,7 @@ const Table = ({
 						{/* Only show if multiple selection is possible */}
 						{multiSelect ? (
 							<th className="small">
-								{/*Checkbox to select all rows*/}
+								{/* Checkbox to select all rows*/}
 								<input
 									ref={selectAllCheckboxRef}
 									type="checkbox"
@@ -249,13 +249,13 @@ const Table = ({
 							</td>
 						</tr>
 					) : !(table.status === "loading") && rows.length === 0 ? (
-						//Show if no results and table is not loading
+						// Show if no results and table is not loading
 						<tr>
 							<td colSpan={table.columns.length}>{t("TABLE_NO_RESULT")}</td>
 						</tr>
 					) : (
 						!(table.status === "loading") &&
-						//Repeat for each row in table.rows
+						// Repeat for each row in table.rows
 						rows.map((row, key) => (
 							<tr key={key}>
 								{/* Show if multi selection is possible */}
@@ -279,7 +279,7 @@ const Table = ({
 									) : !column.template &&
 									  column.translate &&
 									  !column.deactivated ? (
-										//Show only if column not template, translate, not deactivated
+										// Show only if column not template, translate, not deactivated
 										<td key={key}>{t(tryToGetValueForKeyFromRowAsString(row, column.name) as ParseKeys)}</td>
 									) : !!column.template &&
 									  !column.deactivated &&
@@ -331,7 +331,8 @@ const Table = ({
 				{/* Pagination and navigation trough pages */}
 				<div className="pagination">
 					<ButtonLikeAnchor
-						extraClassName={cn("prev", { disabled: !isNavigatePrevious() })}
+						className={cn("prev", { disabled: !isNavigatePrevious() })}
+						aria-disabled={!isNavigatePrevious()}
 						onClick={() => {
 							dispatch(goToPage(pageOffset - 1));
 							forceDeselectAll();
@@ -341,21 +342,28 @@ const Table = ({
 					</ButtonLikeAnchor>
 					{directAccessible.map((page, key) =>
 						page.active ? (
-							<ButtonLikeAnchor key={key} extraClassName="active">
+							<ButtonLikeAnchor key={key}
+								className="active"
+								aria-label={t("TABLE_CURRENT", { pageNumber: page.label })}
+							>
 								{page.label}
 							</ButtonLikeAnchor>
 						) : (
-							<ButtonLikeAnchor key={key} onClick={() => {
-								dispatch(goToPage(page.number));
-								forceDeselectAll();
-							}}>
+							<ButtonLikeAnchor key={key}
+								aria-label={t("TABLE_NUMBERED", { pageNumber: page.label })}
+								onClick={() => {
+									dispatch(goToPage(page.number));
+									forceDeselectAll();
+								}}
+							>
 								{page.label}
 							</ButtonLikeAnchor>
 						),
 					)}
 
 					<ButtonLikeAnchor
-						extraClassName={cn("next", { disabled: !isNavigateNext() })}
+						className={cn("next", { disabled: !isNavigateNext() })}
+						aria-disabled={!isNavigateNext()}
 						onClick={() => {
 							dispatch(goToPage(pageOffset + 1));
 							forceDeselectAll();

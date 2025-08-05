@@ -91,13 +91,13 @@ const EventDetailsAssetsTab = ({
 		padding: "14px 5px",
 		fontWeight: "600",
 		minWidth: "100px",
-		color: "#5d7589",
+		color: "#435263",
 	};
 
 	const assetsTabInactive = {
 		padding: "14px 5px",
 		minWidth: "100px",
-		color: "#92a0ab",
+		color: "#646e75",
 	};
 
 	useEffect(() => {
@@ -168,7 +168,7 @@ const EventDetailsAssetsTab = ({
 														user,
 													) && (
 														<ButtonLikeAnchor
-															extraClassName="details-link"
+															className="details-link"
 															onClick={() =>
 																openSubTab("add-asset")
 															}
@@ -192,7 +192,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.attachments > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("asset-attachments")
 														}
@@ -218,7 +218,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.catalogs > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("asset-catalogs")
 														}
@@ -244,7 +244,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.media > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() => openSubTab("asset-media")}
 													>
 														{
@@ -268,7 +268,7 @@ const EventDetailsAssetsTab = ({
 											<td>
 												{assets.publications > 0 && (
 													<ButtonLikeAnchor
-														extraClassName="details-link"
+														className="details-link"
 														onClick={() =>
 															openSubTab("asset-publications")
 														}

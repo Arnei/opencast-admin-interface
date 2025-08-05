@@ -1,7 +1,7 @@
 import React from "react";
 import EventDetailsTabHierarchyNavigation from "./EventDetailsTabHierarchyNavigation";
 import Notifications from "../../../shared/Notifications";
-import { style_button_spacing } from "../../../../utils/eventDetailsUtils";
+import { styleButtonSpacing } from "../../../../utils/eventDetailsUtils";
 import { Formik, FormikProps } from "formik";
 import { translateOverrideFallback } from "../../../../utils/utils";
 import { useAppDispatch, useAppSelector } from "../../../../store";
@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { getUploadAssetOptions } from "../../../../selectors/eventDetailsSelectors";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import BaseButton from "../../../shared/BaseButton";
 
 /**
  * This component manages the add asset sub-tab for assets tab of event details modal
@@ -111,7 +112,7 @@ const EventDetailsAssetsAddAsset = ({
 															)}
 														</div>
 													</td>
-													{/*Button to remove asset*/}
+													{/* Button to remove asset*/}
 													<td className="fit">
 														<ButtonLikeAnchor
 															className="remove"
@@ -132,14 +133,14 @@ const EventDetailsAssetsAddAsset = ({
 
 								{/* add asset button */}
 								<footer>
-									<button
+									<BaseButton
 										className="submit"
-										style={style_button_spacing}
+										style={styleButtonSpacing}
 										type="submit"
 										onClick={() => formik.handleSubmit()}
 									>
 										{t("EVENTS.EVENTS.NEW.UPLOAD_ASSET.ADD")}
-									</button>
+									</BaseButton>
 								</footer>
 							</div>
 						)}

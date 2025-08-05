@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import _ from "lodash";
 import {
 	getSeriesDetailsExtendedMetadata,
@@ -28,6 +28,7 @@ import { handleTobiraError } from "./shared/tobiraErrors";
  */
 export type TobiraData = {
 	baseURL: string,
+	id: string,
 	hostPages: TobiraPage[],
 };
 
@@ -91,13 +92,14 @@ const initialState: SeriesDetailsState = {
 	tobiraTab: "main",
 	tobiraData: {
 		baseURL: "",
+		id: "",
 		hostPages: [],
 	},
 };
 
 // fetch metadata of certain series from server
 export const fetchSeriesDetailsMetadata = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsMetadata", async (id: Series["id"], { rejectWithValue }) => {
-	const res = await axios.get(`/admin-ng/series/${id}/metadata.json`);
+	const res = await axios.get<MetadataCatalog[]>(`/admin-ng/series/${id}/metadata.json`);
 	const metadataResponse = res.data;
 
 	const mainCatalog = "dublincore/series";
@@ -122,7 +124,14 @@ export const fetchSeriesDetailsMetadata = createAppAsyncThunk("seriesDetails/fet
 
 // fetch acls of certain series from server
 export const fetchSeriesDetailsAcls = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsAcls", async (id: Series["id"], { dispatch }) => {
-	const res = await axios.get(`/admin-ng/series/${id}/access.json`);
+	type FetchSeriesDetailsAcl = {
+		series_access: {
+			acl: Omit<TransformedAcl, "user">[]
+			current_acl: number
+			locked: boolean
+		},
+	}
+	const res = await axios.get<FetchSeriesDetailsAcl>(`/admin-ng/series/${id}/access.json`);
 	const response = res.data;
 
 	if (response.series_access.locked) {
@@ -137,12 +146,12 @@ export const fetchSeriesDetailsAcls = createAppAsyncThunk("seriesDetails/fetchSe
 		);
 	}
 
-	return { acl: response.series_access.acl, current_acl: response.series_access.current_acl };
+	return { acl: response.series_access.acl, currentAcl: response.series_access.current_acl };
 });
 
 // fetch theme of certain series from server
 export const fetchSeriesDetailsTheme = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsTheme", async (id: Series["id"]) => {
-	const res = await axios.get(`/admin-ng/series/${id}/theme.json`);
+	const res = await axios.get<{ [key: string]: string }>(`/admin-ng/series/${id}/theme.json`);
 	const themeResponse = res.data;
 
 	let seriesTheme: SeriesDetailsState["theme"] = null;
@@ -158,7 +167,7 @@ export const fetchSeriesDetailsTheme = createAppAsyncThunk("seriesDetails/fetchS
 
 // fetch names of possible themes from server
 export const fetchSeriesDetailsThemeNames = createAppAsyncThunk("seriesDetails/fetchSeriesDetailsThemeNames", async () => {
-	const res = await axios.get("/admin-ng/resources/THEMES.NAME.json");
+	const res = await axios.get<{ [key: string]: string }>("/admin-ng/resources/THEMES.NAME.json");
 	const response = res.data;
 
 	// transform response for further use
@@ -307,7 +316,7 @@ export const updateSeriesTheme = createAppAsyncThunk("seriesDetails/updateSeries
 		data.append("themeId", themeId);
 
 		axios
-			.put(`/admin-ng/series/${id}/theme`, data)
+			.put<{ [key: string]: string }>(`/admin-ng/series/${id}/theme`, data)
 			.then(response => {
 				const themeResponse = response.data;
 
@@ -334,8 +343,8 @@ export const fetchSeriesDetailsTobira = createAppAsyncThunk("seriesDetails/fetch
 	id: Series["id"],
 	{ dispatch },
 ) => {
-	const res = await axios.get(`/admin-ng/series/${id}/tobira/pages`)
-		.catch(response => handleTobiraError(response, dispatch));
+	const res = await axios.get<SeriesDetailsState["tobiraData"]>(`/admin-ng/series/${id}/tobira/pages`)
+		.catch((error: AxiosError) => handleTobiraError(error, dispatch));
 
 	if (!res) {
 		throw new Error();
@@ -371,7 +380,7 @@ export const updateSeriesTobiraPath = createAppAsyncThunk("series/updateSeriesTo
 	}
 
 	try {
-		const response = await axios.post(`/admin-ng/series/${params.seriesId}/tobira/path`, tobiraParams.toString(), {
+		const response = await axios.post<unknown>(`/admin-ng/series/${params.seriesId}/tobira/path`, tobiraParams.toString(), {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
@@ -403,7 +412,7 @@ export const removeSeriesTobiraPath = createAppAsyncThunk("series/removeSeriesTo
 	const path = encodeURIComponent(params.currentPath);
 
 	try {
-		const response = await axios.delete(
+		const response = await axios.delete<unknown>(
 			`/admin-ng/series/${params.seriesId}/tobira/${path}`,
 		);
 
@@ -529,12 +538,12 @@ const seriesDetailsSlice = createSlice({
 			})
 			.addCase(fetchSeriesDetailsAcls.fulfilled, (state, action: PayloadAction<{
 				acl: SeriesDetailsState["acl"],
-				current_acl: SeriesDetailsState["policyTemplateId"]
+				currentAcl: SeriesDetailsState["policyTemplateId"]
 			}>) => {
 				state.statusAcl = "succeeded";
 				const seriesDetailsAcls = action.payload;
 				state.acl = seriesDetailsAcls.acl;
-				state.policyTemplateId = seriesDetailsAcls.current_acl;
+				state.policyTemplateId = seriesDetailsAcls.currentAcl;
 			})
 			.addCase(fetchSeriesDetailsAcls.rejected, (state, action) => {
 				state.statusAcl = "failed";
@@ -602,7 +611,7 @@ const seriesDetailsSlice = createSlice({
 				state.statusStatisticsValue = "loading";
 			})
 			.addCase(fetchSeriesStatisticsValueUpdate.fulfilled, (state, action: PayloadAction<
-				any
+				SeriesDetailsState["statistics"]
 			>) => {
 				state.statusStatisticsValue = "succeeded";
 				state.statistics = action.payload;

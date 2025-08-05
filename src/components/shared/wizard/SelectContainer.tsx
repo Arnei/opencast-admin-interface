@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { useField } from "formik";
-import ButtonLikeAnchor from "../ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
+import SearchContainer from "../SearchContainer";
+import BaseButton from "../BaseButton";
 
 type Item = {
 	name: string
+	id?: string
 	[key: string]: unknown
 }
 
@@ -30,14 +32,14 @@ const SelectContainer = ({
 
 	// Formik hook for getting data of specific form field
 	// DON'T delete field and meta, hook works with indices not variable names
-	const [field, , helpers] = useField(formikField);
+	const [field, , helpers] = useField<Item[]>(formikField);
 
 	// Search field for filter options/items
 	const [searchField, setSearchField] = useState("");
 	const [defaultItems, setDefaultItems] = useState<Item[]>([]);
 	// arrays an item can be part of depending on its state
 	const [items, setItems] = useState<Item[]>([]);
-	const [selectedItems, setSelectedItems] = useState(field.value);
+	const [selectedItems, setSelectedItems] = useState<Item[]>(field.value);
 	const [markedForAddition, setMarkedForAddition] = useState<string[]>([]);
 	const [markedForRemoval, setMarkedForRemoval] = useState<string[]>([]);
 
@@ -66,10 +68,6 @@ const SelectContainer = ({
 		setDefaultItems(initialItems);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const disabledStyle = {
-		backgroundColor: "#eeeff0",
-	};
 
 	const disabledSelectStyle = {
 		backgroundColor: "#eeeff0",
@@ -140,7 +138,7 @@ const SelectContainer = ({
 		setMarkedForAddition([]);
 		// update items considered for search bar
 		setDefaultItems(editableDefaultItems);
-		//update formik field
+		// update formik field
 		helpers.setValue(editableSelectedItems);
 	};
 
@@ -203,24 +201,17 @@ const SelectContainer = ({
 							{t(`${resource.label}.LEFT` as ParseKeys)}
 							<i className="required" />
 						</label>
-						{/*Search*/}
+						{/* Search*/}
 						{resource.searchable && (
-							<div className="search-container">
-								{/* search bar */}
-								<ButtonLikeAnchor extraClassName="clear" onClick={() => clearSearchField()} />
-								<input
-									type="text"
-									id="search"
-									className="search"
-									disabled={!manageable}
-									style={manageable ? {} : disabledStyle}
-									placeholder={t("TABLE_FILTERS.PLACEHOLDER")}
-									onChange={e => handleChangeSearch(e.target.value)}
-									value={searchField}
-								/>
-							</div>
+							<SearchContainer
+								value={searchField}
+								handleChange={handleChangeSearch}
+								clearSearchField={clearSearchField}
+								isDisabled={!manageable}
+								style={{ marginTop: "10px" }}
+							/>
 						)}
-						{/*Select with options provided by backend*/}
+						{/* Select with options provided by backend*/}
 						<select
 							multiple
 							className="available"
@@ -238,21 +229,22 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("submit", {
 									disabled: !markedForAddition.length || !manageable,
 								})}
+								aria-disabled={!markedForAddition.length || !manageable}
 								onClick={() => handleClickAdd()}
 							>
 								{t(`${resource.label}.ADD` as ParseKeys)}
-							</button>
+							</BaseButton>
 						</div>
 					</div>
 				</div>
 
 				<div className="exchange-icon" />
 
-				{/*Select with options chosen by user*/}
+				{/* Select with options chosen by user*/}
 				<div className="multi-select-col">
 					<div className="row">
 						<label>{t(`${resource.label}.RIGHT` as ParseKeys)}</label>
@@ -264,7 +256,6 @@ const SelectContainer = ({
 							onChange={e => handleChangeRemove(e)}
 							value={markedForRemoval}
 						>
-							{/* @ts-expect-error TS(7006): Parameter 'item' implicitly has an 'any' type. */}
 							{selectedItems.map((item, key) => (
 								<option key={key} value={item.name}>
 									{item.name}
@@ -274,14 +265,15 @@ const SelectContainer = ({
 					</div>
 					<div className="row">
 						<div className="button-container">
-							<button
+							<BaseButton
 								className={cn("remove", {
 									disabled: !markedForRemoval.length || !manageable,
 								})}
+								aria-disabled={!markedForRemoval.length || !manageable}
 								onClick={() => handleClickRemove()}
 							>
 								{t(`${resource.label}.REMOVE` as ParseKeys)}
-							</button>
+							</BaseButton>
 						</div>
 					</div>
 				</div>

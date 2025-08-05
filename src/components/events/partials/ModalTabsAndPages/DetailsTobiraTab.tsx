@@ -15,6 +15,7 @@ import ConfirmModal from "../../../shared/ConfirmModal";
 import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
 import { ModalHandle } from "../../../shared/modals/Modal";
 import { fetchEventDetailsTobira } from "../../../../slices/eventDetailsSlice";
+import BaseButton from "../../../shared/BaseButton";
 
 
 export type TobiraTabHierarchy = "main" | "edit-path";
@@ -58,7 +59,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 
 	const i18nKey = kind === "series" ? "SERIES" : "EVENTS";
 	const prefix = kind === "series" ? "s" : "v";
-	const directTobiraLink = tobiraData.baseURL + `/!${prefix}/:` + id;
+	const directTobiraLink = tobiraData.baseURL + `/!${prefix}/` + (tobiraData.id.length > 2 ? tobiraData.id.substring(2) : `:${id}`);
 
 	const getBreadcrumbs = (currentPage: TobiraPage) => {
 		const homepage = {
@@ -147,7 +148,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 						<a href={directTobiraLink}>
 							{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.DIRECT_LINK`)}
 						</a>
-						<button
+						<BaseButton
 							className="tobira-copy-direct-link"
 							onClick={() => copyTobiraDirectLink()}
 							aria-label={t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.COPY_DIRECT_LINK`)}
@@ -157,7 +158,7 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 								className="fa fa-copy"
 								title={t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.COPY_DIRECT_LINK`)}
 							/>
-						</button>
+						</BaseButton>
 					</div>
 					{kind === "series" && <p className="tab-description">
 						{t("EVENTS.SERIES.DETAILS.TOBIRA.DESCRIPTION")}
@@ -202,6 +203,7 @@ type TobiraTableProps = {
 const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTableProps) => {
 	const { t } = useTranslation();
 	const deleteConfirmationModalRef = useRef<ModalHandle>(null);
+	const prefix = i18nKey === "SERIES" ? "s" : "v";
 
 	return <div className="obj">
 		<header>{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.PAGES`)}</header>
@@ -212,7 +214,7 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 						{t(`EVENTS.${i18nKey}.DETAILS.TOBIRA.NOT_MOUNTED`)}
 						{i18nKey === "SERIES" && <ButtonLikeAnchor
 							style={{ margin: 5 }}
-							extraClassName="edit fa fa-pencil-square pull-right"
+							className="edit fa fa-pencil-square pull-right"
 							onClick={() => openSubTab("edit-path")}
 							tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.MOUNT_SERIES"
 						/>}
@@ -220,7 +222,8 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 				</tr>}
 				{tobiraData.hostPages.map(hostPage => <tr key={hostPage.path}>
 					<td>
-						<a href={tobiraData.baseURL + hostPage.path}>
+						<a href={tobiraData.baseURL + hostPage.path +
+							(tobiraData.id.length > 2 ? `/${prefix}/${tobiraData.id.substring(2)}` : "")}>
 							{hostPage.path !== "/" && <>
 								<span className="tobira-page-separator">/</span>
 								{hostPage.ancestors.map((ancestor, key) => (
@@ -243,12 +246,12 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
 								onClick={() => deleteConfirmationModalRef.current?.open()}
-								extraClassName="remove pull-right"
+								className="remove pull-right"
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.REMOVE_PATH"
 							/>
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
-								extraClassName="edit fa fa-pencil-square pull-right"
+								className="edit fa fa-pencil-square pull-right"
 								onClick={() => openSubTab("edit-path", hostPage)}
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.EDIT_PATH"
 							/>

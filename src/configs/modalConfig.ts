@@ -48,7 +48,7 @@ export const initialFormValuesNewEvents: {
 	scheduleEndMinute: "",
 	repeatOn: [],
 	location: "",
-	//deviceInputs: [],
+	// deviceInputs: [],
 	processingWorkflow: "",
 	configuration: {},
 	aclTemplate: "",

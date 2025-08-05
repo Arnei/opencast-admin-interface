@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import cn from "classnames";
 import { ParseKeys } from "i18next";
+import BaseButton from "./BaseButton";
 
 const NavigationButtons = ({
 	isFirst,
@@ -34,24 +35,26 @@ const NavigationButtons = ({
 	return (
 		<footer>
 			{isLast ? (
-				<button
+				<BaseButton
 					type="submit"
 					className={cn(submitClassName, submitActiveClassName)}
 					disabled={disabled}
+					aria-disabled={disabled}
 					onClick={() => {
 						if (nextPage) {
-							nextPage()
+							nextPage();
 						}
 					}}
 					tabIndex={100}
 				>
 					{t(nextTranslationString ?? "WIZARD.CREATE")}
-				</button>
+				</BaseButton>
 			) : (
-				<button
+				<BaseButton
 					type="submit"
 					className={cn(submitClassName, submitActiveClassName)}
 					disabled={disabled}
+					aria-disabled={disabled}
 					onClick={() => {
 						if (nextPage) {
 							nextPage();
@@ -60,20 +63,20 @@ const NavigationButtons = ({
 					tabIndex={100}
 				>
 					{t(nextTranslationString ?? "WIZARD.NEXT_STEP")}
-				</button>
+				</BaseButton>
 			)}
 			{!isFirst && (
-				<button
+				<BaseButton
 					className="cancel"
 					onClick={() => {
 						if (previousPage) {
-							previousPage()
+							previousPage();
 						}
 					}}
 					tabIndex={101}
 				>
 					{t(previousTranslationString ?? "WIZARD.BACK")}
-				</button>
+				</BaseButton>
 			)}
 		</footer>
 	);

@@ -103,7 +103,8 @@
 			"SELECTED_COLUMNS": "עמודות נבחרות",
 			"FOOTER_TEXT": "הסדר והבחירה יישמרו באופן אוטומטי. הקש \"{{resetTranslation}}\" כדי לשחזר את התצוגה המהווה ברירת מחדל.",
 			"ADD_COLUMN": "Add column",
-			"REMOVE_COLUMN": "Remove column"
+			"REMOVE_COLUMN": "Remove column",
+			"DRAG_HANDLE_USAGE_INSTRUCTIONS": "Press space bar to start a drag. When dragging you can use the arrow keys to move the item around and escape to cancel. Some screen readers may require you to be in focus mode or to use your pass through key"
 		}
 	},
 	"CONFIRMATIONS": {
@@ -208,6 +209,8 @@
 		"SERIES_THEME_REPROCESS_EXISTING_EVENTS": "האירועים הקיימים בסדרה יצטרכו לעבור עיבוד",
 		"SERIES_ACL_LOCKED": "עריכת מדיניות גישה אסורה בזמן שפעולות רצות באירועים שהם חלק מהסדרה",
 		"EVENT_ACL_MISSING_READWRITE_ROLE": "המדיניות גישה דורשת תפקיד אחד לפחות עם הרשאות קריאה וכתיבה.",
+		"METADATA_SAVED": "The metadata has been saved.",
+		"METADATA_NOT_SAVED": "The metadata has NOT been saved!",
 		"THEME_NAME_EMPTY": "השם אינו יכול להשאר ריק",
 		"BUMPER_UPLOAD_ERROR": "שגיאה בזמן האלעת מדיה",
 		"THEME_CREATED": "ערכת הנושא נוצרה",
@@ -985,7 +988,6 @@
 					"ACTIONS": "פעולות",
 					"DETAILS": "פרטים",
 					"DESCRIPTION": "תאור",
-					"MORE_INFO": "מידע נוסף",
 					"ID": "מזהה",
 					"TYPE": "סוג",
 					"TITLE": "כותרת",
@@ -1025,11 +1027,13 @@
 				},
 				"WORKFLOW_DETAILS": {
 					"TITLE": "פרטי מהלך-עבודה",
-					"CONFIGURATION": "הגדרות מהלך-עבודה"
+					"CONFIGURATION": "הגדרות מהלך-עבודה",
+					"OPERATIONS": "Operations",
+					"CURRENT_OPERATION": "Current workflow operation"
 				},
 				"WORKFLOW_OPERATIONS": {
 					"TITLE": "פעולות מהלך-עבודה",
-					"DETAILS_LINK": "תהליכים",
+					"DETAILS_LINK": "All operations",
 					"TABLE_HEADERS": {
 						"TITLE": "כותרת",
 						"STATUS": "מצב",
@@ -1089,7 +1093,8 @@
 						"DATE": "תאריך",
 						"HOST": "מארח מעבד",
 						"TYPE": "סוג שירות",
-						"TECHNICAL_DETAILS": "פרטים טכניים"
+						"TECHNICAL_DETAILS": "פרטים טכניים",
+						"OPERATION": "Operation the error occured in"
 					}
 				}
 			}
@@ -1177,7 +1182,10 @@
 				"TOOLTIP": {
 					"SERIES": "סנן אירועים עבור סדרה זו",
 					"DETAILS": "פתיחת פרטי הסדרה",
-					"DELETE": "מחיקת הסדרה"
+					"DELETE": "מחיקת הסדרה",
+					"CREATION": "Filter for this creation date",
+					"ORGANIZER": "Filter for this organizer",
+					"CONTRIBUTORS": "Filter for this contributor"
 				}
 			},
 			"DETAILS": {
@@ -1986,6 +1994,8 @@
 	"TABLE_EDIT": "ערוך",
 	"TABLE_NEXT": "Next page",
 	"TABLE_PREVIOUS": "Previous page",
+	"TABLE_CURRENT": "Current page {{pageNumber}}",
+	"TABLE_NUMBERED": "Go to page {{pageNumber}}",
 	"DASHBOARD": {
 		"RUNNING": "רץ",
 		"FINISHED": "הסתיים",
@@ -1993,7 +2003,8 @@
 		"FAILED": "נכשל",
 		"FINISHED_WITH_COMMENTS": "משימות",
 		"SCHEDULED": "מתוזמן",
-		"RECORDING": "מקליט"
+		"RECORDING": "מקליט",
+		"BUTTON_TOOLTIP": "Apply filter {{filterName}} to the table"
 	},
 	"HOTKEYS": {
 		"CHEAT_SHEET": {

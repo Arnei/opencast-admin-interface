@@ -1,6 +1,6 @@
 import { PayloadAction, SerializedError, createSlice } from "@reduxjs/toolkit";
 import { eventsTableConfig } from "../configs/tableConfigs/eventsTableConfig";
-import axios, { AxiosProgressEvent } from "axios";
+import axios, { AxiosError, AxiosProgressEvent } from "axios";
 import moment from "moment-timezone";
 import {
 	getURLParams,
@@ -238,6 +238,14 @@ const initialState: EventState = {
 	},
 };
 
+export type FetchEvents = {
+	total: number,
+	count: number,
+	offset: number,
+	limit: number,
+	results: EventState["results"],
+};
+
 // fetch events from server
 export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, { getState }) => {
 	const state = getState();
@@ -261,7 +269,7 @@ export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, {
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get("/admin-ng/event/events.json", { params: params });
+	const res = await axios.get<FetchEvents>("/admin-ng/event/events.json", { params: params });
 	const response = res.data;
 
 	for (let i = 0; response.results.length > i; i++) {
@@ -277,9 +285,9 @@ export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, {
 });
 
 // fetch event metadata from server
-export const fetchEventMetadata = createAppAsyncThunk('events/fetchEventMetadata', async (_, { rejectWithValue }) => {
-	const data = await axios.get("/admin-ng/event/new/metadata");
-	const response = await data.data;
+export const fetchEventMetadata = createAppAsyncThunk("events/fetchEventMetadata", async (_, { rejectWithValue }) => {
+	const data = await axios.get<MetadataCatalog[]>("/admin-ng/event/new/metadata");
+	const response = data.data;
 
 	const mainCatalog = "dublincore/episode";
 	let metadata: EventState["metadata"] | undefined = undefined;
@@ -304,11 +312,17 @@ export const fetchEventMetadata = createAppAsyncThunk('events/fetchEventMetadata
 });
 
 // get merged metadata for provided event ids
-export const postEditMetadata = createAppAsyncThunk('events/postEditMetadata', async (ids: Event["id"][]) => {
+export const postEditMetadata = createAppAsyncThunk("events/postEditMetadata", async (ids: Event["id"][]) => {
+	type PostEditMetadata = {
+		metadata: MetadataField[],
+		notFound: string[],
+		merged: string[],
+		runningWorkflow: string[],
+	};
 	const formData = new URLSearchParams();
 	formData.append("eventIds", JSON.stringify(ids));
 
-	const data = await axios.post(
+	const data = await axios.post<PostEditMetadata>(
 		"/admin-ng/event/events/metadata.json",
 		formData,
 		{
@@ -317,7 +331,7 @@ export const postEditMetadata = createAppAsyncThunk('events/postEditMetadata', a
 			},
 		},
 	);
-	const response = await data.data;
+	const response = data.data;
 
 	// transform response
 	const metadata = transformMetadataFields(response.metadata)
@@ -377,41 +391,44 @@ export const updateBulkMetadata = createAppAsyncThunk("events/updateBulkMetadata
 		})
 		.catch(err => {
 			console.error(err);
-			// if an internal server error occurred, then backend sends further information
-			if (err.status === 500) {
-				// backend should send data containing further information about occurred internal error
-				// if this error data is undefined then an unexpected error occurred
-				if (!err.data) {
+			if (axios.isAxiosError<{ updated: string[], updateFailures: string[], notFound: string[] }>(err) && err.response) {
+				// if an internal server error occurred, then backend sends further information
+				if (err.status === 500) {
+					// backend should send data containing further information about occurred internal error
+					// if this error data is undefined then an unexpected error occurred
+					const data = err.response.data;
+					if (!data) {
+						dispatch(
+							addNotification({ type: "error", key: "BULK_METADATA_UPDATE.UNEXPECTED_ERROR" }),
+						);
+					} else {
+						if (data.updated && data.updated.length === 0) {
+							dispatch(
+								addNotification({ type: "error", key: "BULK_METADATA_UPDATE.NO_EVENTS_UPDATED" }),
+							);
+						}
+						if (data.updateFailures && data.updateFailures.length > 0) {
+							dispatch(
+								addNotification({
+									type: "warning",
+									key: "BULK_METADATA_UPDATE.SOME_EVENTS_NOT_UPDATED",
+								}),
+							);
+						}
+						if (data.notFound && data.notFound.length > 0) {
+							dispatch(
+								addNotification({
+									type: "warning",
+									key: "BULK_ACTIONS.EDIT_EVENTS_METADATA.REQUEST_ERRORS.NOT_FOUND",
+								}),
+							);
+						}
+					}
+				} else {
 					dispatch(
 						addNotification({ type: "error", key: "BULK_METADATA_UPDATE.UNEXPECTED_ERROR" }),
 					);
-				} else {
-					if (err.data.updated && err.data.updated.length === 0) {
-						dispatch(
-							addNotification({ type: "error", key: "BULK_METADATA_UPDATE.NO_EVENTS_UPDATED" }),
-						);
-					}
-					if (err.data.updateFailures && err.data.updateFailures.length > 0) {
-						dispatch(
-							addNotification({
-								type: "warning",
-								key: "BULK_METADATA_UPDATE.SOME_EVENTS_NOT_UPDATED",
-							}),
-						);
-					}
-					if (err.data.notFound && err.data.notFound.length > 0) {
-						dispatch(
-							addNotification({
-								type: "warning",
-								key: "BULK_ACTIONS.EDIT_EVENTS_METADATA.REQUEST_ERRORS.NOT_FOUND",
-							}),
-						);
-					}
 				}
-			} else {
-				dispatch(
-					addNotification({ type: "error", key: "BULK_METADATA_UPDATE.UNEXPECTED_ERROR" }),
-				);
 			}
 		});
 });
@@ -491,12 +508,12 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 		values.sourceMode === "SCHEDULE_MULTIPLE"
 	) {
 		// Get timezone offset
-		//let offset = getTimezoneOffset();
+		// let offset = getTimezoneOffset();
 
 		// Prepare start date of event for post
 		const startDate = new Date(values.scheduleStartDate);
 		// NOTE: if time zone issues still occur during further testing, try to set times to UTC (-offset)
-		//startDate.setHours((values.scheduleStartHour - offset), values.scheduleStartMinute, 0, 0);
+		// startDate.setHours((values.scheduleStartHour - offset), values.scheduleStartMinute, 0, 0);
 		startDate.setHours(
 			parseInt(values.scheduleStartHour),
 			parseInt(values.scheduleStartMinute),
@@ -513,7 +530,7 @@ export const postNewEvent = createAppAsyncThunk("events/postNewEvent", async (pa
 			endDate = new Date(values.scheduleEndDate);
 		}
 		// NOTE: if time zone issues still occur during further testing, try to set times to UTC (-offset)
-		//endDate.setHours((values.scheduleEndHour - offset), values.scheduleEndMinute, 0, 0);
+		// endDate.setHours((values.scheduleEndHour - offset), values.scheduleEndMinute, 0, 0);
 		endDate.setHours(parseInt(values.scheduleEndHour), parseInt(values.scheduleEndMinute), 0, 0);
 
 		// transform duration into milliseconds
@@ -666,9 +683,9 @@ export const deleteEvent = createAppAsyncThunk("events/deleteEvent", async (id: 
 				dispatch(addNotification({ type: "success", key: "EVENT_WILL_BE_DELETED" }));
 			}
 		})
-		.catch(res => {
+		.catch((error: AxiosError) => {
 			// add error notification depending on status code
-			if (res.status === 401) {
+			if (error.status === 401) {
 				dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED_NOT_AUTHORIZED" }));
 			} else {
 				dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED" }));
@@ -676,7 +693,7 @@ export const deleteEvent = createAppAsyncThunk("events/deleteEvent", async (id: 
 		});
 });
 
-export const deleteMultipleEvent = createAppAsyncThunk('events/deleteMultipleEvent', async (events: Event[], { dispatch }) => {
+export const deleteMultipleEvent = createAppAsyncThunk("events/deleteMultipleEvent", async (events: Event[], { dispatch }) => {
 	const data = [];
 
 	for (const event of events) {
@@ -689,12 +706,12 @@ export const deleteMultipleEvent = createAppAsyncThunk('events/deleteMultipleEve
 		.post("/admin-ng/event/deleteEvents", data)
 		.then(res => {
 			console.info(res);
-			//add success notification
+			// add success notification
 			dispatch(addNotification({ type: "success", key: "EVENTS_DELETED" }));
 		})
 		.catch(res => {
 			console.error(res);
-			//add error notification
+			// add error notification
 			dispatch(addNotification({ type: "error", key: "EVENTS_NOT_DELETED" }));
 		});
 });
@@ -704,6 +721,17 @@ export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", asy
 	fetchNewScheduling: boolean,
 	setFormikValue: (field: string, value: EditedEvents[]) => Promise<void | FormikErrors<any>>
 }, { getState }) => {
+	type FetchScheduling = {
+		eventId: string,
+		agentConfiguration: {
+			"event.title": string,
+			"event.location": string,
+			"capture.device.names": string,
+			"event.series"?: string,
+		},
+		start: string, // Date string
+		end: string, // Date string
+	};
 	const { events, fetchNewScheduling, setFormikValue } = params;
 
 	let editedEvents = [];
@@ -720,12 +748,12 @@ export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", asy
 
 		formData.append("ignoreNonScheduled", JSON.stringify(true));
 
-		const response = await axios.post(
+		const response = await axios.post<FetchScheduling[]>(
 			"/admin-ng/event/scheduling.json",
 			formData,
 		);
 
-		const data = await response.data;
+		const data = response.data;
 
 		// transform data for further use
 		for (const d of data) {
@@ -843,8 +871,8 @@ export const updateScheduledEventsBulk = createAppAsyncThunk("events/updateSched
 				weekday: eventChanges.changedWeekday,
 				agentId: eventChanges.changedLocation,
 				// the following two lines can be commented in, when the possibility of a selection of individual inputs is desired and the backend has been adapted to support it (the word inputs may have to be replaced accordingly)
-				//,
-				//inputs: eventChanges.changedDeviceInputs.join(',')
+				// ,
+				// inputs: eventChanges.changedDeviceInputs.join(',')
 			},
 		});
 	}
@@ -990,7 +1018,7 @@ export const checkForConflicts = async (
 	formData.append("metadata", JSON.stringify(metadata));
 
 	return await axios
-		.post("/admin-ng/event/new/conflicts", formData, {
+		.post<{ title: string, start: string, end: string }[]>("/admin-ng/event/new/conflicts", formData, {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
@@ -1012,20 +1040,22 @@ export const checkForConflicts = async (
 			return conflicts;
 		})
 		.catch(reason => {
-			status = reason.response.status;
-			const conflicts = [];
-			if (status === 409) {
-				const conflictsResponse = reason.response.data;
+			if (axios.isAxiosError<{ title: string, start: string, end: string }[]>(reason) && reason.response) {
+				status = reason.response.status;
+				const conflicts = [];
+				if (status === 409) {
+					const conflictsResponse = reason.response.data;
 
-				for (const conflict of conflictsResponse) {
-					conflicts.push({
-						title: conflict.title,
-						start: conflict.start,
-						end: conflict.end,
-					});
+					for (const conflict of conflictsResponse) {
+						conflicts.push({
+							title: conflict.title,
+							start: conflict.start,
+							end: conflict.end,
+						});
+					}
 				}
+				return conflicts;
 			}
-			return conflicts;
 		});
 };
 
@@ -1060,19 +1090,21 @@ export const checkForSchedulingConflicts = (events: EditedEvents[]) => async (di
 	axios
 		.post("/admin-ng/event/bulk/conflicts", formData)
 		.then(res => console.info(res))
-		.catch(res => {
-			if (res.response.status === 409) {
-				dispatch(
-					addNotification({
-						type: "error",
-						key: "CONFLICT_BULK_DETECTED",
-						duration: -1,
-						context: NOTIFICATION_CONTEXT,
-					}),
-				);
-				data = res.response.data;
+		.catch(error => {
+			if (axios.isAxiosError<{ eventId: string, conflicts: { title: string, start: string, end: string }[] }[]>(error) && error.response) {
+				if (error.response.status === 409) {
+					dispatch(
+						addNotification({
+							type: "error",
+							key: "CONFLICT_BULK_DETECTED",
+							duration: -1,
+							context: NOTIFICATION_CONTEXT,
+						}),
+					);
+					data = error.response.data;
+				}
+				console.error(error);
 			}
-			console.error(res);
 		});
 
 	return data;

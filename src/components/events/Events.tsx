@@ -13,7 +13,7 @@ import { eventsTemplateMap } from "../../configs/tableConfigs/eventsTableMap";
 import {
 	loadEventsIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchFilters, editTextFilter } from "../../slices/tableFilterSlice";
+import { fetchFilters } from "../../slices/tableFilterSlice";
 import {
 	getTotalEvents,
 	isFetchingAssetUploadOptions as getIsFetchingAssetUploadOptions,
@@ -72,9 +72,6 @@ const Events = () => {
 
 		dispatch(fetchFilters("events"));
 
-		// Reset text filter
-		dispatch(editTextFilter(""));
-
 		// disable actions button
 		dispatch(setShowActions(false));
 
@@ -102,8 +99,10 @@ const Events = () => {
 	}, [location.hash]);
 
 	const onNewEventModal = async () => {
-		await dispatch(fetchEventMetadata());
-		await dispatch(fetchAssetUploadOptions());
+		await Promise.all([
+			dispatch(fetchEventMetadata()),
+			dispatch(fetchAssetUploadOptions()),
+		]);
 
 		newEventModalRef.current?.open();
 	};
@@ -227,12 +226,12 @@ const Events = () => {
 					<h4>{t("TABLE_SUMMARY", { numberOfRows: events })}</h4>
 				</div>
 
-				{/*Include table modal*/}
+				{/* Include table modal*/}
 				{displayEventDetailsModal &&
 					<EventDetailsModal />
 				}
 
-				{/*Include table component*/}
+				{/* Include table component*/}
 				{/* <Table templateMap={eventsTemplateMap} resourceType="events" /> */}
 				<Table templateMap={eventsTemplateMap} />
 			</MainView>

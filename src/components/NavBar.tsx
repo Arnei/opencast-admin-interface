@@ -10,6 +10,7 @@ import NewResourceModal, { NewResource } from "./shared/NewResourceModal";
 import { useHotkeys } from "react-hotkeys-hook";
 import { ModalHandle } from "./shared/modals/Modal";
 import { ParseKeys } from "i18next";
+import BaseButton from "./shared/BaseButton";
 
 /**
  * Component that renders the nav bar
@@ -52,11 +53,17 @@ const NavBar = ({
 	const newResourceModalRef = useRef<ModalHandle>(null);
 
 	const showNewResourceModal = async () => {
-		newResourceModalRef.current?.open()
+		if (create && create.onShowModal) {
+			await create.onShowModal();
+		}
+		newResourceModalRef.current?.open();
 	};
 
 	const hideNewResourceModal = () => {
-		newResourceModalRef.current?.close?.()
+		if (create && create.onHideModal) {
+			create.onHideModal();
+		}
+		newResourceModalRef.current?.close?.();
 	};
 
 	const toggleNavigation = () => {
@@ -103,13 +110,13 @@ const NavBar = ({
 			{create &&
 				<div className="btn-group">
 					{hasAccess(create.accessRole, user) && (
-						<button
+						<BaseButton
 							className="add"
 							onClick={showNewResourceModal}
 						>
 							<i className="fa fa-plus" />
 							<span>{t(create.text)}</span>
-						</button>
+						</BaseButton>
 					)}
 				</div>
 			}

@@ -9,7 +9,7 @@ import { seriesTemplateMap } from "../../configs/tableConfigs/seriesTableMap";
 import {
 	loadSeriesIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchFilters, editTextFilter } from "../../slices/tableFilterSlice";
+import { fetchFilters } from "../../slices/tableFilterSlice";
 import { getTotalSeries, isShowActions } from "../../selectors/seriesSeletctor";
 import Header from "../Header";
 import NavBar from "../NavBar";
@@ -53,9 +53,6 @@ const Series = () => {
 
 		dispatch(fetchFilters("series"));
 
-		// Reset text filer
-		dispatch(editTextFilter(""));
-
 		// disable actions button
 		dispatch(showActionsSeries(false));
 
@@ -82,9 +79,11 @@ const Series = () => {
 	}, [location.hash]);
 
 	const onNewSeriesModal = async () => {
-		await dispatch(fetchSeriesMetadata());
-		await dispatch(fetchSeriesThemes());
-		await dispatch(fetchSeriesDetailsTobiraNew("/"));
+		await Promise.all([
+			dispatch(fetchSeriesMetadata()),
+			dispatch(fetchSeriesThemes()),
+			dispatch(fetchSeriesDetailsTobiraNew("/")),
+		]);
 
 		newSeriesModalRef.current?.open();
 	};

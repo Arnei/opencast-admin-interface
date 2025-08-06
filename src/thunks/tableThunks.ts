@@ -548,7 +548,7 @@ export const changeColumnSelection = (updatedColumns: TableConfig["columns"]) =>
 			break;
 		}
 		case "lifeCyclePolicies": {
-			await dispatch(setLifeCycleColumns(updatedColumns));
+			dispatch(setLifeCycleColumns(updatedColumns));
 			dispatch(loadLifeCyclePoliciesIntoTable());
 			break;
 		}

@@ -40,7 +40,6 @@ type LifeCycleState = {
 	results: LifeCyclePolicy[],
 	columns: TableConfig["columns"],
 	total: number,
-	count: number,
 	offset: number,
 	limit: number,
 };
@@ -58,15 +57,21 @@ const initialState: LifeCycleState = {
 	results: [],
 	columns: initialColumns,
 	total: 0,
-	count: 0,
 	offset: 0,
 	limit: 0,
 };
 
+type FetchLifeCyclePolicies = {
+	total: number,
+	offset: number,
+	limit: number,
+	results: LifeCyclePolicy[]
+}
+
 export const fetchLifeCyclePolicies = createAppAsyncThunk("lifeCycle/fetchLifeCyclePolicies", async (_, { getState }) => {
 	const state = getState();
 	const params = getURLParams(state, "lifeCyclePolicies");
-	const res = await axios.get("/api/lifecyclemanagement/policies", { params: params });
+	const res = await axios.get<FetchLifeCyclePolicies>("/api/lifecyclemanagement/policies", { params: params });
 	return res.data;
 });
 
@@ -154,7 +159,6 @@ const lifeCycleSlice = createSlice({
 			// Pass the generated action creators to `.addCase()`
 			.addCase(fetchLifeCyclePolicies.fulfilled, (state, action: PayloadAction<{
 				total: LifeCycleState["total"],
-				count: LifeCycleState["count"],
 				limit: LifeCycleState["limit"],
 				offset: LifeCycleState["offset"],
 				results: LifeCycleState["results"],
@@ -163,7 +167,6 @@ const lifeCycleSlice = createSlice({
 				state.status = "succeeded";
 				const policies = action.payload;
 				state.total = policies.total;
-				state.count = policies.count;
 				state.limit = policies.limit;
 				state.offset = policies.offset;
 				state.results = policies.results;

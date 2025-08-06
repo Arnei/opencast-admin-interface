@@ -91,7 +91,7 @@ const NewLifeCyclePolicySummary = <T extends typeof initialFormValuesNewLifeCycl
 								</table>
 							</div>
 						</div>
-						{/*Summary access configuration*/}
+						{/* Summary access configuration */}
 						<AccessSummaryTable
 							policies={formik.values.policies}
 							header={"EVENTS.SERIES.NEW.ACCESS.CAPTION"}

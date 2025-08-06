@@ -44,10 +44,18 @@ const initialState: LifeCyclePolicyDetailsState = {
 
 // fetch details of certain lifeCyclePolicy from server
 export const fetchLifeCyclePolicyDetails = createAppAsyncThunk("lifeCyclePolicyDetails/fetchLifeCyclePolicyDetails", async (id: string) => {
-	const res = await axios.get(`/api/lifecyclemanagement/policies/${id}`);
+	type ReturnType = LifeCyclePolicy & { actionParameters: string, targetFilters: string, accessControlEntries: {
+		id: number,
+		allow: boolean,
+		role: string,
+		action: string,
+	}[] }
+	const res = await axios.get<ReturnType>(`/api/lifecyclemanagement/policies/${id}`);
 	const data = res.data;
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	data.actionParameters = JSON.parse(data.actionParameters);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	data.targetFilters = JSON.parse(data.targetFilters);
 
 	const accessPolicies : {
@@ -69,33 +77,36 @@ export const fetchLifeCyclePolicyDetails = createAppAsyncThunk("lifeCyclePolicyD
 			}
 			if (policy.action === "read" || policy.action === "write") {
 				newPolicies[policy.role][policy.action] = policy.allow;
-			} else if (policy.allow === true) { //|| policy.allow === "true") {
+			} else if (policy.allow === true) { // || policy.allow === "true") {
 				newPolicies[policy.role].actions.push(policy.action);
 			}
 		}
 		acls = policyRoles.map(role => newPolicies[role]);
 
-	data.accessControlEntries = acls;
+	const result = {
+		...data,
+		accessControlEntries: acls,
+	};
 
-	return data;
+	return result;
 });
 
 export const fetchLifeCyclePolicyActions = createAppAsyncThunk("lifeCyclePolicyDetails/fetchLifeCyclePolicyActions", async () => {
-	const res = await axios.get("/api/lifecyclemanagement/policies/actions");
+	const res = await axios.get<string[]>("/api/lifecyclemanagement/policies/actions");
 	const data = res.data;
 
 	return data;
 });
 
 export const fetchLifeCyclePolicyTargetTypes = createAppAsyncThunk("lifeCyclePolicyDetails/fetchLifeCyclePolicyTargetTypes", async () => {
-	const res = await axios.get("/api/lifecyclemanagement/policies/targettypes");
+	const res = await axios.get<string[]>("/api/lifecyclemanagement/policies/targettypes");
 	const data = res.data;
 
 	return data;
 });
 
 export const fetchLifeCyclePolicyTimings = createAppAsyncThunk("lifeCyclePolicyDetails/fetchLifeCyclePolicyTimings", async () => {
-	const res = await axios.get("/api/lifecyclemanagement/policies/timings");
+	const res = await axios.get<string[]>("/api/lifecyclemanagement/policies/timings");
 	const data = res.data;
 
 	return data;

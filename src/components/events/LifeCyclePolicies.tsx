@@ -40,9 +40,6 @@ const LifeCyclePolicies = () => {
 
 		dispatch(fetchFilters("lifeCyclePolicies"));
 
-		// Reset text filter
-		dispatch(editTextFilter(""));
-
 		// Load policies on mount
 		const loadLifeCyclePolicies = async () => {
 			// Fetching policies from server

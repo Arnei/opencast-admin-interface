@@ -23,7 +23,7 @@ const RenderField = ({
 	isFirstField = false,
 }: {
 	field: FieldProps["field"]
-	metadataField: { type: string, collection: { [key: string]: unknown }[], required: boolean, id: string }, //MetadataField
+	metadataField: { type: string, collection: { [key: string]: unknown }[], required: boolean, id: string }, // MetadataField
 	form: FieldProps["form"]
 	showCheck?: boolean,
 	isFirstField?: boolean,
@@ -126,8 +126,6 @@ const RenderField = ({
 				<EditableCronValue
 					field={field}
 					form={form}
-					text={field.value}
-					showCheck={showCheck}
 				/>
 			)}
 			<div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -215,7 +213,7 @@ const EditableSingleSelect = ({
 	ref,
 }: {
 	field: FieldProps["field"]
-	metadataField: { type: string, collection: { [key: string]: any }[], required: boolean, id: string }, //MetadataField
+	metadataField: { type: string, collection: { [key: string]: any }[], required: boolean, id: string }, // MetadataField
 	text: string
 	form: FieldProps["form"]
 	isFirstField?: boolean,
@@ -231,6 +229,7 @@ const EditableSingleSelect = ({
 			value={field.value as string}
 			text={text}
 			options={metadataField.collection
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				? metadataField.collection.map(item => ({ label: item.label ?? item.name, value: item.value, order: item.order }))
 				: []}
 			required={metadataField.required}
@@ -333,20 +332,16 @@ const EditableSingleValueTime = ({
 const EditableCronValue = ({
 	field,
 	form: { initialValues, setFieldValue },
-	text,
-	showCheck,
 } : {
 	field: FieldProps["field"]
 	form: FieldProps["form"]
-	text: string
-	showCheck?: boolean,
 }) => {
 
 	return (
 		<div>
 			<Cron
 				className={"my-project-cron"}
-				value={field.value}
+				value={field.value as string}
 				setValue={(value: string) => setFieldValue(field.name, value)}
 			/>
 		</div>

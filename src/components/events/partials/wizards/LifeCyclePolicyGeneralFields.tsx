@@ -290,8 +290,9 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 					</thead>
 
 					<tbody>
-						<FieldArray name="targetFiltersArray">
-							{({ replace, remove, push }) => (
+						<FieldArray
+							name="targetFiltersArray"
+							render={arrayHelpers => (
 								<>
 									{Object.entries(formik.values.targetFiltersArray).map(([key, filter], index) => {
 										return (
@@ -335,7 +336,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 												</td>
 												<td>
 													<button
-														onClick={() => remove(index)}
+														onClick={() => arrayHelpers.remove(index)}
 														className="button-like-anchor remove"
 													/>
 												</td>
@@ -346,7 +347,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 										<td colSpan={5}>
 											<button
 												onClick={() =>
-													push(createTargetFilter())
+													arrayHelpers.push(createTargetFilter())
 												}
 												className="button-like-anchor"
 											>
@@ -359,7 +360,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 									</tr>
 								</>
 							)}
-						</FieldArray>
+						/>
 					</tbody>
 				</table>
 			</div>
@@ -443,7 +444,7 @@ const DropdownField = ({
 
 	return (
 		<DropDown
-			value={field.value}
+			value={field.value as string}
 			text={value}
 			options={values ? formatPolicyActionsForDropdown(values) : []}
 			required={true}

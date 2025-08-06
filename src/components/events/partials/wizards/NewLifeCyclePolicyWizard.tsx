@@ -121,7 +121,8 @@ const NewLifeCyclePolicyWizard = ({
 								setActivePage={setPage}
 								completed={pageCompleted}
 								setCompleted={setPageCompleted}
-								formik={formik}
+								isValid={formik.isValid}
+								acls={formik.values.policies}
 							/>
 							<div>
 								{page === 0 && (

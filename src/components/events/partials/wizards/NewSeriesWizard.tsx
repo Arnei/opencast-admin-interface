@@ -25,6 +25,8 @@ import { removeNotificationWizardForm } from "../../../../slices/notificationSli
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import { hasAccess } from "../../../../utils/utils";
 import { getAclDefaults } from "../../../../selectors/aclSelectors";
+import { fetchAclDefaults } from "../../../../slices/aclSlice";
+import { getTemplate } from "../../../../utils/aclUtils";
 
 /**
  * This component manages the pages of the new series wizard and the submission of values
@@ -54,15 +56,30 @@ const NewSeriesWizard = ({
 		// This should set off a web request that will intentionally fail, in order
 		// to check if tobira is available at all
 		dispatch(fetchSeriesDetailsTobiraNew(""));
+		// Need to fetch acl defaults here to be able to initialize default acl template
+		dispatch(fetchAclDefaults());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const themesEnabled = (orgProperties["admin.themes.enabled"] || "false").toLowerCase() === "true";
+	useEffect(() => {
+		const blablabla = async () => {
+			const templateId = aclDefaults && aclDefaults["default_template"] ? aclDefaults["default_template"] : undefined;
+			if (templateId) {
+				const template = await getTemplate(templateId);
+				setTemplatedPolicies(template);
+			}
+		};
+		blablabla();
 
-	const initialValues = getInitialValues(metadataFields, extendedMetadata, user, aclDefaults);
+	}, [aclDefaults]);
+
+	const themesEnabled = (orgProperties["admin.themes.enabled"] || "false").toLowerCase() === "true";
 
 	const [page, setPage] = useState(0);
 	const [pageCompleted, setPageCompleted] = useState<{ [key: number]: boolean }>({});
+	const [templatedPolicies, setTemplatedPolicies] = useState<TransformedAcl[]>([]);
+
+	const initialValues = getInitialValues(metadataFields, extendedMetadata, user, aclDefaults, templatedPolicies);
 
 
 	type StepName = "metadata" | "metadata-extended" | "access" | "theme" | "tobira" | "summary";
@@ -238,6 +255,7 @@ const getInitialValues = (
 	extendedMetadata: MetadataCatalog[],
 	user: UserInfoState,
 	aclDefaults: { [key: string]: string },
+	templatedPolicies: TransformedAcl[],
 ) => {
 	let initialValues = initialFormValuesNewSeries;
 
@@ -263,6 +281,9 @@ const getInitialValues = (
 			user: user.user,
 		},
 	];
+
+	initialValues["aclTemplate"] = aclDefaults && aclDefaults["default_template"] ? aclDefaults["default_template"] : "";
+	initialValues["policies"] = [...initialValues["policies"], ...templatedPolicies];
 
 	return initialValues;
 };

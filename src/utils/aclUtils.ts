@@ -64,23 +64,7 @@ export const handleTemplateChange = async <T extends { policies: TransformedAcl[
 	aclDefaults: { [key: string]: string } | undefined,
 	defaultUser?: UserInfoState,
 ) => {
-	// fetch information about chosen template from backend
-	let template = await fetchAclTemplateById(templateId);
-	// fetch user info
-	const users = await fetchUsersForTemplate(template.map(role => role.role));
-
-	// Add user info to applicable roles
-	template = template.map(acl => {
-		if (users && users[acl.role]) {
-			acl.user = {
-				username: users[acl.role].username,
-				name: users[acl.role].name,
-				email: users[acl.role].email,
-			};
-		}
-
-		return acl;
-	});
+	let template = await getTemplate(templateId);
 
 	// always add current user to acl since template could lock the user out
 	if (defaultUser) {
@@ -112,4 +96,28 @@ export const handleTemplateChange = async <T extends { policies: TransformedAcl[
 	formik.setFieldValue("aclTemplate", templateId);
 	// Is this necessary?
 	dispatch(checkAcls(formik.values.policies));
+};
+
+export const getTemplate = async (
+	templateId: string,
+) => {
+		// fetch information about chosen template from backend
+	let template = await fetchAclTemplateById(templateId);
+	// fetch user info
+	const users = await fetchUsersForTemplate(template.map(role => role.role));
+
+	// Add user info to applicable roles
+	template = template.map(acl => {
+		if (users && users[acl.role]) {
+			acl.user = {
+				username: users[acl.role].username,
+				name: users[acl.role].name,
+				email: users[acl.role].email,
+			};
+		}
+
+		return acl;
+	});
+
+	return template;
 };

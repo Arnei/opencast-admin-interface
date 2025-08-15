@@ -117,6 +117,7 @@ export const initialFormValuesNewSeries: {
 	theme: "",
 	breadcrumbs: [],
 	selectedPage: undefined,
+	aclTemplate: "",
 };
 
 // All fields for new theme form that are fix and not depending on response of backend

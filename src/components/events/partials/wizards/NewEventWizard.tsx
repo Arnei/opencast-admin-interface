@@ -25,6 +25,9 @@ import { removeNotificationWizardForm } from "../../../../slices/notificationSli
 import NewMetadataCommonPage from "../ModalTabsAndPages/NewMetadataCommonPage";
 import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
 import { getAclDefaults } from "../../../../selectors/aclSelectors";
+import { fetchAclDefaults } from "../../../../slices/aclSlice";
+import { getTemplate } from "../../../../utils/aclUtils";
+import { TransformedAcl } from "../../../../slices/aclDetailsSlice";
 
 /**
  * This component manages the pages of the new event wizard and the submission of values
@@ -46,9 +49,22 @@ const NewEventWizard = ({
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
-
+		// Need to fetch acl defaults here to be able to initialize default acl template
+		dispatch(fetchAclDefaults());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		const blablabla = async () => {
+			const templateId = aclDefaults && aclDefaults["default_template"] ? aclDefaults["default_template"] : undefined;
+			if (templateId) {
+				const template = await getTemplate(templateId);
+				setTemplatedPolicies(template);
+			}
+		};
+		blablabla();
+
+	}, [aclDefaults]);
 
 	// Whether the ACL of a new event is initialized with the ACL of its series.
 	let initEventAclWithSeriesAcl = true;
@@ -57,16 +73,18 @@ const NewEventWizard = ({
 		initEventAclWithSeriesAcl = user.org.properties[ADMIN_INIT_EVENT_ACL_WITH_SERIES_ACL] === "true";
 	}
 
+	const [page, setPage] = useState(0);
+	const [pageCompleted, setPageCompleted] = useState<{ [key: number]: boolean }>({});
+	const [templatedPolicies, setTemplatedPolicies] = useState<TransformedAcl[]>([]);
+
 	const initialValues = getInitialValues(
 		metadataFields,
 		extendedMetadata,
 		uploadSourceOptions,
 		user,
+		templatedPolicies,
 		aclDefaults,
 	);
-
-	const [page, setPage] = useState(0);
-	const [pageCompleted, setPageCompleted] = useState<{ [key: number]: boolean }>({});
 
 	type StepName = "metadata" | "metadata-extended" | "source" | "upload-asset" | "processing" | "access" | "summary";
 	type Step = WizardStep & {
@@ -263,6 +281,7 @@ const getInitialValues = (
 	extendedMetadata: MetadataCatalog[],
 	uploadSourceOptions: UploadOption[],
 	user: UserInfoState,
+	templatedPolicies: TransformedAcl[],
 	aclDefaults?: { [key: string]: string },
 ) => {
 	let initialValues = initialFormValuesNewEvents;
@@ -338,6 +357,9 @@ const getInitialValues = (
 			user: user.user,
 		},
 	];
+
+	initialValues["aclTemplate"] = aclDefaults && aclDefaults["default_template"] ? aclDefaults["default_template"] : "";
+	initialValues["policies"] = [...initialValues["policies"], ...templatedPolicies];
 
 	return initialValues;
 };

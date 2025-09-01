@@ -21,6 +21,7 @@ import { availableHotkeys } from "../../configs/hotkeysConfig";
 import TableActionDropdown from "../shared/TableActionDropdown";
 import TablePage from "../shared/TablePage";
 import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
+import { fetchAclDefaults } from "../../slices/aclSlice";
 
 /**
  * This component renders the table view of series
@@ -45,6 +46,7 @@ const Series = () => {
 			dispatch(fetchSeriesMetadata()),
 			dispatch(fetchSeriesThemes()),
 			dispatch(fetchSeriesDetailsTobiraNew("/")),
+			dispatch(fetchAclDefaults()),
 		]);
 
 		newSeriesModalRef.current?.open();

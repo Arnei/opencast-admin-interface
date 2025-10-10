@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import _ from "lodash";
 import DatePicker from "react-datepicker";
-import { Formik, FormikErrors, FormikProps } from "formik";
+import { Formik, FormikErrors, FormikProps, FormikValues } from "formik";
 import Notifications from "../../../shared/Notifications";
 import {
 	getSchedulingConflicts,
@@ -54,6 +54,7 @@ import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import i18n from "../../../../i18n/i18n";
 import SchedulingRadio from "../wizards/scheduling/SchedulingRadio";
+import * as Yup from "yup";
 
 export type InitialValues = {
 	scheduleStartDate: string;
@@ -67,6 +68,7 @@ export type InitialValues = {
 	captureAgent: string;
 	inputs: string[];
 	stream: string;
+	record: string;
 }
 
 /**
@@ -151,6 +153,19 @@ const EventDetailsSchedulingTab = ({
 		}
 	};
 
+	const getRecord = (deviceId: Recording["id"]) => {
+		if (deviceId === source.device.id) {
+			return source.device.parsedCapabilities.record ? source.device.parsedCapabilities.record : [];
+		} else {
+			for (const agent of filterDevicesForAccess(user, captureAgents)) {
+				if (agent.id === deviceId) {
+					return agent.parsedCapabilities.record ? agent.parsedCapabilities.record : [];
+				}
+			}
+			return [];
+		}
+	};
+
 	const getInputForAgent = (deviceId: Recording["id"], input: string) => {
 		const inputs = getInputs(deviceId);
 		const value = inputs.find(agent => agent.id === input)?.value;
@@ -160,6 +175,12 @@ const EventDetailsSchedulingTab = ({
 	const getStreamForAgent = (deviceId: Recording["id"], s: string) => {
 		const stream = getStream(deviceId);
 		const value = stream.find(agent => agent.id === s)?.value;
+		return value ? t(value as ParseKeys) : "";
+	};
+
+	const getRecordForAgent = (deviceId: Recording["id"], s: string) => {
+		const record = getRecord(deviceId);
+		const value = record.find(agent => agent.id === s)?.value;
 		return value ? t(value as ParseKeys) : "";
 	};
 
@@ -228,6 +249,36 @@ const EventDetailsSchedulingTab = ({
 		);
 	};
 
+	const validationSchema = Yup.object({
+		// Capture agent specific validation
+		stream: Yup.string()
+			.nullable()
+			.oneOf(["0", "1"], "Invalid stream value")
+			.optional(),
+		record: Yup.string()
+			.nullable()
+			.oneOf(["0", "1"], "Invalid record value")
+			.optional()
+			.test(
+				"record-depends-on-stream",
+				"Record can be 0 only if Stream is 1",
+				function (value) {
+					const { stream } = this.parent as FormikValues;
+
+					// If record is not provided — no validation needed
+					if (value == null) { return true; }
+
+					// If stream is not provided — also fine
+					if (stream == null || stream === "") { return true; }
+
+					// Enforce the rule only when both are defined
+					if (value === "0" && stream !== "1") { return false; }
+
+					return true;
+				},
+			),
+	});
+
 	// initial values of the formik form
 	const getInitialValues = () => {
 		const startDate = new Date(source.start.date);
@@ -238,6 +289,9 @@ const EventDetailsSchedulingTab = ({
 			: [];
 		const stream = source.device.capabilitiesMethods.stream && source.device.capabilitiesMethods.stream.length > 0
 			? source.device.capabilitiesMethods.stream[0]
+			: "";
+		const record = source.device.capabilitiesMethods.record && source.device.capabilitiesMethods.record.length > 0
+			? source.device.capabilitiesMethods.record[0]
 			: "";
 
 		startDate.setHours(0, 0, 0);
@@ -255,6 +309,7 @@ const EventDetailsSchedulingTab = ({
 			captureAgent: source.device.name,
 			inputs: inputs.filter(input => input !== ""),
 			stream: stream,
+			record: record,
 		};
 	};
 
@@ -275,6 +330,7 @@ const EventDetailsSchedulingTab = ({
 					<Formik<InitialValues>
 						enableReinitialize
 						initialValues={getInitialValues()}
+						validationSchema={validationSchema}
 						onSubmit={values => submitForm(values)}
 						innerRef={formikRef}
 					>
@@ -563,6 +619,33 @@ const EventDetailsSchedulingTab = ({
 															:
 																<span>
 																	{getStreamForAgent(formik.values.captureAgent, formik.values.stream)}
+																	<br />
+																</span>
+														)}
+												</td>
+											</tr>
+
+											{/* record */}
+											<tr>
+												<td>
+													{t(
+														"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.RECORD",
+													)}
+												</td>
+												<td>
+													{!!formik.values.captureAgent &&
+														!!getRecord(formik.values.captureAgent) &&
+														getRecord(formik.values.captureAgent).length >
+															0 &&
+														(hasAccessRole &&
+														accessAllowed(formik.values.captureAgent)
+															? <SchedulingRadio
+																	name="record"
+																	inputs={getRecord(formik.values.captureAgent)}
+																/>
+															:
+																<span>
+																	{getRecordForAgent(formik.values.captureAgent, formik.values.record)}
 																	<br />
 																</span>
 														)}

@@ -528,6 +528,26 @@ const Schedule = <T extends {
 		}
 	};
 
+	const renderLayoutDeviceOptions = () => {
+		if (formik.values.location) {
+			const inputDevice = inputDevices.find(
+				({ name }) => name === formik.values.location,
+			);
+			if (!inputDevice) {
+				return <></>;
+			}
+			return (
+				<>
+					<SchedulingRadio
+						name="layout"
+						inputs={inputDevice.parsedCapabilities.layout}
+						// formik={formik}
+					/>
+				</>
+			);
+		}
+	};
+
 	return (
 		<div className="obj">
 			<header>{t("EVENTS.EVENTS.NEW.SOURCE.DATE_TIME.CAPTION")}</header>
@@ -788,7 +808,7 @@ const Schedule = <T extends {
 										await formik.setFieldValue("inputs", inputDevice.parsedCapabilities.inputs.map(input => input.id));
 									}
 									if (inputDevice) {
-										if (inputDevice.parsedCapabilities.stream) {
+										if (inputDevice.parsedCapabilities.inputs) {
 											formik.setFieldValue("inputs", []);
 										}
 										if (inputDevice.parsedCapabilities.stream) {
@@ -809,6 +829,9 @@ const Schedule = <T extends {
 												formik.setFieldValue("record", "");
 											}
 										}
+										if (inputDevice.parsedCapabilities.layout) {
+											formik.setFieldValue("layout", "");
+										}
 									}
 								}}
 							/>
@@ -825,10 +848,16 @@ const Schedule = <T extends {
 								{renderStreamDeviceOptions()}
 							</td>
 						</tr>
-							<tr>
+						<tr>
 							<td>{t("EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.RECORD")}</td>
 							<td>
 								{renderRecordDeviceOptions()}
+							</td>
+						</tr>
+						<tr>
+							<td>{t("EVENTS.EVENTS.NEW.SOURCE.PLACEHOLDER.LAYOUT")}</td>
+							<td>
+								{renderLayoutDeviceOptions()}
 							</td>
 						</tr>
 					</tbody>

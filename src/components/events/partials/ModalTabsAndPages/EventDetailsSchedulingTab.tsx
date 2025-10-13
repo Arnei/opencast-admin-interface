@@ -70,6 +70,7 @@ export type InitialValues = {
 	stream: string;
 	record: string;
 	layout: string;
+	cameraPosition: string;
 }
 
 /**
@@ -180,6 +181,19 @@ const EventDetailsSchedulingTab = ({
 		}
 	};
 
+	const getCameraPosition = (deviceId: Recording["id"]) => {
+		if (deviceId === source.device.id) {
+			return source.device.parsedCapabilities.cameraPosition ? source.device.parsedCapabilities.cameraPosition : [];
+		} else {
+			for (const agent of filterDevicesForAccess(user, captureAgents)) {
+				if (agent.id === deviceId) {
+					return agent.parsedCapabilities.cameraPosition ? agent.parsedCapabilities.cameraPosition : [];
+				}
+			}
+			return [];
+		}
+	};
+
 	const getInputForAgent = (deviceId: Recording["id"], input: string) => {
 		const inputs = getInputs(deviceId);
 		const value = inputs.find(agent => agent.id === input)?.value;
@@ -201,6 +215,12 @@ const EventDetailsSchedulingTab = ({
 	const getLayoutForAgent = (deviceId: Recording["id"], s: string) => {
 		const layout = getLayout(deviceId);
 		const value = layout.find(agent => agent.id === s)?.value;
+		return value ? t(value as ParseKeys) : "";
+	};
+
+	const getCameraPositionForAgent = (deviceId: Recording["id"], s: string) => {
+		const cameraPosition = getCameraPosition(deviceId);
+		const value = cameraPosition.find(agent => agent.id === s)?.value;
 		return value ? t(value as ParseKeys) : "";
 	};
 
@@ -316,6 +336,9 @@ const EventDetailsSchedulingTab = ({
 		const layout = source.device.capabilitiesMethods.layout && source.device.capabilitiesMethods.layout.length > 0
 			? source.device.capabilitiesMethods.layout[0]
 			: "";
+		const cameraPosition = source.device.capabilitiesMethods.cameraPosition && source.device.capabilitiesMethods.cameraPosition.length > 0
+			? source.device.capabilitiesMethods.cameraPosition[0]
+			: "";
 
 		startDate.setHours(0, 0, 0);
 		endDate.setHours(0, 0, 0);
@@ -334,6 +357,7 @@ const EventDetailsSchedulingTab = ({
 			stream: stream,
 			record: record,
 			layout: layout,
+			cameraPosition: cameraPosition,
 		};
 	};
 
@@ -697,6 +721,33 @@ const EventDetailsSchedulingTab = ({
 															:
 																<span>
 																	{getLayoutForAgent(formik.values.captureAgent, formik.values.layout)}
+																	<br />
+																</span>
+														)}
+												</td>
+											</tr>
+
+											{/* cameraPosition */}
+											<tr>
+												<td>
+													{t(
+														"EVENTS.EVENTS.DETAILS.SOURCE.PLACEHOLDER.CAMERA_POSITION",
+													)}
+												</td>
+												<td>
+													{!!formik.values.captureAgent &&
+														!!getCameraPosition(formik.values.captureAgent) &&
+														getCameraPosition(formik.values.captureAgent).length >
+															0 &&
+														(hasAccessRole &&
+														accessAllowed(formik.values.captureAgent)
+															? <SchedulingRadio
+																	name="cameraPosition"
+																	inputs={getCameraPosition(formik.values.captureAgent)}
+																/>
+															:
+																<span>
+																	{getCameraPositionForAgent(formik.values.captureAgent, formik.values.cameraPosition)}
 																	<br />
 																</span>
 														)}

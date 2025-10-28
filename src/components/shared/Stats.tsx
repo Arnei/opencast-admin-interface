@@ -9,7 +9,7 @@ import {
 	editTextFilter,
 	removeTextFilter,
 } from "../../slices/tableFilterSlice";
-import { loadEventsIntoTable } from "../../thunks/tableThunks";
+import { loadEventsIntoTable, goToPage } from "../../thunks/tableThunks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchEvents } from "../../slices/eventSlice";
 import { ParseKeys } from "i18next";
@@ -40,6 +40,7 @@ const Stats = () => {
 			const filter = filterMap.find(({ name }) => name === f.name);
 			filterValue = f.value;
 			if (filter) {
+				dispatch(goToPage(0));
 				dispatch(editFilterValue({ filterName: filter.name, value: filterValue, resource: "events" }));
 			}
 		});

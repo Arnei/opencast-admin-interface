@@ -8,6 +8,7 @@ import { ParseKeys } from "i18next";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { Resource } from "../../slices/tableSlice";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { goToPage } from "../../thunks/tableThunks";
 
 /**
  * This component renders the start date cells of events in the table view
@@ -45,6 +46,7 @@ const DateTimeCell = ({
 			endDate.setMinutes(59);
 			endDate.setSeconds(59);
 
+			dispatch(goToPage(0));
 			dispatch(editFilterValue({ filterName: filter.name, value: startDate.toISOString() + "/" + endDate.toISOString(), resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());

@@ -6,6 +6,7 @@ import { AsyncThunk } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
 import { Resource } from "../../slices/tableSlice";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { goToPage } from "../../thunks/tableThunks";
 
 /**
  * This component renders the presenters cells of events in the table view
@@ -35,6 +36,7 @@ const MultiValueCell = ({
 			({ name }) => name === filterName,
 		);
 		if (filter) {
+			dispatch(goToPage(0));
 			dispatch(editFilterValue({ filterName: filter.name, value: presenter, resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());

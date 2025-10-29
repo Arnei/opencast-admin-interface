@@ -33,6 +33,8 @@ import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import SearchContainer from "./SearchContainer";
 import { Resource } from "../../slices/tableSlice";
+import { HiFunnel } from "react-icons/hi2";
+import { LuSettings, LuX } from "react-icons/lu";
 
 /**
  * This component renders the table filters in the upper right corner of the table
@@ -161,7 +163,7 @@ const TableFilters = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [itemValue]);
 
-	const handleDatepicker = async (dates?: [Date | undefined | null, Date | undefined | null]) => {
+	const handleDatepicker = (dates?: [Date | undefined | null, Date | undefined | null]) => {
 		if (dates != null) {
 			const [start, end] = dates;
 
@@ -185,7 +187,7 @@ const TableFilters = ({
 
 	// Workaround for entering a date range by only entering one date
 	// (e.g. 01/01/2025 results in a range of 01/01/2025 - 01/01/2025)
-	const handleDatePickerOnKeyDown = async (keyEvent: React.KeyboardEvent<HTMLElement>) => {
+	const handleDatePickerOnKeyDown = (keyEvent: React.KeyboardEvent<HTMLElement>) => {
 		if (keyEvent.key === "Enter") {
 			const end = endDate ?? (startDate ? new Date(startDate) : undefined);
 			end?.setHours(23);
@@ -259,8 +261,9 @@ const TableFilters = ({
 							<ButtonLikeAnchor
 								onClick={() => setFilterSelector(!showFilterSelector)}
 								tooltipText="TABLE_FILTERS.ADD"
+								className="table-filter-button"
 							>
-								<i className="fa fa-filter" />
+								<HiFunnel />
 							</ButtonLikeAnchor>
 
 							{/* show if icon is clicked*/}
@@ -322,7 +325,7 @@ const TableFilters = ({
 							{/* Show for each selected filter a blue label containing its name and option */}
 							{filterMap.map((filter, key) => {
 								return filter.value && (
-									<span className="ng-multi-value" key={key}>
+									<span className="multi-value" key={key}>
 										{
 											// Use different representation of name and value depending on type of filter
 											filter.type === "period" ? (
@@ -345,7 +348,7 @@ const TableFilters = ({
 											onClick={() => removeFilter(filter)}
 											tooltipText="TABLE_FILTERS.REMOVE"
 										>
-											<i className="fa fa-times" />
+											<LuX />
 										</ButtonLikeAnchor>
 									</span>
 								);
@@ -357,16 +360,18 @@ const TableFilters = ({
 							<ButtonLikeAnchor
 								onClick={removeFilters}
 								tooltipText="TABLE_FILTERS.CLEAR"
+								className="table-filter-button"
 							>
-								<i className="clear fa fa-times" />
+								<LuX/>
 							</ButtonLikeAnchor>
 						}
 						{/* Settings icon to open filters profile dialog (save and editing filter profiles)*/}
 						<ButtonLikeAnchor
 							onClick={() => setFilterSettings(!showFilterSettings)}
 							tooltipText="TABLE_FILTERS.PROFILES.FILTERS_HEADER"
+							className="table-filter-button"
 						>
-							<i className="settings fa fa-cog fa-times" />
+							<LuSettings />
 						</ButtonLikeAnchor>
 
 						{/* Filter profile dialog for saving and editing filter profiles */}

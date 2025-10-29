@@ -37,14 +37,13 @@ const EditScheduledEventsModal = ({
 	const initialValues = initialFormValuesEditScheduledEvents;
 
 	const {
-		snapshot,
 		page,
 		nextPage,
 		previousPage,
 		setPage,
 		pageCompleted,
 		setPageCompleted,
-	} = usePageFunctions(0, initialValues);
+	} = usePageFunctions(0);
 
 	// for edit page: conflicts with other events
 	const [conflicts, setConflicts] = useState<Conflict[]>([]);
@@ -89,16 +88,15 @@ const EditScheduledEventsModal = ({
 			errors.events = "Not all events editable!";
 		}
 		if (steps[page].name !== "general") {
-			return checkSchedulingConflicts(
+			const isConflict = checkSchedulingConflicts(
 				values,
 				setConflicts,
 				dispatch,
-			).then(result => {
-				if (!result) {
-					errors.editedEvents = "Scheduling conflicts exist!";
-				}
-				return errors;
-			});
+			);
+			if (!isConflict) {
+				errors.editedEvents = "Scheduling conflicts exist!";
+			}
+			return errors;
 		} else {
 			return errors;
 		}
@@ -121,7 +119,7 @@ const EditScheduledEventsModal = ({
 		<>
 			{/* Initialize overall form */}
 			<Formik
-				initialValues={snapshot}
+				initialValues={initialValues}
 				validate={values => validateFormik(values)}
 				onSubmit={values => handleSubmit(values)}
 			>

@@ -10,11 +10,19 @@ import NewResourceModal, { NewResource } from "./shared/NewResourceModal";
 import { useHotkeys } from "react-hotkeys-hook";
 import { ModalHandle } from "./shared/modals/Modal";
 import { ParseKeys } from "i18next";
+import BaseButton from "./shared/BaseButton";
+import { LuPlus } from "react-icons/lu";
 
 /**
  * Component that renders the nav bar
  */
-type CreateType = {
+export type NavBarLink = {
+	path: string
+	accessRole: string
+	text: ParseKeys
+}
+
+export type CreateType = {
 	accessRole: string
 	onShowModal?: () => Promise<void>
 	onHideModal?: () => void
@@ -37,11 +45,7 @@ const NavBar = ({
 	navAriaLabel?: ParseKeys
 	displayNavigation: boolean
 	setNavigation: React.Dispatch<React.SetStateAction<boolean>>
-	links: {
-		path: string
-		accessRole: string
-		text: ParseKeys
-	}[]
+	links: NavBarLink[]
 	create?: CreateType
 }) => {
 	const { t } = useTranslation();
@@ -109,13 +113,14 @@ const NavBar = ({
 			{create &&
 				<div className="btn-group">
 					{hasAccess(create.accessRole, user) && (
-						<button
+						<BaseButton
 							className="add"
 							onClick={showNewResourceModal}
+							style={{ display: "flex", alignItems: "center" }}
 						>
-							<i className="fa fa-plus" />
+							<LuPlus className="btn-group-icon" />
 							<span>{t(create.text)}</span>
-						</button>
+						</BaseButton>
 					)}
 				</div>
 			}

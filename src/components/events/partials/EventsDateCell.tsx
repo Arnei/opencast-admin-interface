@@ -1,6 +1,3 @@
-import { useTranslation } from "react-i18next";
-import { editFilterValue } from "../../../slices/tableFilterSlice";
-import React from "react";
 import { loadEventsIntoTable } from "../../../thunks/tableThunks";
 import { fetchEvents } from "../../../slices/eventSlice";
 import { Event } from "../../../slices/eventSlice";
@@ -21,7 +18,7 @@ const EventsDateCell = ({
 			filterName="startDate"
 			fetchResource={fetchEvents}
 			loadResourceIntoTable={loadEventsIntoTable}
-			tooltipText="EVENTS.EVENTS.TABLE.TOOLTIP.START"
+			// tooltipText="EVENTS.EVENTS.TABLE.TOOLTIP.START" // Disabled due to performance concerns
 		/>
 	);
 };

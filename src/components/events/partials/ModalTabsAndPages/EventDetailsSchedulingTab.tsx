@@ -92,7 +92,6 @@ const EventDetailsSchedulingTab = ({
 
 	const sourceStartDate = new Date(source.start.date);
 	const endStartDate = new Date(source.start.date);
-
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
 		dispatch(checkConflicts({
@@ -179,7 +178,7 @@ const EventDetailsSchedulingTab = ({
 	};
 
 	// submits the formik form
-	const submitForm = async (values: SchedulingInfo) => {
+	const submitForm = (values: SchedulingInfo) => {
 		dispatch(removeNotificationWizardForm());
 		const startDate = makeDate(
 			values.scheduleStartDate,
@@ -250,7 +249,7 @@ const EventDetailsSchedulingTab = ({
 					<Formik<InitialValues>
 						enableReinitialize
 						initialValues={getInitialValues()}
-						onSubmit={values => submitForm(values).then(() => {})}
+						onSubmit={values => submitForm(values)}
 						innerRef={formikRef}
 					>
 						{formik => (
@@ -305,8 +304,7 @@ const EventDetailsSchedulingTab = ({
 															yearDropdownItemNumber={2}
 															dateFormat="P"
 															popperClassName="datepicker-custom"
-															className="datepicker-custom-input"
-															portalId="root"
+															wrapperClassName="datepicker-custom-wrapper"
 															locale={currentLanguage?.dateLocale}
 															strictParsing
 														/>

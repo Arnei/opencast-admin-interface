@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import ConfirmModal from "../../shared/ConfirmModal";
-import SeriesDetailsModal from "./modals/SeriesDetailsModal";
 import {
 	fetchSeriesDetailsThemeNames,
 	fetchSeriesDetailsAcls,
 	fetchSeriesDetailsMetadata,
 	fetchSeriesDetailsTheme,
 	fetchSeriesDetailsTobira,
+	openModal,
 } from "../../../slices/seriesDetailsSlice";
 import {
 	getSeriesHasEvents,
@@ -18,9 +18,10 @@ import {
 	checkForEventsDeleteSeriesModal,
 	deleteSeries,
 } from "../../../slices/seriesSlice";
-import { IconButton } from "../../shared/IconButton";
-
 import { ModalHandle } from "../../shared/modals/Modal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuCircleX, LuFileText } from "react-icons/lu";
+import { SeriesDetailsPage } from "./modals/SeriesDetails";
 
 /**
  * This component renders the action cells of series in the table view
@@ -33,7 +34,6 @@ const SeriesActionsCell = ({
 	const dispatch = useAppDispatch();
 
 	const deleteConfirmationModalRef = useRef<ModalHandle>(null);
-	const detailsModalRef = useRef<ModalHandle>(null);
 
 	const hasEvents = useAppSelector(state => getSeriesHasEvents(state));
 	const deleteAllowed = useAppSelector(state => isSeriesDeleteAllowed(state));
@@ -61,32 +61,30 @@ const SeriesActionsCell = ({
 			dispatch(fetchSeriesDetailsTobira(row.id)),
 		]);
 
-		detailsModalRef.current?.open();
+		dispatch(openModal(SeriesDetailsPage.Metadata, row));
 	};
 
 	return (
 		<>
 			{/* series details */}
-			<IconButton
-				callback={() => showSeriesDetailsModal()}
-				iconClassname={"more-series"}
+			<ButtonLikeAnchor
+				onClick={() => showSeriesDetailsModal()}
+				className={"action-cell-button more-series"}
 				editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
-				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}
-			/>
-
-			<SeriesDetailsModal
-				seriesId={row.id}
-				seriesTitle={row.title}
-				modalRef={detailsModalRef}
-			/>
+				// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
 			{/* delete series */}
-			<IconButton
-				callback={() => showDeleteConfirmation()}
-				iconClassname={"remove"}
+			<ButtonLikeAnchor
+				onClick={() => showDeleteConfirmation()}
+				className={"action-cell-button remove"}
 				editAccessRole={"ROLE_UI_SERIES_DELETE"}
-				tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"}
-			/>
+				// tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
+			>
+				<LuCircleX />
+			</ButtonLikeAnchor>
 
 			<ConfirmModal
 				close={hideDeleteConfirmation}

@@ -17,6 +17,7 @@ import { ParseKeys } from "i18next";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import { LuCheck, LuEllipsis, LuLoader, LuPause, LuRotateCcw, LuX } from "react-icons/lu";
 import { GoDash } from "react-icons/go";
+import { LuChevronRight } from "react-icons/lu";
 
 /**
  * This component manages the workflow operations for the workflows tab of the event details modal
@@ -31,14 +32,14 @@ const EventDetailsWorkflowOperations = ({
 	const workflowId = useAppSelector(state => getModalWorkflowId(state));
 	const operations = useAppSelector(state => getWorkflowOperations(state));
 
-  const loadWorkflowOperations = async () => {
+  const loadWorkflowOperations = () => {
 		// Fetching workflow operations from server
 		dispatch(fetchWorkflowOperations({ eventId, workflowId }));
 	};
 
   useEffect(() => {
 		// Fetch workflow operations initially
-		loadWorkflowOperations().then();
+		loadWorkflowOperations();
 
 		// Fetch workflow operations every 5 seconds
 		const fetchWorkflowOperationsInterval = setInterval(loadWorkflowOperations, 5000);
@@ -170,7 +171,7 @@ export const Operation = ({
 
 	return (
 		<tr>
-			<td style={{ display: "flex", alignItems: "center" }}>
+			<td className="workflow-operation-status-container">
 				<OperationStatusIcon status={item.status} />
 				{t(item.status as ParseKeys)}
 			</td>
@@ -180,12 +181,13 @@ export const Operation = ({
 			{/* link to 'Operation Details'  sub-Tab */}
 			<td>
 				<ButtonLikeAnchor
-					extraClassName="details-link"
+					className="details-link"
 					onClick={() =>
 						openSubTab("workflow-operation-details", operationId)
 					}
 				>
 					{t("EVENTS.EVENTS.DETAILS.MEDIA.DETAILS") /* Details */}
+					<LuChevronRight className="details-link-icon"/>
 				</ButtonLikeAnchor>
 			</td>
 		</tr>
@@ -200,23 +202,21 @@ const OperationStatusIcon = ({
 	// Parse translation key to state
 	const state = status.split(".").pop();
 
-	const iconStyle = { marginRight: "5px" };
-
 	switch (state) {
 		case "INSTANTIATED":
-			return <LuEllipsis style={{ ...iconStyle, color: "#666" }}/>;
+			return <LuEllipsis className="workflow-operation-icon"/>;
 		case "RUNNING":
-			return <LuLoader className="fa-spin" style={{ ...iconStyle, color: "#666" }}/>;
+			return <LuLoader className="fa-spin workflow-operation-icon"/>;
 		case "PAUSED":
-			return <LuPause style={{ ...iconStyle, color: "#666" }}/>;
+			return <LuPause className="workflow-operation-icon"/>;
 		case "SUCCEEDED":
-			return <LuCheck style={{ ...iconStyle, color: "#37c180" }}/>;
+			return <LuCheck className="workflow-operation-icon green"/>;
 		case "FAILED":
-			return <LuX style={{ ...iconStyle, color: "#fa1919" }}/>;
+			return <LuX className="workflow-operation-icon red"/>;
 		case "SKIPPED":
-			return <GoDash style={{ ...iconStyle, color: "#378dd4" }}/>;
+			return <GoDash className="workflow-operation-icon blue"/>;
 		case "RETRY":
-			return <LuRotateCcw className="fa-spin" style={{ ...iconStyle, color: "#666" }}/>;
+			return <LuRotateCcw className="fa-spin workflow-operation-icon"/>;
 		default:
 			return <></>;
 	}

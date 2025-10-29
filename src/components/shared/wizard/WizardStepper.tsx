@@ -3,13 +3,10 @@ import cn from "classnames";
 import { Step, StepButton, StepLabel, Stepper } from "@mui/material";
 import {
 	isSummaryReachable,
-	stepLabelStyle,
-	stepperStyle,
 } from "../../../utils/wizardUtils";
 import CustomStepIcon from "./CustomStepIcon";
 import { checkAcls } from "../../../slices/aclSlice";
 import { useAppDispatch } from "../../../store";
-import { FormikProps } from "formik/dist/types";
 import { ParseKeys } from "i18next";
 import { TransformedAcl } from "../../../slices/aclDetailsSlice";
 
@@ -41,10 +38,10 @@ const WizardStepper = ({
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const handleOnClick = async (key: number) => {
+	const handleOnClick = (key: number) => {
 		if (isSummaryReachable(key, steps, completed)) {
 			if (acls) {
-				const check = await dispatch(checkAcls(acls));
+				const check = dispatch(checkAcls(acls));
 				if (!check) {
 					return;
 				}
@@ -77,13 +74,12 @@ const WizardStepper = ({
 			nonLinear
 			alternativeLabel
 			connector={<></>}
-			sx={stepperStyle.root}
 			className={cn("step-by-step")}
 		>
 			{steps.map((label, key) =>
 				<Step key={label.translation} completed={completed[key]}>
 					<StepButton onClick={() => handleOnClick(key)}>
-						<StepLabel sx={stepLabelStyle.root} StepIconComponent={CustomStepIcon}>
+						<StepLabel StepIconComponent={CustomStepIcon}>
 							{t(label.translation)}
 						</StepLabel>
 					</StepButton>

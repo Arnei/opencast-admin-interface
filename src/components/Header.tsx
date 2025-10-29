@@ -14,17 +14,19 @@ import { availableHotkeys } from "../configs/hotkeysConfig";
 import { studioURL } from "../configs/generalConfig";
 import { hasAccess } from "../utils/utils";
 import RegistrationModal from "./shared/RegistrationModal";
+import TermsOfUseModal from "./shared/TermsOfUseModal";
 import HotKeyCheatSheet from "./shared/HotKeyCheatSheet";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";
-import { HiTranslate } from "react-icons/hi";
-import { IconContext } from "react-icons";
+import { HiOutlineTranslate } from "react-icons/hi";
 import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
 import { ModalHandle } from "./shared/modals/Modal";
 import { broadcastLogout } from "../utils/broadcastSync";
+import BaseButton from "./shared/BaseButton";
+import { LuBell, LuCheck, LuChevronDown, LuCirclePlay, LuMessageCircleQuestion, LuVideo } from "react-icons/lu";
 
 // References for detecting a click outside of the container of the dropdown menus
 const containerLang = React.createRef<HTMLDivElement>();
@@ -50,6 +52,7 @@ const Header = () => {
 	const errorCounter = useAppSelector(state => getErrorCount(state));
 	const user = useAppSelector(state => getUserInformation(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
+	const displayTerms = (orgProperties["org.opencastproject.admin.display_terms"] || "false").toLowerCase() === "true";
 
 	const loadHealthStatus = async () => {
 		await dispatch(fetchHealthStatus());
@@ -144,11 +147,9 @@ const Header = () => {
 					{/* Select language */}
 					<div className="nav-dd lang-dd" id="lang-dd" ref={containerLang}>
 						<Tooltip active={!displayMenuLang} title={t("LANGUAGE")}>
-							<button className="lang" onClick={() => setMenuLang(!displayMenuLang)}>
-								<IconContext.Provider value={{ style: { fontSize: "20px" } }}>
-									<HiTranslate />
-								</IconContext.Provider>
-							</button>
+							<BaseButton className="lang nav-dd-element" onClick={() => setMenuLang(!displayMenuLang)}>
+									<HiOutlineTranslate className="header-icon"/>
+							</BaseButton>
 						</Tooltip>
 						{displayMenuLang && <MenuLang handleChangeLanguage={handleChangeLanguage}/>}
 					</div>
@@ -166,8 +167,9 @@ const Header = () => {
 											orgProperties["org.opencastproject.admin.mediamodule.url"]
 										}
 										target="_blank" rel="noreferrer"
+										className="nav-dd-element"
 									>
-										<i className="fa fa-play-circle" />
+										<LuCirclePlay className="header-icon"/>
 									</a>
 								</Tooltip>
 							</div>
@@ -177,8 +179,8 @@ const Header = () => {
 					{hasAccess("ROLE_STUDIO", user) && (
 						<div className="nav-dd">
 							<Tooltip title={t("STUDIO")}>
-								<a href={studioURL} target="_blank" rel="noreferrer">
-									<i className="fa fa-video-camera" />
+								<a href={studioURL} target="_blank" rel="noreferrer" className="nav-dd-element">
+									<LuVideo className="header-icon"/>
 								</a>
 							</Tooltip>
 						</div>
@@ -192,14 +194,14 @@ const Header = () => {
 							ref={containerNotify}
 						>
 							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
-								<button onClick={() => setMenuNotify(!displayMenuNotify)}>
-									<i className="fa fa-bell" aria-hidden="true" />
+								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element">
+									<LuBell className="header-icon"/>
 									{errorCounter !== 0 && (
 										<span id="error-count" className="badge">
 											{errorCounter}
 										</span>
 									)}
-								</button>
+								</BaseButton>
 							</Tooltip>
 							{/* Click on the bell icon, a dropdown menu with all services in serviceList and their status opens */}
 							{displayMenuNotify && (
@@ -227,11 +229,12 @@ const Header = () => {
 								ref={containerHelp}
 							>
 								<Tooltip active={!displayMenuHelp} title={t("HELP.HELP")}>
-									<button
+									<BaseButton
 										onClick={() => setMenuHelp(!displayMenuHelp)}
+										className="nav-dd-element"
 									>
-										<span className="fa fa-question-circle"></span>
-									</button>
+										<LuMessageCircleQuestion className="header-icon"/>
+									</BaseButton>
 								</Tooltip>
 								{/* Click on the help icon, a dropdown menu with documentation, REST-docs and shortcuts (if available) opens */}
 								{displayMenuHelp && (
@@ -247,14 +250,14 @@ const Header = () => {
 						)}
 
 					{/* Username */}
-					<div className="nav-dd user-dd" id="user-dd" ref={containerUser}>
-						<button
+					<div className="user-dd" id="user-dd" ref={containerUser}>
+						<BaseButton
 							className="h-nav"
 							onClick={() => setMenuUser(!displayMenuUser)}
 						>
 							{user.user.name || user.user.username}
-							<span className="dropdown-icon" />
-						</button>
+							<LuChevronDown className="dropdown-icon" />
+						</BaseButton>
 						{/* Click on username, a dropdown menu with the option to logout opens */}
 						{displayMenuUser && <MenuUser />}
 					</div>
@@ -263,6 +266,9 @@ const Header = () => {
 
 			{/* Adopters Registration Modal */}
 			<RegistrationModal modalRef={registrationModalRef}/>
+
+			{/* Terms of use for all non-admin users */}
+			{displayTerms && !user.roles.includes("ROLE_ADMIN") && <TermsOfUseModal />}
 
 			{/* Hotkey Cheat Sheet */}
 			<HotKeyCheatSheet modalRef={hotKeyCheatSheetModalRef}/>
@@ -281,9 +287,10 @@ const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: strin
 			{languages.map((language, key) => (
 				<li key={key}>
 					<ButtonLikeAnchor
-						extraClassName={(i18n.language === language.code ? "selected" : "")}
+						className={(i18n.language === language.code ? "selected" : "")}
 						onClick={() => handleChangeLanguage(language.code)}
 					>
+						{i18n.language === language.code && <LuCheck className="selected-icon" />}
 						{language.long}
 					</ButtonLikeAnchor>
 				</li>
@@ -312,21 +319,20 @@ const MenuNotify = ({
 			{healthStatus.map((service, key) => (
 				<li key={key}>
 					{!!service.status && (
-						<button
-							className="button-like-anchor"
+						<ButtonLikeAnchor
 							onClick={() => redirectToServices()}
 						>
 							<span> {service.name} </span>
 							{service.error ? (
-								<span className="ng-multi-value ng-multi-value-red">
+								<span className="multi-value multi-value-red">
 									{service.status}
 								</span>
 							) : (
-								<span className="ng-multi-value ng-multi-value-green">
+								<span className="multi-value multi-value-green">
 									{service.status}
 								</span>
 							)}
-						</button>
+						</ButtonLikeAnchor>
 					)}
 				</li>
 			))}

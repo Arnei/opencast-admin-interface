@@ -115,7 +115,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 
 	return (
 		<>
-			<ModalContentTable modalContentClassName="modal-content active">
+			<ModalContentTable modalContentClassName="modal-content">
 				<Notifications context="not_corner" />
 
 				{/* Table that shows conflicts with other events*/}
@@ -158,7 +158,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 				{!loading && (
 					<FieldArray
 						name="editedEvents"
-						render={arrayHelpers => (
+						render={_arrayHelpers => (
 							<>
 							{hasAccess(
 								"ROLE_UI_EVENTS_DETAILS_METADATA_EDIT",
@@ -177,7 +177,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 															)}
 														</span>
 													</td>
-													<td className="editable ng-isolated-scope">
+													<td className="editable">
 													{/*
 														* Per event there are 14 input fields, so with 'key * 14', the right
 														* event is reached. After the '+' comes the number of the input field.
@@ -205,7 +205,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 															)}
 														</span>
 													</td>
-													<td className="editable ng-isolated-scope">
+													<td className="editable">
 														{/*
 															* Per event there are 14 input fields, so with 'key * 14', the right
 															* event is reached. After the '+' comes the number of the input field.
@@ -399,10 +399,10 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 			<WizardNavigationButtons
 				formik={formik}
 				nextPage={
-					async () => {
+					() => {
 						dispatch(removeNotificationWizardForm());
 						if (
-							await checkSchedulingConflicts(
+							checkSchedulingConflicts(
 								formik.values,
 								setConflicts,
 								dispatch,

@@ -26,12 +26,6 @@ const NewUserWizard = ({
 
 	const usernames = useAppSelector(state => getUsernames(state));
 
-	const navStyle = {
-		left: "0px",
-		top: "auto",
-		position: "initial" as const,
-	};
-
 	const [tab, setTab] = useState(0);
 
 	const openTab = (tabNr: number) => {
@@ -61,15 +55,15 @@ const NewUserWizard = ({
 	return (
 		<>
 			{/* Head navigation*/}
-			<nav className="modal-nav" id="modal-nav" style={navStyle}>
+			<nav className="modal-nav">
 				<ButtonLikeAnchor
-					extraClassName={cn("wider", { active: tab === 0 })}
+					className={cn("wider", { active: tab === 0 })}
 					onClick={() => openTab(0)}
 				>
 					{t("USERS.USERS.DETAILS.TABS.USER")}
 				</ButtonLikeAnchor>
 				<ButtonLikeAnchor
-					extraClassName={cn("wider", { active: tab === 1 })}
+					className={cn("wider", { active: tab === 1 })}
 					onClick={() => openTab(1)}
 					tooltipText="USERS.USERS.DETAILS.DESCRIPTION.ROLES"
 				>

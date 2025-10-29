@@ -15,7 +15,7 @@ jobs:
     if: github.repository_owner == 'opencast'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: prepare crowdin client
       run: |
@@ -26,4 +26,4 @@ jobs:
       env:
         CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
       run: |
-        crowdin upload sources --config .crowdin.yaml -b main
+        crowdin upload sources --config .crowdin.yaml -b "${GITHUB_REF##*/}"

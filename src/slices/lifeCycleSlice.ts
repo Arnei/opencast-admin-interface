@@ -116,7 +116,7 @@ export const postNewLifeCyclePolicy = createAppAsyncThunk("lifeCycle/postNewLife
 	data.delete("accessControlEntries");
 	data.append("accessControlEntries", JSON.stringify(prepareAccessPolicyRulesForPost(policy.accessControlEntries).acl.ace));
 
-	axios.post("/api/lifecyclemanagement/policies", data)
+	await axios.post("/api/lifecyclemanagement/policies", data)
 		.then(res => {
 			console.info(res);
 			dispatch(addNotification({ type: "success", key: "LIFECYCLE_POLICY_ADDED" }));
@@ -128,7 +128,7 @@ export const postNewLifeCyclePolicy = createAppAsyncThunk("lifeCycle/postNewLife
 });
 
 export const deleteLifeCyclePolicy = createAppAsyncThunk("lifeCycle/fetchLifeCyclePolicies", async (id: string, { dispatch }) => {
-	axios
+	await axios
 		.delete(`/api/lifecyclemanagement/policies/${id}`)
 		.then(res => {
 			console.info(res);

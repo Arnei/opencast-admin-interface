@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import ResourceDetailsAccessPolicyTab from "../../../shared/modals/ResourceDetailsAccessPolicyTab";
 import { removeNotificationWizardForm } from "../../../../slices/notificationSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store";
@@ -21,7 +20,6 @@ const LifeCyclePolicyDetailsAccessTab = ({
 	policyChanged: boolean,
 	setPolicyChanged: (value: boolean) => void,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const acl = useAppSelector(state => getLifeCyclePolicyDetailsAcl(state));

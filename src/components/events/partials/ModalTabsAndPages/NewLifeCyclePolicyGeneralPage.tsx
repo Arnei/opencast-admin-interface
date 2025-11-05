@@ -1,4 +1,3 @@
-import React from "react";
 import { FormikProps } from "formik";
 import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
 import LifeCyclePolicyGeneralFields from "../wizards/LifeCyclePolicyGeneralFields";
@@ -10,11 +9,9 @@ import { LifeCyclePolicy, TargetFilter } from "../../../../slices/lifeCycleSlice
 const NewLifeCyclePolicyGeneralPage = <T extends LifeCyclePolicy & {targetFiltersArray: (TargetFilter & { filter: string })[]}>({
 	formik,
 	nextPage,
-	header,
 }: {
 	formik: FormikProps<T>,
 	nextPage: (values: T) => void,
-	header: string
 }) => {
 
 	return (

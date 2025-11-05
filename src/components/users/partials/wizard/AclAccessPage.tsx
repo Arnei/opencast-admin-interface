@@ -68,7 +68,7 @@ const AclAccessPage = <T extends RequiredFormProps>({
 					<ul>
 						<li>
 							<div className="obj list-obj">
-								<header className="no-expand">
+								<header>
 									{t("USERS.ACLS.NEW.ACCESS.ACCESS_POLICY.TITLE")}
 								</header>
 
@@ -151,8 +151,8 @@ const AclAccessPage = <T extends RequiredFormProps>({
 					<WizardNavigationButtons
 						formik={formik}
 						nextPage={
-							async () => {
-								if (await dispatch(checkAcls(formik.values.policies))) {
+							() => {
+								if (dispatch(checkAcls(formik.values.policies))) {
 									nextPage(formik.values);
 								}
 							}

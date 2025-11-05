@@ -1,4 +1,3 @@
-import React from "react";
 import { fetchSeries, Series } from "../../../slices/seriesSlice";
 import { loadSeriesIntoTable } from "../../../thunks/tableThunks";
 import MultiValueCell from "../../shared/MultiValueCell";
@@ -18,7 +17,7 @@ const SeriesOrganizersCell = ({
 				filterName="organizers"
 				fetchResource={fetchSeries}
 				loadResourceIntoTable={loadSeriesIntoTable}
-				tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.ORGANIZER"
+				// tooltipText="EVENTS.SERIES.TABLE.TOOLTIP.ORGANIZER" // Disabled due to performance concerns
 			/>
 		);
 };

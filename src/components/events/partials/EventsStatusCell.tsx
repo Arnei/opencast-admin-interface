@@ -28,7 +28,7 @@ const EventsStatusCell = ({
 		}
 
 		dispatch(fetchWorkflows(row.id)).unwrap()
-			.then(async workflows => {
+			.then(workflows => {
 				// Open workflow overview modal if no workflows available
 				if (!workflows.entries.length) {
 					return dispatch(openModal(EventDetailsPage.Workflow, row));
@@ -44,7 +44,7 @@ const EventsStatusCell = ({
 		<ButtonLikeAnchor
 			onClick={() => openStatusModal()}
 			className={"crosslink"}
-			tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.STATUS"}
+			// tooltipText={"EVENTS.EVENTS.TABLE.TOOLTIP.STATUS"}  // Disabled due to performance concerns
 		>
 			{t(row.displayable_status as ParseKeys)}
 		</ButtonLikeAnchor>

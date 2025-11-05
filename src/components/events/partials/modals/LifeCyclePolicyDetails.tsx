@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ModalNavigation from "../../../shared/modals/ModalNavigation";
 import { getLifeCyclePolicyDetails } from "../../../../selectors/lifeCycleDetailsSelectors";
 import LifeCyclePolicyGeneralTab from "../ModalTabsAndPages/LifeCyclePolicyGeneralTab";

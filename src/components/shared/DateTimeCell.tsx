@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { editFilterValue } from "../../slices/tableFilterSlice";
 import { getFilters } from "../../selectors/tableFilterSelectors";
@@ -25,7 +24,7 @@ const DateTimeCell = ({
 	filterName: string
 	fetchResource: AsyncThunk<any, void, any>
 	loadResourceIntoTable: () => AppThunk
-	tooltipText: ParseKeys
+	tooltipText?: ParseKeys
 }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();

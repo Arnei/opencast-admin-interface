@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { LifeCyclePolicy, TargetFilter } from "../../../../slices/lifeCycleSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store";

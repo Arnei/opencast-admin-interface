@@ -5,6 +5,7 @@ import { useField } from "formik";
 import { ParseKeys } from "i18next";
 import SearchContainer from "../SearchContainer";
 import BaseButton from "../BaseButton";
+import { LuArrowRightLeft } from "react-icons/lu";
 
 type Item = {
 	name: string
@@ -69,16 +70,12 @@ const SelectContainer = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const disabledSelectStyle = {
-		backgroundColor: "#eeeff0",
-	};
-
 	const clearSearchField = () => {
 		setSearchField("");
 		setItems(defaultItems);
 	};
 
-	const handleChangeSearch = async (input: string) => {
+	const handleChangeSearch = (input: string) => {
 		const filtered = defaultItems.filter(item => {
 			return item.name.toLowerCase().includes(input.toLowerCase());
 		});
@@ -214,9 +211,9 @@ const SelectContainer = ({
 						{/* Select with options provided by backend*/}
 						<select
 							multiple
-							className="available"
+							className={cn("available", { disabled: !manageable })}
+							style={manageable ? { minHeight: "11em" } : {}}
 							disabled={!manageable}
-							style={manageable ? { minHeight: "11em" } : disabledSelectStyle}
 							value={markedForAddition}
 							onChange={e => handleChangeAdd(e)}
 						>
@@ -242,7 +239,7 @@ const SelectContainer = ({
 					</div>
 				</div>
 
-				<div className="exchange-icon" />
+				<LuArrowRightLeft className="exchange-icon"/>
 
 				{/* Select with options chosen by user*/}
 				<div className="multi-select-col">
@@ -250,9 +247,9 @@ const SelectContainer = ({
 						<label>{t(`${resource.label}.RIGHT` as ParseKeys)}</label>
 						<select
 							multiple
-							className="selected"
+							className={cn("selected", { disabled: !manageable })}
 							disabled={!manageable}
-							style={manageable ? { minHeight: "11em" } : disabledSelectStyle}
+							style={manageable ? { minHeight: "11em" } : {}}
 							onChange={e => handleChangeRemove(e)}
 							value={markedForRemoval}
 						>

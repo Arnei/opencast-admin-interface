@@ -1,4 +1,3 @@
-import React from "react";
 import { getFilters } from "../../selectors/tableFilterSelectors";
 import { editFilterValue } from "../../slices/tableFilterSlice";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
@@ -23,7 +22,7 @@ const MultiValueCell = ({
 	filterName: string
 	fetchResource: AsyncThunk<any, void, any>
 	loadResourceIntoTable: () => AppThunk
-	tooltipText: ParseKeys,
+	tooltipText?: ParseKeys,
 }) => {
 	const dispatch = useAppDispatch();
 

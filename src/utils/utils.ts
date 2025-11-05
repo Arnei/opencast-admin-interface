@@ -157,3 +157,10 @@ export function hasOwnProperty<O extends object, K extends PropertyKey>(
 ): obj is O & Record<K, unknown> {
 	return Object.prototype.hasOwnProperty.call(obj, key);
 }
+
+/**
+ * Have the browser show a warning dialog for unsaved changes
+ */
+export const confirmUnsaved = (t: TFunction) => {
+	return window.confirm(t("CONFIRMATIONS.WARNINGS.UNSAVED_CHANGES"));
+};

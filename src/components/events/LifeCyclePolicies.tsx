@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TableFilters from "../shared/TableFilters";
 import Table from "../shared/Table";
 import Notifications from "../shared/Notifications";
 import { loadLifeCyclePoliciesIntoTable } from "../../thunks/tableThunks";
-import { fetchFilters, editTextFilter } from "../../slices/tableFilterSlice";
+import { fetchFilters } from "../../slices/tableFilterSlice";
 import Header from "../Header";
 import NavBar from "../NavBar";
 import MainView from "../MainView";
@@ -16,7 +16,6 @@ import { fetchLifeCyclePolicies } from "../../slices/lifeCycleSlice";
 import { lifeCyclePoliciesTemplateMap } from "../../configs/tableConfigs/lifeCyclePoliciesTableMap";
 import { fetchLifeCyclePolicyActions, fetchLifeCyclePolicyTargetTypes, fetchLifeCyclePolicyTimings } from "../../slices/lifeCycleDetailsSlice";
 import { ModalHandle } from "../shared/modals/Modal";
-import { availableHotkeys } from "../../configs/hotkeysConfig";
 import { eventsLinks } from "./partials/EventsNavigation";
 import { resetTableProperties } from "../../slices/tableSlice";
 

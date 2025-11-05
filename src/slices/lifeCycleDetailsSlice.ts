@@ -113,6 +113,7 @@ export const fetchLifeCyclePolicyTimings = createAppAsyncThunk("lifeCyclePolicyD
 });
 
 // Dummy function for compatability
+// eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
 export const fetchLifeCyclePolicyDetailsAcls = createAppAsyncThunk("lifeCyclePolicyDetails/fetchLifeCyclePolicyDetailsAcls", async (id: string, { getState }) => {
 	const state = getState();
 	return state.lifeCyclePolicyDetails.accessControlEntries;
@@ -128,7 +129,7 @@ export const updateLifeCyclePolicyAccess = createAppAsyncThunk("lifeCyclePolicyD
 	const data = new URLSearchParams();
 	data.append("accessControlEntries", JSON.stringify(policies.acl.ace));
 
-	axios.put(`/api/lifecyclemanagement/policies/${id}`, data)
+	await axios.put(`/api/lifecyclemanagement/policies/${id}`, data)
 		.then(response => {
 			console.info(response);
 			dispatch(addNotification({ type: "success", key: "LIFECYCLEPOLICY_ADDED" }));
@@ -155,7 +156,7 @@ export const updateLifeCyclePolicy = createAppAsyncThunk("lifeCyclePolicyDetails
 		data.append(key, stringified);
 	});
 
-	axios.put(`/api/lifecyclemanagement/policies/${policy.id}`, data)
+	await axios.put(`/api/lifecyclemanagement/policies/${policy.id}`, data)
 		.then(response => {
 			console.info(response);
 			dispatch(addNotification({ type: "success", key: "LIFECYCLEPOLICY_ADDED" }));

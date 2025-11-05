@@ -1,15 +1,13 @@
-import React, { useRef, useState } from "react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import { Tooltip } from "../../shared/Tooltip";
+import { useAppDispatch } from "../../../store";
 import { deleteLifeCyclePolicy, LifeCyclePolicy } from "../../../slices/lifeCycleSlice";
-import DetailsModal from "../../shared/modals/DetailsModal";
 import LifeCyclePolicyDetails from "./modals/LifeCyclePolicyDetails";
-import { hasAccess } from "../../../utils/utils";
-import { getUserInformation } from "../../../selectors/userInfoSelectors";
 import { fetchLifeCyclePolicyDetails } from "../../../slices/lifeCycleDetailsSlice";
-import ConfirmModal from "../../shared/ConfirmModal";
-import { ModalHandle } from "../../shared/modals/Modal";
+import { Modal, ModalHandle } from "../../shared/modals/Modal";
+import ButtonLikeAnchor from "../../shared/ButtonLikeAnchor";
+import { LuFileText } from "react-icons/lu";
+import { ActionCellDelete } from "../../shared/ActionCellDelete";
 
 /**
  * This component renders the title cells of series in the table view
@@ -22,28 +20,17 @@ const LifeCyclePolicyActionCell = ({
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const [displayLifeCyclePolicyDetails, setLifeCyclePolicyDetails] = useState(false);
-	const deleteConfirmationModalRef = useRef<ModalHandle>(null);
-
-	const user = useAppSelector(state => getUserInformation(state));
+	const modalRef = useRef<ModalHandle>(null);
 
 	const showLifeCyclePolicyDetails = async () => {
 		await dispatch(fetchLifeCyclePolicyDetails(row.id));
 
-		setLifeCyclePolicyDetails(true);
+		modalRef.current?.open();
 	};
 
-	const hideLifeCyclePolicyDetails = () => {
-		setLifeCyclePolicyDetails(false);
-	};
-
-	const hideDeleteConfirmation = () => {
-		deleteConfirmationModalRef.current?.close?.();
-	};
-
-	const showDeleteConfirmation = async () => {
-		deleteConfirmationModalRef.current?.open();
-	};
+	// const hideLifeCyclePolicyDetails = () => {
+	// 	modalRef.current?.close?.();
+	// };
 
 	const deletingPolicy = (id: string) => {
 		dispatch(deleteLifeCyclePolicy(id));
@@ -52,43 +39,32 @@ const LifeCyclePolicyActionCell = ({
 	return (
 		<>
 			{/* view details location/recording */}
-			{hasAccess("ROLE_UI_LIFECYCLEPOLICY_DETAILS_VIEW", user) && (
-				<Tooltip title={t("LIFECYCLE.POLICIES.TABLE.TOOLTIP.DETAILS")}>
-					<button
-						className="button-like-anchor more"
-						onClick={() => showLifeCyclePolicyDetails()}
-					/>
-				</Tooltip>
-			)}
+			<ButtonLikeAnchor
+				onClick={() => showLifeCyclePolicyDetails()}
+				className={"action-cell-button"}
+				editAccessRole={"ROLE_UI_LIFECYCLEPOLICY_DETAILS_VIEW"}
+				// tooltipText={"LIFECYCLE.POLICIES.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns
+			>
+				<LuFileText />
+			</ButtonLikeAnchor>
 
-			{displayLifeCyclePolicyDetails && (
-				<DetailsModal
-					handleClose={hideLifeCyclePolicyDetails}
-					title={row.title}
-					prefix={"LIFECYCLE.POLICIES.DETAILS.HEADER"}
-				>
-					<LifeCyclePolicyDetails />
-				</DetailsModal>
-			)}
+			<Modal
+				header={t("LIFECYCLE.POLICIES.DETAILS.HEADER", { name: row.title })}
+				classId="user-details-modal"
+				ref={modalRef}
+			>
+				{/* component that manages tabs of user details modal*/}
+				<LifeCyclePolicyDetails />
+			</Modal>
 
 			{/* delete policy */}
-			{hasAccess("ROLE_UI_LIFECYCLEPOLICY_DELETE", user) && (
-				<Tooltip title={t("LIFECYCLE.POLICIES.TABLE.TOOLTIP.DELETE")}>
-					<button
-						onClick={() => showDeleteConfirmation()}
-						className="button-like-anchor remove"
-
-					/>
-				</Tooltip>
-			)}
-
-			<ConfirmModal
-				close={hideDeleteConfirmation}
-				resourceName={row.title}
-				resourceType="LIFECYCLE_POLICY"
+			<ActionCellDelete
+				editAccessRole={"ROLE_UI_LIFECYCLEPOLICY_DELETE"}
+				// tooltipText={"LIFECYCLE.POLICIES.TABLE.TOOLTIP.DELETE"} // Disabled due to performance concerns
 				resourceId={row.id}
+				resourceName={row.title}
+				resourceType={"LIFECYCLE_POLICY"}
 				deleteMethod={deletingPolicy}
-				modalRef={deleteConfirmationModalRef}
 			/>
 		</>
 	);

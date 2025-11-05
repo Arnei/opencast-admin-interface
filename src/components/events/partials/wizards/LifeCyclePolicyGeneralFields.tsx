@@ -18,6 +18,11 @@ import { formatPolicyActionsForDropdown } from "../../../../utils/dropDownUtils"
 // sourceMode: string,
 // processingWorkflow: string,
 // }
+type EventFilterOption = {
+	id: string,
+	type: string,
+	collection?: unknown
+}
 
 const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFiltersArray: (TargetFilter & { filter: string })[]}>({
 	formik,
@@ -82,7 +87,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 		},
 	];
 
-	const eventFilterOptions: { id: string, type: string, collection?: unknown }[] = [];
+	const eventFilterOptions: EventFilterOption[] = [];
 	for (const field of metadataFields.fields) {
 		eventFilterOptions.push(field);
 	}
@@ -106,6 +111,22 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 				return [];
 		}
 	};
+
+	const filterTargetTypesByFilter = (filter: string) => {
+		const event = eventFilterOptions.find(event => event.id === filter);
+
+		if (!event) {
+			return ALL_TARGET_FILTER_TYPES;
+		}
+		if (event.type.includes("text")) {
+			return ["SEARCH", "WILDCARD"];
+		}
+		if (event.type.includes("date")) {
+			return ["GREATER_THAN", "LESS_THAN"];
+		}
+		return ALL_TARGET_FILTER_TYPES;
+	};
+
 
 	return (
 		<>
@@ -204,6 +225,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 							/>
 						</td>
 					</tr>
+					{formik.values.timing === "SPECIFIC_DATE" &&
 					<tr>
 						<td>
 							{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ACTIONDATE")}
@@ -223,6 +245,8 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 							/>
 						</td>
 					</tr>
+					}
+					{formik.values.timing === "REPEATING" &&
 					<tr>
 						<td>
 							{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.CRONTRIGGER")}
@@ -242,6 +266,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 							/>
 						</td>
 					</tr>
+					}
 					{!isNew &&
 						<tr>
 							<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ID")}</td>
@@ -295,6 +320,12 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 							render={arrayHelpers => (
 								<>
 									{Object.entries(formik.values.targetFiltersArray).map(([key, filter], index) => {
+										// Get available filter options
+										const availableFilterOptions = filterOptions(formik.values.targetType);
+
+										// Derive available type options based on selected filter
+										const dependentTypeOptions = filterTargetTypesByFilter(filter.filter);
+
 										return (
 											<tr key={index}>
 												<td className="editable">
@@ -302,19 +333,24 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 														type="time"
 														name={`targetFiltersArray.${key}.filter`}
 														value={filter.filter}
-														values={filterOptions(formik.values.targetType).map(e => e.id)}
+														values={availableFilterOptions.map(e => e.id)}
 														creatable={true}
 														clearFieldName={`targetFiltersArray.${key}.value`}
 														component={DropdownField}
+														onChange={(value: string) => {
+															formik.setFieldValue(`targetFiltersArray.${key}.filter`, value);
+															// Reset type when filter changes
+															formik.setFieldValue(`targetFiltersArray.${key}.type`, undefined);
+														}}
 													/>
 												</td>
 												<td className="editable">
 													<Field
 														name={`targetFiltersArray.${key}.value`}
 														metadataField={{
-															type: getTargetFilterRenderType(filter.filter, filterOptions(formik.values.targetType)),
+															type: getTargetFilterRenderType(filter.filter, availableFilterOptions),
 															required: true,
-															collection: getTargetFilterRenderCollection(filter.filter, filterOptions(formik.values.targetType)),
+															collection: getTargetFilterRenderCollection(filter.filter, availableFilterOptions),
 															id: undefined,
 														}}
 														component={RenderField}
@@ -322,9 +358,10 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 												</td>
 												<td className="editable">
 													<Field
+														key={`type-${filter.filter}-${index}`} // ensures rerender when filter changes
 														name={`targetFiltersArray.${key}.type`}
 														value={filter.type}
-														values={ALL_TARGET_FILTER_TYPES}
+														values={dependentTypeOptions}
 														component={DropdownField}
 													/>
 												</td>

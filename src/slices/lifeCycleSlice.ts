@@ -20,7 +20,7 @@ type TargetFilterTypesTuple = typeof ALL_TARGET_FILTER_TYPES;
 type TargetFiltersType = TargetFilterTypesTuple[number];
 
 export type LifeCyclePolicy = {
-	actionParameters: { [key: string]: unknown }, // JSON. Variable, depends on action
+	actionParameters: { [key: string]: unknown }, // JSON. Variable, depends on action1
 	timing: string,
 	action: string,
 	targetType: string,

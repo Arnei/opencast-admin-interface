@@ -51,10 +51,6 @@ const LifeCyclePolicyGeneralTab = ({
 		};
 		// values.actionParameters["workflowParameters"] = JSON.stringify(workflowParameters);
 
-		if (values.action === "START_WORKFLOW") {
-			values.actionParameters["workflowParameters"] = JSON.parse(values.actionParameters["workflowParameters"] as string);
-		}
-
 		dispatch(updateLifeCyclePolicy(newValues));
 	};
 

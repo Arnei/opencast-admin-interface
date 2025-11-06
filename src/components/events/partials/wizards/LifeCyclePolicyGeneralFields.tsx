@@ -9,7 +9,11 @@ import { getLifeCyclePolicyActions, getLifeCyclePolicyTargetTypes, getLifeCycleP
 import DropDown from "../../../shared/DropDown";
 import { getEventMetadata } from "../../../../selectors/eventSelectors";
 import { fetchEventMetadata } from "../../../../slices/eventSlice";
-import { formatPolicyActionsForDropdown } from "../../../../utils/dropDownUtils";
+import { formatPolicyActionsForDropdown, formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
+import { getWorkflowDef } from "../../../../selectors/workflowSelectors";
+import { fetchWorkflowDef } from "../../../../slices/workflowSlice";
+import RenderWorkflowConfig, { Configuration } from "./RenderWorkflowConfig";
+import { setDefaultConfig } from "../../../../utils/workflowPanelUtils";
 
 /**
  * This component renders the metadata page for new events and series in the wizards.
@@ -403,57 +407,9 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 			</div>
 
 			{formik.values.action === "START_WORKFLOW" &&
-				<div className="obj tbl-list">
-					<header>
-						{ t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ACTIONPARAMETERS.CAPTION") }
-					</header>
-						<table className="main-tbl">
-							<tbody>
-								<tr>
-									<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ACTIONPARAMETERS.WORKFLOW_ID")}<i className="required">*</i></td>
-									<td>
-									<Field
-										type="text"
-										name={"actionParameters.workflowId"}
-										metadataField={{
-											type: "text",
-											required: true,
-											collection: undefined,
-											id: undefined,
-										}}
-										component={RenderField}
-									/>
-									</td>
-								</tr>
-								<tr>
-								<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ACTIONPARAMETERS.WORKFLOW_PARAMETERS")}</td>
-									<td>
-										<Field
-											type="text"
-											// component="textarea"
-											name="actionParameters.workflowParameters"
-											className="editable vertical-resize"
-
-											metadataField={{
-												type: "text_long",
-												required: false,
-												collection: undefined,
-												id: undefined,
-											}}
-											component={RenderField}
-										/>
-										{/* Using our "WorkflowConfig" component would be nice, but it does not allow us to add or remove config options */}
-										{/* <WorkflowConfig
-											// @ts-expect-error TS(7006):
-											formik={formik}
-											configPanel={formik.values.workflowParameters}
-											description={""}
-										/> */}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-				</div>
+				<WorkflowSelector
+					formik={formik}
+				/>
 			}
 		</>
 	);
@@ -515,4 +471,88 @@ const getTargetFilterRenderType = (filterName: string, targetFilterOptions: { id
 const getTargetFilterRenderCollection = (filterName: string, targetFilterOptions: { id: string, type: string, collection?: unknown }[]) => {
 	const option = targetFilterOptions.find(e => e.id === filterName);
 	return option !== undefined ? option.collection : undefined;
+};
+
+const WorkflowSelector = <T extends LifeCyclePolicy & {targetFiltersArray: (TargetFilter & { filter: string })[]}>({
+	formik,
+}: {
+	formik: FormikProps<T>,
+}) => {
+	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
+
+	const workflowDef = useAppSelector(state => getWorkflowDef(state));
+	// const lol = JSON.parse(formik.values.actionParameters.workflowParameters)
+
+	useEffect(() => {
+		// Load workflow definitions for selecting
+		dispatch(fetchWorkflowDef("tasks"));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const setDefaultValues = (value: string) => {
+		const workflowId = value;
+		// fill values with default configuration of chosen workflow
+		const defaultConfiguration = setDefaultConfig(workflowDef, workflowId);
+
+		// set default configuration in formik
+		formik.setFieldValue("actionParameters.workflowParameters", defaultConfiguration);
+		// set chosen workflow in formik
+		formik.setFieldValue("actionParameters.workflowId", workflowId);
+	};
+
+	return (
+		<div className="obj quick-actions">
+			<header>
+				{t("EVENTS.EVENTS.NEW.PROCESSING.SELECT_WORKFLOW")}
+			</header>
+			<div className="obj-container padded">
+				{workflowDef.length > 0 ? (
+					<div className="editable">
+						<DropDown
+							value={formik.values.actionParameters.workflowId}
+							text={
+								workflowDef.find(
+									workflow =>
+										formik.values.actionParameters.workflowId === workflow.id,
+								)?.title ?? ""
+							}
+							options={formatWorkflowsForDropdown(workflowDef)}
+							required={true}
+							handleChange={element => {
+								if (element) {
+									setDefaultValues(element.value as string);
+								}
+							}}
+							placeholder={t(
+								"EVENTS.EVENTS.NEW.PROCESSING.SELECT_WORKFLOW",
+							)}
+							customCSS={{ width: "100%" }}
+						/>
+					</div>
+				) : (
+					<span>
+						{t("EVENTS.EVENTS.NEW.PROCESSING.SELECT_WORKFLOW_EMPTY")}
+					</span>
+				)}
+
+				{/* Configuration panel of selected workflow */}
+				<div className="collapsible-box">
+					<div
+						id="new-event-workflow-configuration"
+						className="checkbox-container obj-container"
+					>
+						{formik.values.actionParameters.workflowId ? (
+							<RenderWorkflowConfig
+								displayDescription
+								workflowId={formik.values.actionParameters.workflowId as string}
+								configuration={formik.values.actionParameters.workflowParameters as Configuration}
+								configurationName={"actionParameters.workflowParameters"}
+							/>
+						) : null}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };

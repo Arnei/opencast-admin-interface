@@ -187,6 +187,7 @@ const EventDetailsWorkflowSchedulingTab = ({
 													<div className="obj-container padded">
 														{hasCurrentAgentAccess() &&
 															isRoleWorkflowEdit &&
+															formik.values.configuration &&
 															!!workflowConfiguration &&
 															!!workflowConfiguration.workflowId && (
 																<div
@@ -197,7 +198,8 @@ const EventDetailsWorkflowSchedulingTab = ({
 																		workflowId={
 																			workflowConfiguration.workflowId
 																		}
-																		formik={formik}
+																		configuration={formik.values.configuration}
+																		configurationName={"configuration"}
 																	/>
 																</div>
 															)}

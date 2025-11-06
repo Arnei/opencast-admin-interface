@@ -17,6 +17,7 @@ import ModalContentTable from "../../../shared/modals/ModalContentTable";
 interface RequiredFormProps {
 	sourceMode: string,
 	processingWorkflow: string,
+	configuration: { [key: string]: any },
 }
 
 const NewProcessingPage = <T extends RequiredFormProps>({
@@ -115,8 +116,8 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 									<RenderWorkflowConfig
 										displayDescription
 										workflowId={formik.values.processingWorkflow}
-										// @ts-expect-error TS(7006):
-										formik={formik}
+										configuration={formik.values.configuration}
+										configurationName="configuration"
 									/>
 								) : null}
 							</div>

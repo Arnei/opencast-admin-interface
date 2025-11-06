@@ -80,8 +80,15 @@ const NewLifeCyclePolicySummary = <T extends typeof initialFormValuesNewLifeCycl
 													<tr>
 														{/*  @ts-expect-error: Potentially unknown */}
 														<td>{formik.values.actionParameters.workflowId}</td>
-														{/*  @ts-expect-error: Potentially unknown */}
-														<td>{formik.values.actionParameters.workflowParameters}</td>
+														<td>
+															{/*  @ts-expect-error: Potentially unknown */}
+															{Object.entries(formik.values.actionParameters.workflowParameters).map(([key, value]) => (
+																<tr key={key}>
+																	<td>{key}</td>
+																	<td>{String(value)}</td>
+																</tr>
+															))}
+														</td>
 													</tr>
 													}
 											</td>

@@ -55,6 +55,9 @@ export const fetchLifeCyclePolicyDetails = createAppAsyncThunk("lifeCyclePolicyD
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	data.actionParameters = JSON.parse(data.actionParameters);
+	if (data.action === "START_WORKFLOW") {
+		data.actionParameters.workflowParameters = JSON.parse(data.actionParameters.workflowParameters as string);
+	}
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	data.targetFilters = JSON.parse(data.targetFilters);
 

@@ -242,7 +242,8 @@ export const initialFormValuesNewLifeCyclePolicy: {
 	cronTrigger: "",
 	actionParameters: {
 		workflowId: "noop",
-		workflowParameters: "{\"straightToPublishing\": true}",
+		// workflowParameters: "{\"straightToPublishing\": true}",
+		workflowParameters: { straightToPublishing: true },
 	},
 
 	policies: [],

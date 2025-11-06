@@ -89,9 +89,7 @@ const NewLifeCyclePolicyWizard = ({
 			targetFilters: parseTargetFiltersForSubmit(values.targetFiltersArray),
 			accessControlEntries: values.policies,
 		};
-		if (fixedValues.action === "START_WORKFLOW") {
-			fixedValues.actionParameters["workflowParameters"] = JSON.parse(values.actionParameters["workflowParameters"] as string);
-		}
+
 		const response = dispatch(postNewLifeCyclePolicy(fixedValues));
 		console.info(response);
 		close();

@@ -11,7 +11,15 @@ import { ParseKeys } from "i18next";
 /**
  * This component manages the tabs of the series details modal
  */
-const LifeCyclePolicyDetails = () => {
+const LifeCyclePolicyDetails = ({
+	policyId,
+	policyChanged,
+	setPolicyChanged,
+}: {
+	policyId: string
+	policyChanged: boolean
+	setPolicyChanged: (policyChanged: boolean) => void
+}) => {
 	const [page, setPage] = useState(0);
 	const dispatch = useAppDispatch();
 
@@ -24,9 +32,6 @@ const LifeCyclePolicyDetails = () => {
 	}, []);
 
 	const policy = useAppSelector(state => getLifeCyclePolicyDetails(state));
-
-	// tracks, whether the policies are different to the initial value
-	const [policyChanged, setPolicyChanged] = useState(false);
 
 	// information about tabs
 	const tabs: {
@@ -59,7 +64,7 @@ const LifeCyclePolicyDetails = () => {
 				{page === 0 && <LifeCyclePolicyGeneralTab policy={policy} />}
 				{page === 1 &&
 					<LifeCyclePolicyDetailsAccessTab
-						seriesId={policy.id}
+						seriesId={policyId}
 						header={tabs[page].tabTranslation}
 						policyChanged={policyChanged}
 						setPolicyChanged={setPolicyChanged}

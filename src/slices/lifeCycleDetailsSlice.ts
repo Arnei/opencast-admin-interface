@@ -6,15 +6,22 @@ import { TransformedAcl } from "./aclDetailsSlice";
 import { createPolicy } from "../utils/resourceUtils";
 import { Ace } from "./aclSlice";
 import { addNotification } from "./notificationSlice";
+import { AppDispatch } from "../store";
 
 
 /**
  * This file contains redux reducer for actions affecting the state of a lifeCyclePolicy/capture agent
  */
+type LifeCyclePolicyDetailsModal = {
+	show: boolean,
+	policy: { id: string, title: string } | null,
+}
+
 interface LifeCyclePolicyDetailsState extends LifeCyclePolicy {
 	statusLifeCyclePolicyDetails: "uninitialized" | "loading" | "succeeded" | "failed",
 	errorLifeCyclePolicyDetails: SerializedError | null,
 
+	modal: LifeCyclePolicyDetailsModal,
 	actionsEnum: string[],
 	targetTypesEnum: string[],
 	timingsEnum: string[],
@@ -24,7 +31,11 @@ interface LifeCyclePolicyDetailsState extends LifeCyclePolicy {
 const initialState: LifeCyclePolicyDetailsState = {
 	statusLifeCyclePolicyDetails: "uninitialized",
 	errorLifeCyclePolicyDetails: null,
-  actionParameters: {},
+	modal: {
+		show: false,
+		policy: null,
+	},
+	actionParameters: {},
 	timing: "SPECIFIC_DATE",
 	action: "START_WORKFLOW",
 	targetType: "EVENT",
@@ -170,10 +181,34 @@ export const updateLifeCyclePolicy = createAppAsyncThunk("lifeCyclePolicyDetails
 		});
 });
 
+/**
+ * Open details modal externally
+ *
+ * @param page modal page
+ * @param policy policy to show
+ */
+export const openModal = (
+	policy: LifeCyclePolicyDetailsModal["policy"],
+) => (dispatch: AppDispatch) => {
+	dispatch(setModalLifeCyclePolicy(policy));
+	dispatch(setShowModal(true));
+};
+
 const lifeCyclePolicyDetailsSlice = createSlice({
 	name: "lifeCyclePolicyDetails",
 	initialState,
-	reducers: {},
+	reducers: {
+		setShowModal(state, action: PayloadAction<
+			LifeCyclePolicyDetailsState["modal"]["show"]
+		>) {
+			state.modal.show = action.payload;
+		},
+		setModalLifeCyclePolicy(state, action: PayloadAction<
+			LifeCyclePolicyDetailsState["modal"]["policy"]
+		>) {
+			state.modal.policy = action.payload;
+		},
+	},
 	// These are used for thunks
 	extraReducers: builder => {
 		builder
@@ -234,7 +269,10 @@ const lifeCyclePolicyDetailsSlice = createSlice({
 	},
 });
 
-// export const {} = lifeCyclePolicyDetailsSlice.actions;
+export const {
+	setShowModal,
+	setModalLifeCyclePolicy,
+} = lifeCyclePolicyDetailsSlice.actions;
 
 // Export the slice reducer as the default export
 export default lifeCyclePolicyDetailsSlice.reducer;

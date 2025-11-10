@@ -25,7 +25,19 @@ const RenderField = ({
 	isFirstField = false,
 }: {
 	field: FieldProps["field"]
-	metadataField: { type: string, collection: { [key: string]: unknown }[], required: boolean, id: string }, // MetadataField
+	metadataField: {
+		type: string,
+		collection?: {
+			name: string,
+			value: string,
+			label?: string,
+			order?: number,
+			selectable?: boolean,
+		}[],
+		required: boolean,
+		id: string,
+		translatable?: boolean
+	}, // MetadataField
 	form: FieldProps["form"]
 	showCheck?: boolean,
 	isFirstField?: boolean,
@@ -206,7 +218,19 @@ const EditableDateValue = ({
 // renders editable field for selecting value via dropdown
 type EditableSingleSelectProps = ({
 	field: FieldProps["field"]
-	metadataField: { type: string, collection: { [key: string]: any }[], required: boolean, id: string, translatable?: boolean }, // MetadataField
+	metadataField: {
+		type: string,
+		collection?: {
+			name: string,
+			value: string,
+			label?: string,
+			order?: number,
+			selectable?: boolean,
+		}[],
+		required: boolean,
+		id: string,
+		translatable?: boolean
+	}, // MetadataField
 	text: string
 	form: FieldProps["form"]
 	isFirstField?: boolean,
@@ -233,6 +257,7 @@ const EditableSingleSelect = (props: EditableSingleSelectProps) => {
 	return <EditableSingleSelectDropDown
 		field={field}
 		metadataField={metadataField}
+		options={metadataField.collection?.map(item => { return { label: item.label ?? item.name, value: item.value, order: item.order }; })}
 		text={text}
 		form={form}
 		isFirstField={isFirstField}

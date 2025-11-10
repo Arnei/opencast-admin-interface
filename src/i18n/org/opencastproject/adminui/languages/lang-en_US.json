@@ -707,7 +707,8 @@
 					"ACCESS": "Access policy",
 					"COMMENTS": "Comments",
 					"STATISTICS": "Statistics",
-					"TOBIRA": "Tobira"
+					"TOBIRA": "Tobira",
+					"LIFECYCLEPOLICIES": "LifeCycle Policies"
 				},
 				"PUBLICATIONS": {
 					"CAPTION": "Publications",
@@ -1109,6 +1110,15 @@
 						"TYPE": "Service type",
 						"TECHNICAL_DETAILS": "Technical details",
 						"OPERATION": "Operation the error occured in"
+					}
+				},
+				"LIFECYCLEPOLICIES": {
+					"EMPTY": "No policies found",
+					"TABLE_TITLE": "LifeCycle Policies",
+					"TITLE": "Policy title",
+					"DISCLAIMER": {
+						"TITLE": "Important note",
+						"MESSAGE": "The list contains lifecycle policies that would affect this event, were the policies to be executed right now. Since policies only decide which events they affect on the moment of their execution, this list cannot claim to be accurate. A policy appearing in the list below is no guarantee that the policy will affect this event."
 					}
 				}
 			}

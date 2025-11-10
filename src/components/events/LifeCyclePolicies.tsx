@@ -18,6 +18,7 @@ import { fetchLifeCyclePolicyActions, fetchLifeCyclePolicyTargetTypes, fetchLife
 import { ModalHandle } from "../shared/modals/Modal";
 import { eventsLinks } from "./partials/EventsNavigation";
 import { resetTableProperties } from "../../slices/tableSlice";
+import LifeCyclePolicyDetailsModal from "./partials/modals/LifeCyclePolicyDetailsModal";
 
 /**
  * This component renders the table view of policies
@@ -110,6 +111,9 @@ const LifeCyclePolicies = () => {
 				<Table templateMap={lifeCyclePoliciesTemplateMap} />
 			</MainView>
 			<Footer />
+
+			{/* Include table modal */}
+			<LifeCyclePolicyDetailsModal />
 		</>
 	);
 };

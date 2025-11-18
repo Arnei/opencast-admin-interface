@@ -230,7 +230,7 @@ export const initialFormValuesNewLifeCyclePolicy: {
 	cronTrigger: string,
 	actionParameters: { [key: string]: unknown }
 	policies: TransformedAcl[]
-	targetFiltersArray: (TargetFilter & { filter: string })[],
+	targetFiltersTransformed: { [key: string]: (TargetFilter & { filter: string })[] },
 } = {
 	title: "",
 	isActive: true,
@@ -247,5 +247,7 @@ export const initialFormValuesNewLifeCyclePolicy: {
 	},
 
 	policies: [],
-	targetFiltersArray: [],
+	targetFiltersTransformed: {
+		"dublincore/episode": [],
+	},
 };

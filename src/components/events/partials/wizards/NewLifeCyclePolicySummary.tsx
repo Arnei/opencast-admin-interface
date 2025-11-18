@@ -63,13 +63,17 @@ const NewLifeCyclePolicySummary = <T extends typeof initialFormValuesNewLifeCycl
 										<tr>
 											<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.TARGETFILTERS.CAPTION")}</td>
 											<td>
-												{formik.values.targetFiltersArray.map((filter, key) => (
-													<tr key={key}>
-														<td>{filter.filter}</td>
-														<td>{filter.value.toString()}</td>
-														<td>{filter.type}</td>
-														<td>{filter.must.toString()}</td>
-													</tr>
+												{Object.entries(formik.values.targetFiltersTransformed)
+													.filter(([outerKey]) => outerKey === "dublincore/episode")
+													.map(([_outerKey, filters]) => (
+														filters.map((filter, key) => (
+															<tr key={key}>
+																<td>{filter.filter}</td>
+																<td>{filter.value.toString()}</td>
+																<td>{filter.type}</td>
+																<td>{filter.must.toString()}</td>
+															</tr>
+														))
 												))}
 											</td>
 										</tr>

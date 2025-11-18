@@ -6,7 +6,7 @@ import { LifeCyclePolicy, TargetFilter } from "../../../../slices/lifeCycleSlice
 /**
  * This component renders the metadata page for new events and series in the wizards.
  */
-const NewLifeCyclePolicyGeneralPage = <T extends LifeCyclePolicy & {targetFiltersArray: (TargetFilter & { filter: string })[]}>({
+const NewLifeCyclePolicyGeneralPage = <T extends LifeCyclePolicy & {targetFiltersTransformed: { [key: string]: (TargetFilter & { filter: string })[] }}>({
 	formik,
 	nextPage,
 }: {

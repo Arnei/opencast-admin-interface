@@ -11,7 +11,7 @@ import { hasAccess } from "../../../../utils/utils";
 import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import { LifeCyclePolicySchema } from "../../../../utils/validate";
 import _ from "lodash";
-import { parseTargetFiltersForSubmit } from "../../../../utils/lifeCycleUtils";
+import { parseTargetFiltersForEditing, parseTargetFiltersForSubmit } from "../../../../utils/lifeCycleUtils";
 
 /**
  * This component renders details about a recording/capture agent
@@ -26,10 +26,13 @@ const LifeCyclePolicyGeneralTab = ({
 
 	const user = useAppSelector(state => getUserInformation(state));
 
-	const handleSubmit = (values: LifeCyclePolicy & {workflowParameters: ConfigurationPanelField[], targetFiltersArray: (TargetFilter & { filter: string })[]}) => {
+	const handleSubmit = (values: LifeCyclePolicy & {
+		workflowParameters: ConfigurationPanelField[],
+		targetFiltersTransformed: { [key: string]: (TargetFilter & { filter: string })[] }
+	}) => {
 
 		// Parse filters
-		const targetFilters: typeof values["targetFilters"] = parseTargetFiltersForSubmit(values.targetFiltersArray);
+		const targetFilters: typeof values["targetFilters"] = parseTargetFiltersForSubmit(values.targetFiltersTransformed);
 
 		// TODO: Improve workflowParameters rendering
 		// Parse action parameters
@@ -56,9 +59,12 @@ const LifeCyclePolicyGeneralTab = ({
 
 	// set current values of metadata fields as initial values
 	const getInitialValues = (policy: LifeCyclePolicy) => {
-		const initialValues: LifeCyclePolicy & {workflowParameters: ConfigurationPanelField[], targetFiltersArray: (TargetFilter & { filter: string })[]} = {
+		const initialValues: LifeCyclePolicy & {
+			workflowParameters: ConfigurationPanelField[],
+			targetFiltersTransformed: { [key: string]: (TargetFilter & { filter: string })[] }
+		} = {
 			workflowParameters: [],
-			targetFiltersArray: [],
+			targetFiltersTransformed: {},
 			...policy,
 		};
 
@@ -68,13 +74,16 @@ const LifeCyclePolicyGeneralTab = ({
 		delete initialValues.accessControlEntries;
 
 		// Transform filters into something more editable
-		const targetFiltersArray: (TargetFilter & { filter: string })[] = [];
-		for (const key in policy.targetFilters) {
-			targetFiltersArray.push({
-				filter: key,
-				...policy.targetFilters[key],
-			});
-		}
+		const targetFiltersTransformed = {
+			"dublincore/episode": [],
+			...parseTargetFiltersForEditing(policy.targetFilters),
+		};
+		// for (const key in policy.targetFilters) {
+		// 	targetFiltersArray.push({
+		// 		filter: key,
+		// 		...policy.targetFilters[key],
+		// 	});
+		// }
 
 		// TODO: Improve workflowParameters rendering
 		// Parse action parameters
@@ -93,7 +102,7 @@ const LifeCyclePolicyGeneralTab = ({
 		//   });
 		// });
 
-		initialValues.targetFiltersArray = targetFiltersArray;
+		initialValues.targetFiltersTransformed = targetFiltersTransformed;
 		// initialValues.workflowParameters = configPanelFields;
 
 		return initialValues;

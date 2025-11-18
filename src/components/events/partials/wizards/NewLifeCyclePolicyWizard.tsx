@@ -86,7 +86,7 @@ const NewLifeCyclePolicyWizard = ({
 	const handleSubmit = (values: typeof initialValues) => {
 		const fixedValues = {
 			...values,
-			targetFilters: parseTargetFiltersForSubmit(values.targetFiltersArray),
+			targetFilters: parseTargetFiltersForSubmit(values.targetFiltersTransformed),
 			accessControlEntries: values.policies,
 		};
 

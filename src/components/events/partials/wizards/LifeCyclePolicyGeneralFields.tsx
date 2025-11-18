@@ -28,7 +28,7 @@ type EventFilterOption = {
 	collection?: unknown
 }
 
-const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFiltersArray: (TargetFilter & { filter: string })[]}>({
+const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFiltersTransformed: { [key: string]: (TargetFilter & { filter: string })[] }}>({
 	formik,
 	isNew,
 }: {
@@ -319,89 +319,96 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 					</thead>
 
 					<tbody>
-						<FieldArray
-							name="targetFiltersArray"
-							render={arrayHelpers => (
-								<>
-									{Object.entries(formik.values.targetFiltersArray).map(([key, filter], index) => {
-										// Get available filter options
-										const availableFilterOptions = filterOptions(formik.values.targetType);
+						{Object.entries(formik.values.targetFiltersTransformed).map(([outerKey, filters]) => {
+							if (outerKey !== "dublincore/episode") { return null; }
 
-										// Derive available type options based on selected filter
-										const dependentTypeOptions = filterTargetTypesByFilter(filter.filter);
+							return (
+								<FieldArray
+									key={outerKey}
+									name={`targetFiltersTransformed.${outerKey}`}
+									render={arrayHelpers => (
+										<>
+											{Object.entries(filters).map(([key, filter], index) => {
+												// Get available filter options
+												const availableFilterOptions = filterOptions(formik.values.targetType);
 
-										return (
-											<tr key={index}>
-												<td className="editable">
-													<Field
-														type="time"
-														name={`targetFiltersArray.${key}.filter`}
-														value={filter.filter}
-														values={availableFilterOptions.map(e => e.id)}
-														creatable={true}
-														clearFieldName={`targetFiltersArray.${key}.value`}
-														component={DropdownField}
-														onChange={(value: string) => {
-															formik.setFieldValue(`targetFiltersArray.${key}.filter`, value);
-															// Reset type when filter changes
-															formik.setFieldValue(`targetFiltersArray.${key}.type`, undefined);
-														}}
-													/>
-												</td>
-												<td className="editable">
-													<Field
-														name={`targetFiltersArray.${key}.value`}
-														metadataField={{
-															type: getTargetFilterRenderType(filter.filter, availableFilterOptions),
-															required: true,
-															collection: getTargetFilterRenderCollection(filter.filter, availableFilterOptions),
-															id: undefined,
-														}}
-														component={RenderField}
-													/>
-												</td>
-												<td className="editable">
-													<Field
-														key={`type-${filter.filter}-${index}`} // ensures rerender when filter changes
-														name={`targetFiltersArray.${key}.type`}
-														value={filter.type}
-														values={dependentTypeOptions}
-														component={DropdownField}
-													/>
-												</td>
-												<td className="editable">
-													<Field
-														type="checkbox"
-														name={`targetFiltersArray.${key}.must`}
-													/>
-												</td>
-												<td>
+												// Derive available type options based on selected filter
+												const dependentTypeOptions = filterTargetTypesByFilter(filter.filter);
+
+												return (
+													<tr key={index}>
+														<td className="editable">
+															<Field
+																type="time"
+																name={`targetFiltersTransformed.${outerKey}.${key}.filter`}
+																value={filter.filter}
+																values={availableFilterOptions.map(e => e.id)}
+																creatable={true}
+																clearFieldName={`targetFiltersTransformed.${outerKey}.${key}.value`}
+																component={DropdownField}
+																onChange={(value: string) => {
+																	formik.setFieldValue(`targetFiltersTransformed.${outerKey}.${key}.filter`, value);
+																	// Reset type when filter changes
+																	formik.setFieldValue(`targetFiltersTransformed.${outerKey}.${key}.type`, undefined);
+																}}
+															/>
+														</td>
+														<td className="editable">
+															<Field
+																name={`targetFiltersTransformed.${outerKey}.${key}.value`}
+																metadataField={{
+																	type: getTargetFilterRenderType(filter.filter, availableFilterOptions),
+																	required: true,
+																	collection: getTargetFilterRenderCollection(filter.filter, availableFilterOptions),
+																	id: undefined,
+																}}
+																component={RenderField}
+															/>
+														</td>
+														<td className="editable">
+															<Field
+																key={`type-${filter.filter}-${index}`} // ensures rerender when filter changes
+																name={`targetFiltersTransformed.${outerKey}.${key}.type`}
+																value={filter.type}
+																values={dependentTypeOptions}
+																component={DropdownField}
+															/>
+														</td>
+														<td className="editable">
+															<Field
+																type="checkbox"
+																name={`targetFiltersTransformed.${outerKey}.${key}.must`}
+															/>
+														</td>
+														<td>
+															<button
+																onClick={() => arrayHelpers.remove(index)}
+																className="button-like-anchor remove"
+															/>
+														</td>
+													</tr>
+												);
+											})}
+											<tr>
+												<td colSpan={5}>
 													<button
-														onClick={() => arrayHelpers.remove(index)}
-														className="button-like-anchor remove"
-													/>
+														onClick={() =>
+															arrayHelpers.push(createTargetFilter())
+														}
+														className="button-like-anchor"
+													>
+														+{" "}
+														{t(
+															"LIFECYCLE.POLICIES.DETAILS.GENERAL.TARGETFILTERS.NEW",
+														)}
+													</button>
 												</td>
 											</tr>
-										);
-									})}
-									<tr>
-										<td colSpan={5}>
-											<button
-												onClick={() =>
-													arrayHelpers.push(createTargetFilter())
-												}
-												className="button-like-anchor"
-											>
-												+{" "}
-												{t(
-													"LIFECYCLE.POLICIES.DETAILS.GENERAL.TARGETFILTERS.NEW",
-												)}
-											</button>
-										</td>
-									</tr>
-								</>
-							)}
-						/>
+										</>
+									)}
+								/>
+							);
+						})}
 					</tbody>
 				</table>
 			</div>
@@ -473,7 +480,7 @@ const getTargetFilterRenderCollection = (filterName: string, targetFilterOptions
 	return option !== undefined ? option.collection : undefined;
 };
 
-const WorkflowSelector = <T extends LifeCyclePolicy & {targetFiltersArray: (TargetFilter & { filter: string })[]}>({
+const WorkflowSelector = <T extends LifeCyclePolicy & {targetFiltersTransformed: { [key: string]: (TargetFilter & { filter: string })[] }}>({
 	formik,
 }: {
 	formik: FormikProps<T>,

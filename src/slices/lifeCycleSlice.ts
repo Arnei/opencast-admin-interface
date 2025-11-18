@@ -10,6 +10,7 @@ import { addNotification } from "./notificationSlice";
 // type LifeCyclePolicyTiming = "SPECIFIC_DATE" | "REPEATING" | "ALWAYS";
 // type LifeCyclePolicyAction = "START_WORKFLOW"
 // type LifeCyclePolicyTargetType = "EVENT"
+export type CommonMetadataCatalogFlavor = "dublincore/episode"; // TODO: Get this from the backend
 export type TargetFilter = {
 	value: string | string[],
 	type: TargetFiltersType,
@@ -30,7 +31,7 @@ export type LifeCyclePolicy = {
 	isCreatedFromConfig: boolean,
 	actionDate: string, // Date
 	cronTrigger: string,
-	targetFilters: { [key: string]: TargetFilter },
+	targetFilters: { [key: string]: { [key: string]: TargetFilter } },
 	accessControlEntries: TransformedAcl[]
 }
 
@@ -85,7 +86,7 @@ export const postNewLifeCyclePolicy = createAppAsyncThunk("lifeCycle/postNewLife
 		isActive: boolean,
 		actionDate: string,
 		cronTrigger: string,
-		targetFilters: { [key: string]: TargetFilter },
+		targetFilters: { [key: string]: { [key: string]: TargetFilter } },
 		accessControlEntries: TransformedAcl[]
 	},
 	{ dispatch },

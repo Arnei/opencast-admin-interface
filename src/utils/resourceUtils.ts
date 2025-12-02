@@ -304,7 +304,7 @@ export const getMetadataCollectionFieldName = (
 				return name.label ? t(name.label) : "";
 			}
 
-			return collectionField ? t(collectionField.name as ParseKeys) : "";
+			return collectionField ? t(collectionField.name as ParseKeys, { nsSeparator: false }) : "";
 		}
 
 		return "";

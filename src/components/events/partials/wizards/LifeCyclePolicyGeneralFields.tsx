@@ -14,6 +14,8 @@ import { getWorkflowDef } from "../../../../selectors/workflowSelectors";
 import { fetchWorkflowDef } from "../../../../slices/workflowSlice";
 import RenderWorkflowConfig, { Configuration } from "./RenderWorkflowConfig";
 import { setDefaultConfig } from "../../../../utils/workflowPanelUtils";
+import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
+import { LuCircleX } from "react-icons/lu";
 
 /**
  * This component renders the metadata page for new events and series in the wizards.
@@ -381,17 +383,19 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 															/>
 														</td>
 														<td>
-															<button
+															<ButtonLikeAnchor
 																onClick={() => arrayHelpers.remove(index)}
-																className="button-like-anchor remove"
-															/>
+																className="action-cell-button remove"
+															>
+																<LuCircleX />
+															</ButtonLikeAnchor>
 														</td>
 													</tr>
 												);
 											})}
 											<tr>
 												<td colSpan={5}>
-													<button
+													<ButtonLikeAnchor
 														onClick={() =>
 															arrayHelpers.push(createTargetFilter())
 														}
@@ -401,7 +405,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 														{t(
 															"LIFECYCLE.POLICIES.DETAILS.GENERAL.TARGETFILTERS.NEW",
 														)}
-													</button>
+													</ButtonLikeAnchor>
 												</td>
 											</tr>
 										</>

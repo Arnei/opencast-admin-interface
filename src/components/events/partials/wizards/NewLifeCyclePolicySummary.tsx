@@ -38,7 +38,7 @@ const NewLifeCyclePolicySummary = <T extends typeof initialFormValuesNewLifeCycl
 										</tr>
 										<tr>
 											<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ISACTIVE")}</td>
-											<td>{formik.values.isActive}</td>
+											<td><input type="checkbox" disabled checked={formik.values.isActive} /></td>
 										</tr>
 										<tr>
 											<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.TARGETTYPE")}</td>

@@ -52,6 +52,7 @@ const LifeCyclePolicyDetailsModal = () => {
           closeCallback={close}
           header={t("LIFECYCLE.POLICIES.DETAILS.HEADER", { name: policy.title })}
           classId="details-modal"
+          focusTrapActive={false}
         >
           <LifeCyclePolicyDetails
             policyId={policy.id}

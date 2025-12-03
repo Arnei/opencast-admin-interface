@@ -60,6 +60,7 @@ const NewResourceModal = ({
       header={headerText()}
       classId="add-event-modal"
       // initialFocus={"#firstField"}
+      focusTrapActive={resource === "lifecyclepolicy" ? false : true}
       ref={modalRef}
     >
       {resource === "events" && (

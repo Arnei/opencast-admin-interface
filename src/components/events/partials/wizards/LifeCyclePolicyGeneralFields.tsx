@@ -348,8 +348,9 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 																creatable={true}
 																clearFieldName={`targetFiltersTransformed.${outerKey}.${key}.value`}
 																component={DropdownField}
-																onChange={(value: string) => {
-																	formik.setFieldValue(`targetFiltersTransformed.${outerKey}.${key}.filter`, value);
+																onChangeOverride={(element: { value: string; label: string } | null) => {
+																	formik.setFieldValue(`targetFiltersTransformed.${outerKey}.${key}.value`, undefined);
+																	formik.setFieldValue(`targetFiltersTransformed.${outerKey}.${key}.filter`, element?.value ?? undefined);
 																	// Reset type when filter changes
 																	formik.setFieldValue(`targetFiltersTransformed.${outerKey}.${key}.type`, undefined);
 																}}
@@ -357,6 +358,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 														</td>
 														<td className="editable">
 															<Field
+																key={`type-${filter.filter}-${index}`} // ensures rerender when filter changes
 																name={`targetFiltersTransformed.${outerKey}.${key}.value`}
 																metadataField={{
 																	type: getTargetFilterRenderType(filter.filter, availableFilterOptions),
@@ -436,6 +438,7 @@ const DropdownField = ({
 	values,
 	clearFieldName,
 	creatable = false,
+	onChangeOverride,
 }: {
 	field: FieldProps["field"]
 	form: FieldProps["form"]
@@ -443,8 +446,22 @@ const DropdownField = ({
 	values: string[]
 	clearFieldName: string
 	creatable: boolean
+	onChangeOverride?: (element: { value: string; label: string } | null) => void
 }) => {
 	const { t } = useTranslation();
+
+	const handleChange = (element: { value: string; label: string } | null) => {
+		if (onChangeOverride) {
+			// call the override function if provided
+			onChangeOverride(element);
+		} else {
+			// default behavior
+			setFieldValue(clearFieldName, undefined);
+			if (element) {
+				setFieldValue(field.name, element.value);
+			}
+		}
+	};
 
 	return (
 		<DropDown
@@ -452,12 +469,7 @@ const DropdownField = ({
 			text={value}
 			options={values ? formatPolicyActionsForDropdown(values) : []}
 			required={true}
-			handleChange={element => {
-				setFieldValue(clearFieldName, undefined);
-				if (element) {
-					setFieldValue(field.name, element.value);
-				}
-			}}
+			handleChange={handleChange}
 			placeholder={`-- ${t("SELECT_NO_OPTION_SELECTED")} --`}
 			creatable={creatable}
 			customCSS={{

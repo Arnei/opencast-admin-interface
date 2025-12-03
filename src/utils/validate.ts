@@ -250,7 +250,71 @@ export const AdopterRegistrationSchema = Yup.object().shape({
 	email: Yup.string().email(),
 });
 
-// Validation Schema used in lifecycle policy modal
+/**
+ * Validation Schema used in lifecycle policy modal
+ */
+const filterItemSchema = Yup.object({
+	filter: Yup.string().required("Required"),
+	value: Yup.mixed().required("Required"),
+	type: Yup.string().required("Required"),
+	must: Yup.boolean(),
+});
+
+const targetFiltersSchema = Yup.object()
+	.test(
+		"has-at-least-one-array",
+		"At least one filter group is required",
+		function (obj) {
+			if (!obj || typeof obj !== "object") { return false; }
+			return Object.keys(obj).length > 0;
+		},
+	)
+	.test(
+		"has-at-least-one-item",
+		"At least one filter must be defined",
+		function (obj) {
+			if (!obj || typeof obj !== "object") { return false; }
+
+			let total = 0;
+
+			for (const key of Object.keys(obj)) {
+				const arr = (obj as Record<string, unknown>)[key];
+				if (Array.isArray(arr)) {
+					total += arr.length;
+				}
+			}
+
+			return total > 0;
+		},
+	)
+	.test(
+		"validate-items",
+		"Invalid filter structure",
+		function (obj) {
+			if (!obj || typeof obj !== "object") { return false; }
+
+			for (const key of Object.keys(obj)) {
+				const arr = (obj as Record<string, unknown>)[key];
+
+				if (!Array.isArray(arr)) {
+					return this.createError({
+						message: `Filter "${key}" must be an array`,
+					});
+				}
+
+				for (const item of arr) {
+					try {
+						filterItemSchema.validateSync(item);
+					} catch (err) {
+						return this.createError({ message: (err as Error).message });
+					}
+				}
+			}
+
+			return true;
+		},
+	);
+
 export const LifeCyclePolicySchema = [
 	Yup.object().shape({
 		title: Yup.string().required("Required"),
@@ -274,13 +338,7 @@ export const LifeCyclePolicySchema = [
 			is: (timing: string) => timing === "REPEATING",
 			then: () => Yup.string().required("Required"),
 		}),
-		targetFiltersArray: Yup.array().of(
-			Yup.object().shape({
-				filter: Yup.string().required("Required"),
-				value: Yup.mixed().required("Required"),
-				type: Yup.string().required("Required"),
-				must: Yup.boolean(),
-			}),
-		),
+		targetFiltersTransformed: targetFiltersSchema,
 	}),
 ];
+

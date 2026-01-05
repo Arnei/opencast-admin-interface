@@ -66,9 +66,9 @@ const RenderField = ({
 				/>
 			)}
 			{metadataField.type === "text" &&
-				!!metadataField.collection &&
+				(!!metadataField.collection || metadataField.listprovider) &&
 				(
-					<EditableSingleSelect
+					<EditableSingleSelectListProvider
 						metadataField={metadataField}
 						field={field}
 						form={form}
@@ -80,7 +80,7 @@ const RenderField = ({
 					/>
 				)}
 			{metadataField.type === "ordered_text" && (
-				<EditableSingleSelect
+				<EditableSingleSelectListProvider
 					metadataField={metadataField}
 					field={field}
 					form={form}
@@ -93,7 +93,7 @@ const RenderField = ({
 			)}
 			{metadataField.type === "text" &&
 				!(
-					metadataField.collection
+					metadataField.collection || metadataField.listprovider
 				) && (
 					<EditableSingleValue
 						field={field}
@@ -219,9 +219,9 @@ const EditableSingleSelect = (props: EditableSingleSelectProps) => {
 		ref,
 	} = props;
 
-	if (metadataField.id === "isPartOf") {
-		return <EditableSingleSelectSeries {...props} />;
-	}
+	// if (metadataField.id === "isPartOf") {
+	// 	return <EditableSingleSelectSeries {...props} />;
+	// }
 
 	return <EditableSingleSelectDropDown
 		field={field}
@@ -378,6 +378,53 @@ const EditableSingleSelectSeries = ({
 		fetchOptions={fetchOptions}
 	/>;
 };
+
+const EditableSingleSelectListProvider = ({
+	field,
+	metadataField,
+	form,
+	isFirstField,
+	focused,
+	setFocused,
+	ref,
+}: EditableSingleSelectProps) => {
+	const [label, setLabel] = useState("");
+
+	useEffect(() => {
+		// The metadata catalog only contains the field value, so we need to fetch the label ourselves
+		const fetchLabelById = async () => {
+			if (field.value) {
+				const res = await axios.get<{ [key: string]: string }>(`/admin-ng/resources/${metadataField.listprovider}.json?limit=1&filter=textFilter:${field.value}`);
+				const data = res.data;
+				const transformedData = transformListProvider(data);
+				if (transformedData.length > 0) {
+					setLabel(transformedData[0].label);
+				}
+			}
+		};
+		fetchLabelById();
+	}, [field.value, metadataField.listprovider]);
+
+	// Fetch collection
+	const fetchOptions = async (inputValue: string) => {
+		const res = await axios.get<{ [key: string]: string }>(`/admin-ng/resources/${metadataField.listprovider}.json?filter=textFilter:${inputValue}`);
+		const data = res.data;
+		return transformListProvider(data);
+	};
+
+	return <EditableSingleSelectDropDown
+		field={field}
+		metadataField={metadataField}
+		text={label}
+		form={form}
+		isFirstField={isFirstField}
+		focused={focused}
+		setFocused={setFocused}
+		ref={ref}
+		fetchOptions={fetchOptions}
+	/>;
+};
+
 
 const EditableSingleSelectDropDown = ({
 	field,

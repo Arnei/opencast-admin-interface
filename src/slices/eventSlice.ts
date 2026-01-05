@@ -101,6 +101,7 @@ export type MetadataField = {
 	readOnly: boolean,
 	required: boolean,
 	translatable?: boolean,
+	listprovider?: string,
 	type: string,
 	value: string | string[],
 }

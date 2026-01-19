@@ -45,6 +45,8 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 	const timings = useAppSelector(state => getLifeCyclePolicyTimings(state));
 	const metadataFields = useAppSelector(state => getEventMetadata(state));
 
+	console.log(targetTypes);
+
 	useEffect(() => {
 		dispatch(fetchEventMetadata());
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,6 +192,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 						<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.TARGETTYPE")}<i className="required">*</i></td>
 						<td className="editable">
 							<Field
+								key={targetTypes?.join(",") ?? "targetTypes_empty"}
 								name="targetType"
 								metadataField={{
 									type: "text",
@@ -205,6 +208,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 						<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.TIMING")}<i className="required">*</i></td>
 						<td className="editable">
 							<Field
+								key={timings?.join(",") ?? "timings_empty"}
 								name={"timing"}
 								metadataField={{
 									type: "text",
@@ -220,6 +224,7 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 						<td>{t("LIFECYCLE.POLICIES.DETAILS.GENERAL.ACTION")}<i className="required">*</i></td>
 						<td className="editable">
 							<Field
+								key={actions?.join(",") ?? "actions_empty"}
 								name={"action"}
 								metadataField={{
 									type: "text",

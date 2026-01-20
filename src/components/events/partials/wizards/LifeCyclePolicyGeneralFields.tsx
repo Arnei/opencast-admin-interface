@@ -45,8 +45,6 @@ const LifeCyclePolicyGeneralFields = <T extends LifeCyclePolicy & {targetFilters
 	const timings = useAppSelector(state => getLifeCyclePolicyTimings(state));
 	const metadataFields = useAppSelector(state => getEventMetadata(state));
 
-	console.log(targetTypes);
-
 	useEffect(() => {
 		dispatch(fetchEventMetadata());
 	// eslint-disable-next-line react-hooks/exhaustive-deps

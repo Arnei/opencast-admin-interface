@@ -25,6 +25,7 @@ import {
 	getModalPage,
 	getEventDetailsTobiraDataError,
 	getEventDetailsTobiraStatus,
+	getWorkflows,
 } from "../../../../selectors/eventDetailsSelectors";
 import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import EventDetailsStatisticsTab from "../ModalTabsAndPages/EventDetailsStatisticsTab";
@@ -137,6 +138,7 @@ const EventDetails = ({
 	const captureAgents = useAppSelector(state => getRecordings(state));
 	const tobiraStatus = useAppSelector(state => getEventDetailsTobiraStatus(state));
 	const tobiraError = useAppSelector(state => getEventDetailsTobiraDataError(state));
+	const workflows = useAppSelector(state => getWorkflows(state));
 
 	const tabs: {
 		tabNameTranslation: ParseKeys,
@@ -322,7 +324,7 @@ const EventDetails = ({
 						formikRef={formikRef}
 					/>
 				)}
-				{page === EventDetailsPage.Workflow && !hasSchedulingProperties &&
+				{page === EventDetailsPage.Workflow && !workflows.scheduling &&
 					((workflowTabHierarchy === "workflows" && (
 						<EventDetailsWorkflowTab
 							eventId={eventId}
@@ -346,7 +348,7 @@ const EventDetails = ({
 								eventId={eventId}
 							/>
 						)))}
-				{page === EventDetailsPage.Workflow && hasSchedulingProperties &&
+				{page === EventDetailsPage.Workflow && workflows.scheduling &&
 					<EventDetailsWorkflowSchedulingTab
 						eventId={eventId}
 						formikRef={formikRef}

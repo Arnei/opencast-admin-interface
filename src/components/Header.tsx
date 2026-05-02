@@ -6,6 +6,7 @@ import languages from "../i18n/languages";
 import opencastLogo from "../img/opencast-white.svg?url";
 import { setSpecificServiceFilter } from "../slices/tableFilterSlice";
 import { getErrorCount, getHealthStatus } from "../selectors/healthSelectors";
+import { getRegistration, getIsRegistering, getAgreedLatestToU } from "../selectors/registrationSelectors";
 import {
 	getOrgProperties,
 	getUserInformation,
@@ -19,6 +20,11 @@ import HotKeyCheatSheet from "./shared/HotKeyCheatSheet";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
+import {
+  fetchRegistration,
+  fetchLatestToU,
+  fetchIsUpToDate,
+} from "../slices/registrationSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";
 import { HiOutlineTranslate } from "react-icons/hi";
@@ -51,11 +57,27 @@ const Header = () => {
 	const healthStatus = useAppSelector(state => getHealthStatus(state));
 	const errorCounter = useAppSelector(state => getErrorCount(state));
 	const user = useAppSelector(state => getUserInformation(state));
+	const registration = useAppSelector(state => getRegistration(state));
+	const _isRegistering = useAppSelector(state => getIsRegistering(state));
+	const _agreedLatestToU = useAppSelector(state => getAgreedLatestToU(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
 	const displayTerms = (orgProperties["org.opencastproject.admin.display_terms"] || "false").toLowerCase() === "true";
 
 	const loadHealthStatus = async () => {
 		await dispatch(fetchHealthStatus());
+	};
+
+	if (registration == null) {
+		dispatch(fetchRegistration());
+	}
+	// dispatch(fetchLatestToU());
+	// dispatch(fetchIsUpToDate());
+
+	const _getLatestToU = async () => {
+		await dispatch(fetchLatestToU());
+	};
+	const _getIsUpToDate = async () => {
+		await dispatch(fetchIsUpToDate());
 	};
 
 	const hideMenuHelp = () => {
@@ -134,18 +156,18 @@ const Header = () => {
 	}, []);
 
 	useEffect(() => {
-  			if (!user) { return; }
+		if (!user) { return; }
 
-  			const isAdmin = user.isAdmin || user.isOrgAdmin;
-	        const isLocalhost = window.location.hostname === "localhost";
-  			const lastDismissed = localStorage.getItem("adopterModalDismissed");
-  			const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-  			const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
+		const isAdmin = user.isAdmin || user.isOrgAdmin;
+		const isLocalhost = window.location.hostname === "localhost";
+		const lastDismissed = localStorage.getItem("adopterModalDismissed");
+		const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+		const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
 
-  			if (isAdmin && !isLocalhost && dismissedLongEnough) {
-  			  showRegistrationModal();
-  			}
-			}, [user]);
+		if (isAdmin && !isLocalhost && dismissedLongEnough && registration == null) {
+		  showRegistrationModal();
+		}
+	}, [user, registration]);
 	return (
 		<>
 			<header className="primary-header">

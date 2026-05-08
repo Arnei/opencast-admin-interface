@@ -63,9 +63,9 @@ const Header = () => {
 		await dispatch(fetchHealthStatus());
 	};
 
-	if (registration == null) {
+	useEffect(() => {
 		dispatch(fetchRegistration());
-	}
+	}, [dispatch]);
 
 	const hideMenuHelp = () => {
 		setMenuHelp(false);

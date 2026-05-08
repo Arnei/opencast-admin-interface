@@ -27,33 +27,8 @@ export type Registration = {
   deleteMe: boolean,
 }
 
-export type Summary = {
-  general: Registration,
-  statistics: {
-    statistics_key: string,
-    adopter_key: string,
-    job_count: number,
-    event_count: number,
-    series_count: number,
-    user_count: number,
-    ca_count: number,
-    total_minutes: number,
-    tenant_count: number,
-    hosts: {
-      cores: number,
-      max_load: number,
-      memory: number,
-      hostname: string,
-      disk_space: number,
-      services: string,
-    }[],
-    version: string
-  }
-}
-
 export type RegistrationState = {
   registration: Registration | null,
-  summary: Summary | null,
   latestToU: string,
   isRegistering: boolean,
   agreedToToU: boolean,
@@ -68,7 +43,6 @@ type Temp = {
 // Initial state of health status in redux store
 const initialState: RegistrationState = {
   registration: null,
-  summary: null,
   latestToU: "uninitialized",
   isRegistering: false,
   agreedToToU: false,
@@ -78,12 +52,6 @@ const initialState: RegistrationState = {
 // This is the registration itself
 export const fetchRegistration = createAppAsyncThunk("registration/fetchRegistration", async () => {
   const res = await axios.get<Registration>("/admin-ng/adopter/registration");
-  return res.data;
-});
-
-// This is the summary
-export const fetchSummary = createAppAsyncThunk("registration/fetchSummary", async () => {
-  const res = await axios.get<Summary>("/admin-ng/adopter/summary");
   return res.data;
 });
 
@@ -134,11 +102,6 @@ const registrationSlice = createSlice({
           latestToU: state.latestToU,
         };
         state.agreedToToU = agreedLatestTerms(state, updatedState);
-			})
-			.addCase(fetchSummary.fulfilled, (state, action: PayloadAction<
-				Summary
-			>) => {
-        state.summary = action.payload;
 			})
 			.addCase(fetchIsUpToDate.fulfilled, (state, action: PayloadAction<
 				boolean

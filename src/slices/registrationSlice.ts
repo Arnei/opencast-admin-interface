@@ -4,27 +4,9 @@ import { WritableDraft } from "immer";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 
 export type Registration = {
-  adopterKey: string,
-  statisticsKey: string,
-  organisationName: string,
-  departmentName: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  country: string,
-  postalCode: string,
-  street: string,
-  streetNo: string,
-  contactMe: boolean,
-  systemType: string,
-  allowsStatistics: boolean,
-  allowsErrorReports: boolean,
-  dateCreated: string,
-  dateUpdated: string,
   agreedToPolicy: boolean,
   registered: boolean,
   termsVersionAgreed: string,
-  deleteMe: boolean,
 }
 
 export type RegistrationState = {

@@ -90,7 +90,7 @@ const Table = ({
 		loadResource();
 
 		// Fetch resources every minute
-		const fetchResourceInterval = setInterval(loadResource, 5000);
+		const fetchResourceInterval = setInterval(() => { loadResource(); }, 5000);
 
 		return () => {
 			allowLoadIntoTable = false;

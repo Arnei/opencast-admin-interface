@@ -43,14 +43,14 @@ const MainNav = ({
 
 	useHotkeys(
 		availableHotkeys.general.EVENT_VIEW.sequence,
-		() => navigate("/events/events"),
+		() => { navigate("/events/events"); },
 		{ description: t(availableHotkeys.general.EVENT_VIEW.description) ?? undefined },
 		[],
 	);
 
 	useHotkeys(
 		availableHotkeys.general.SERIES_VIEW.sequence,
-		() => navigate("/events/series"),
+		() => { navigate("/events/series"); },
 		{ description: t(availableHotkeys.general.SERIES_VIEW.description) ?? undefined },
 		[],
 	);

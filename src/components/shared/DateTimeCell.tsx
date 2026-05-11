@@ -53,7 +53,7 @@ const DateTimeCell = ({
 	return (
 		// Link template for start date of event
 		<ButtonLikeAnchor
-			onClick={() => addFilter(date)}
+			onClick={() => { addFilter(date); }}
 			className={"crosslink"}
 			tooltipText={tooltipText}
 		>

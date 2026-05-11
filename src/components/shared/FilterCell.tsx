@@ -47,7 +47,7 @@ const FilterCell = <T, >({
 		filterItems.map((item, key) => (
 			<ButtonLikeAnchor
 				key={key}
-				onClick={() => addFilter(item.filterValue)}
+				onClick={() => { addFilter(item.filterValue); }}
 				className={"crosslink"}
 				tooltipText={item.cellTooltipText}
 			>

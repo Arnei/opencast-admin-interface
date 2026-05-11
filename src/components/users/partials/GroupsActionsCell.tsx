@@ -38,7 +38,7 @@ const GroupsActionsCell = ({
 		<>
 			{/* edit/show group */}
 			<ButtonLikeAnchor
-				onClick={() => showGroupDetails()}
+				onClick={() => { showGroupDetails(); }}
 				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_GROUPS_EDIT"}
 				// tooltipText={"USERS.GROUPS.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns

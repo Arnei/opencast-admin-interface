@@ -3,6 +3,7 @@ import i18n from "../i18n/i18n";
 import { ParseKeys, TFunction } from "i18next";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { UploadOption } from "../slices/eventSlice";
+import { AsyncThunk } from "@reduxjs/toolkit";
 
 /**
  * This File contains methods that are needed in more than one places
@@ -154,3 +155,8 @@ export const translateOverrideFallback = (asset: UploadOption, t: TFunction, suf
 export const confirmUnsaved = (t: TFunction) => {
 	return window.confirm(t("CONFIRMATIONS.WARNINGS.UNSAVED_CHANGES"));
 };
+
+// A type for the cases where the component really only cares that it gets
+// an async thunk of any sort.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GenericAsyncThunk = AsyncThunk<any, void, any>;

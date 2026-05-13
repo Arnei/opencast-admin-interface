@@ -1,10 +1,10 @@
 import { getFilters } from "../../selectors/tableFilterSelectors";
 import { editFilterValue } from "../../slices/tableFilterSlice";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
-import { AsyncThunk } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
 import { Resource } from "../../slices/tableSlice";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { GenericAsyncThunk } from "../../utils/utils";
 
 /**
  * This component renders the presenters cells of events in the table view
@@ -20,7 +20,7 @@ const MultiValueCell = ({
 	resource: Resource
 	values: string[]
 	filterName: string
-	fetchResource: AsyncThunk<any, void, any>
+	fetchResource: GenericAsyncThunk
 	loadResourceIntoTable: () => AppThunk
 	tooltipText?: ParseKeys,
 }) => {

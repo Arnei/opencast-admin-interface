@@ -25,7 +25,7 @@ import ModalContent from "../../../shared/modals/ModalContent";
 type InitialValues = {
 	workflowDefinition: string;
 	configuration: {
-			[key: string]: any;
+			[key: string]: unknown;
 	} | undefined;
 }
 

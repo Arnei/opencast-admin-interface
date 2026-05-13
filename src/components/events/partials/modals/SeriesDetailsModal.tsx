@@ -18,6 +18,7 @@ const SeriesDetailsModal = () => {
 
 	// tracks, whether the policies are different to the initial value
 	const [policyChanged, setPolicyChanged] = useState(false);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const formikRef = useRef<FormikProps<any>>(null);
 
 	const displaySeriesDetailsModal = useAppSelector(state => showModal(state));

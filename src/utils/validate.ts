@@ -145,7 +145,7 @@ export const NewEventSchema = {
 	}),
 	"upload-asset": Yup.object().shape({}),
 	"processing": Yup.object().shape({
-		processingWorkflow: Yup.string().required("Required"),
+		workflowId: Yup.string().required("Required"),
 	}),
 	"access": Yup.object().shape({}),
 	"summary": Yup.object().shape({}),

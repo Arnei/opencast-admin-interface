@@ -432,7 +432,7 @@ export const postNewEvent = (params: {
 		policies: TransformedAcl[],
 		configuration: { [key: string]: unknown },
 		inputs?: string[],
-		processingWorkflow: string,
+		workflowId: string,
 		repeatOn: string[],
 		scheduleDurationHours: string,
 		scheduleDurationMinutes: string,
@@ -620,7 +620,7 @@ export const postNewEvent = (params: {
 		JSON.stringify({
 			metadata: metadata,
 			processing: {
-				workflow: values.processingWorkflow,
+				workflow: values.workflowId,
 				configuration: configurationPrepared,
 			},
 			access: access,

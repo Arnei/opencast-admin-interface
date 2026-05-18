@@ -22,7 +22,7 @@ import { UploadAssetsTrack } from "../../../../slices/eventSlice";
  * This component renders the summary page for new events in the new event wizard.
  */
 interface RequiredFormProps {
-	processingWorkflow: string
+	workflowId: string
 	sourceMode: string
 	startDate?: string
 	location: string
@@ -92,7 +92,7 @@ const NewEventSummary = <T extends RequiredFormProps>({
 
 	// Get additional information about chosen workflow definition
 	const workflowDefinition = workflowDef.find(
-		workflow => workflow.id === formik.values.processingWorkflow,
+		workflow => workflow.id === formik.values.workflowId,
 	);
 
 	const endsOnSameDay = formik.values.scheduleStartDate === formik.values.scheduleEndDate;

@@ -12,7 +12,7 @@ import ModalContentTable from "../../../shared/modals/ModalContentTable";
  */
 interface RequiredFormProps {
 	events: Event[],
-	workflow: string,
+	workflowId: string,
 	configuration: { [key: string]: string },
 }
 
@@ -55,7 +55,7 @@ const StartTaskSummaryPage = <T extends RequiredFormProps>({
 									{
 										workflowDef.find(
 											workflow =>
-												formik.values.workflow === workflow.id,
+												formik.values.workflowId === workflow.id,
 										)?.title ?? ""
 										}
 								</p>

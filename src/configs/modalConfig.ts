@@ -203,11 +203,11 @@ export const initialFormValuesNewUser: {
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
 export const initialFormValuesStartTask: {
 	events: Event[],
-	workflow: string,
+	workflowId: string,
 	configuration: { [key: string]: string },
 } = {
 	events: [],
-	workflow: "",
+	workflowId: "",
 	configuration: {},
 };
 

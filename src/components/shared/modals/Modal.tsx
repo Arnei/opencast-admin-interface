@@ -74,7 +74,7 @@ export const Modal = forwardRef<ModalHandle, PropsWithChildren<ModalProps>>(
 					<div className="modal-animation modal-overlay" />
 					<section
 						id={classId}
-						className={className ? className : "modal wizard modal-animation"}
+						className={className ? className : "modal modal-animation"}
 					>
 						<header>
 							<ButtonLikeAnchor

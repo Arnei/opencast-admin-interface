@@ -6,7 +6,11 @@ import languages from "../i18n/languages";
 import opencastLogo from "../img/opencast-white.svg?url";
 import { setSpecificServiceFilter } from "../slices/tableFilterSlice";
 import { getErrorCount, getHealthStatus } from "../selectors/healthSelectors";
-import { getRegistration } from "../selectors/registrationSelectors";
+import {
+	getRegistration,
+	getIsRegistering,
+	getAgreedLatestToU,
+} from "../selectors/registrationSelectors";
 import {
 	getOrgProperties,
 	getUserInformation,
@@ -22,6 +26,8 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
 import {
   fetchRegistration,
+  fetchLatestToU,
+  fetchIsUpToDate,
 } from "../slices/registrationSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";
@@ -54,6 +60,8 @@ const Header = () => {
 
 	const healthStatus = useAppSelector(state => getHealthStatus(state));
 	const errorCounter = useAppSelector(state => getErrorCount(state));
+	const isUpToDate = useAppSelector(state => getIsRegistering(state));
+	const agreedLatestToU = useAppSelector(state => getAgreedLatestToU(state));
 	const user = useAppSelector(state => getUserInformation(state));
 	const registration = useAppSelector(state => getRegistration(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
@@ -65,10 +73,16 @@ const Header = () => {
 
 	useEffect(() => {
 		dispatch(fetchRegistration());
+		dispatch(fetchLatestToU());
+		dispatch(fetchIsUpToDate());
 	}, [dispatch]);
 
 	const hideMenuHelp = () => {
 		setMenuHelp(false);
+	};
+
+	const hideNotificationMenu = () => {
+		setMenuNotify(false);
 	};
 
 	const showRegistrationModal = () => {
@@ -219,9 +233,9 @@ const Header = () => {
 							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
 								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element">
 									<LuBell className="header-icon"/>
-									{errorCounter !== 0 && (
+									{(errorCounter !== 0 || !agreedLatestToU || !isUpToDate) && (
 										<span id="error-count" className="badge">
-											{errorCounter}
+											{errorCounter + (!agreedLatestToU || !isUpToDate ? 1 : 0)}
 										</span>
 									)}
 								</BaseButton>
@@ -230,6 +244,10 @@ const Header = () => {
 							{displayMenuNotify && (
 								<MenuNotify
 									healthStatus={healthStatus}
+									registering={isUpToDate}
+									updatedToU={agreedLatestToU}
+									showRegistrationModal={showRegistrationModal}
+									hideNotificationMenu={hideNotificationMenu}
 								/>
 							)}
 						</div>
@@ -324,8 +342,16 @@ const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: strin
 
 const MenuNotify = ({
 	healthStatus,
+	registering,
+	updatedToU,
+	showRegistrationModal,
+	hideNotificationMenu,
 }: {
 	healthStatus: HealthStatus[],
+	registering: boolean,
+	updatedToU: boolean,
+	showRegistrationModal: () => void,
+	hideNotificationMenu: () => void,
 }) => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
@@ -335,6 +361,13 @@ const MenuNotify = ({
 		await dispatch(setSpecificServiceFilter({ filter: "actions", filterValue: "true" }));
 		navigate("/systems/services");
 	};
+
+	// show Adopter Registration Modal and hide drop down
+	const showAdoptersRegistrationModal = () => {
+		showRegistrationModal();
+		hideNotificationMenu();
+	};
+
 
 	return (
 		<ul className="dropdown-ul">
@@ -359,6 +392,26 @@ const MenuNotify = ({
 					)}
 				</li>
 			))}
+      {!registering &&
+        <li>
+          <ButtonLikeAnchor
+            onClick={() => showAdoptersRegistrationModal()}
+          >
+            <span className="wide-text">Registration</span>
+            <span className="multi-value multi-value-yellow">Unregistered</span>
+				  </ButtonLikeAnchor>
+        </li>
+      }
+      {registering && !updatedToU &&
+        <li>
+          <ButtonLikeAnchor
+            onClick={() => showAdoptersRegistrationModal()}
+          >
+            <span className="wide-text">Registration</span>
+            <span className="multi-value multi-value-yellow">Updated ToU</span>
+				  </ButtonLikeAnchor>
+        </li>
+      }
 		</ul>
 	);
 };

@@ -59,14 +59,6 @@
       border-left: 0;
       border-radius: 0 4px 4px 0;
     }
-
-    > input[type="radio"]:checked + label {
-      cursor: pointer;
-      border: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -2%);
-      background: linear-gradient(color.adjust(variables.$white, $lightness: -4%), color.adjust(variables.$color-lightgray, $lightness: -10%));
-      color: variables.$medium-prim-color;
-      box-shadow: inset 0px 1px 6px 2px rgba(0,0,0,.1);
-    }
   }
 
   p {

@@ -22,7 +22,7 @@
  *
  */
 
-@mixin triangle-point-side($position, $width, $height, $position-from-left: 4.75px, $background-color: variables.$white, $border-stroke: 1px, $border-color: color.adjust(variables.$main-border-color, $lightness: -5%), $position-from-origin: 1) {
+@mixin triangle-point-side($position, $width, $height, $position-from-left: 4.75px, $background-color: variables.$white, $border-stroke: 1px, $border-color: variables.$main-border-color, $position-from-origin: 1) {
     
     @if $position == left {
         &:before,
@@ -54,7 +54,7 @@
 } 
 
 
-@mixin triangle-point($position, $width, $height, $position-from-right: 10px, $background-color: variables.$white, $border-stroke: 1px, $border-color: color.adjust(variables.$main-border-color, $lightness: -5%), $position-from-origin: 1) {
+@mixin triangle-point($position, $width, $height, $position-from-right: 10px, $background-color: variables.$white, $border-stroke: 1px, $border-color: variables.$main-border-color, $position-from-origin: 1) {
      
     @if $position == top {
 

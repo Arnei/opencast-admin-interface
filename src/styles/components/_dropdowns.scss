@@ -42,18 +42,17 @@
     // Pulled from Button Mixin (keep in sync with those styles)
     background: linear-gradient(variables.$white, variables.$color-lightgray);
     border: variables.$thin-border-stroke variables.$main-border-color;
-    box-shadow: inset 0px 1px 0px 0px variables.$white, 0px 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0px 1px 0px 0px variables.$white, 0px 1px 2px variables.$color-button-box-shadow;
     color: variables.$medium-prim-color;
     text-shadow: 0px 1px 0px variables.$white;
 
     &:hover {
-        border: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -2%);
-        background: linear-gradient(color.adjust(variables.$white, $lightness: -1%), color.adjust(variables.$color-lightgray, $lightness: -1%));
-        color: variables.$medium-prim-color;
+        border: variables.$thin-border-stroke variables.$primary-color-light-blue;
+        box-shadow: 0 0 0 1px variables.$primary-color-light-blue;
     }
 
     &:active {
-        box-shadow: inset 0px 1px 6px 2px rgba(0,0,0,.05);
+        box-shadow: inset 0px 1px 6px 2px variables.$color-button-box-shadow;
     }
 
     // Menu Icon Settings

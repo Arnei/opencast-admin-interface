@@ -25,7 +25,7 @@
 
 .breadcrumb {
     $height: 35px;
-    background: color.adjust(variables.$modal-nav-bg-color, $lightness: 4%);
+    background: variables.$off-white;
     border-bottom: 1px solid variables.$modal-nav-border-color;
     line-height: $height;
 

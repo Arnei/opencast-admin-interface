@@ -34,14 +34,6 @@
     p {
         color: $text-color;
     }
-
-    a {
-        color: color.adjust($text-color, $lightness: 10%);
-
-        &:hover {
-            color: $text-color;
-        }
-    }
 }
 
 // Alerts

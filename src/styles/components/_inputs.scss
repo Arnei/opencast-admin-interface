@@ -51,7 +51,7 @@ textarea {
     }
 
     &:hover {
-        border: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -20%);
+        border: variables.$thin-border-stroke variables.$dark-prim-color;
     }
 
     &:focus {
@@ -99,7 +99,7 @@ select[multiple] {
     height: 40px;
     position: relative;
 
-    outline: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -2%);
+    outline: variables.$thin-border-stroke variables.$main-border-color;
     border-radius: variables.$main-border-radius;
 
     input.search {

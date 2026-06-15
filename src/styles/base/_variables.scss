@@ -72,6 +72,7 @@ $medium-prim-color:         #666;
 $color-gray:                #898989;
 $light-prim-color:          #a6a6a6;
 $color-silver:              #CCC;
+$color-midgray:             #e2e2e2;
 $color-highgray:            #ededed;
 $color-lightgray:           #F8F8F8;
 $color-white:               #fff;
@@ -84,7 +85,7 @@ $global-text-color-light:      color.adjust($global-text-color, $lightness: 6%);
 // ----------------------------------------
 
 $main-border-color:            $color-silver;
-$lighter-border-color:         $color-highgray;
+$lighter-border-color:         $color-midgray;
 $dark-bg-border-color:         #0e1b25;
 
 // Element Colors

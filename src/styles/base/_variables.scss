@@ -67,48 +67,46 @@ $b-blue-gradient:           #55cef2;
 $color-black:               #000;
 $dark-prim-color:           #333;
 $color-darkgray:            #444;
+$color-neutral-darkgray:    #4d4d4d;
 $medium-prim-color:         #666;
 $color-gray:                #898989;
 $light-prim-color:          #a6a6a6;
 $color-silver:              #CCC;
+$color-highgray:            #ededed;
 $color-lightgray:           #F8F8F8;
 $color-white:               #fff;
 
 // Text
 $global-text-color:            $medium-prim-color;
-$global-text-color-light:      color.adjust($global-text-color, $lightness: 6%); 
+$global-text-color-light:      color.adjust($global-text-color, $lightness: 6%); //#757575
+
+// Border
+// ----------------------------------------
+
+$main-border-color:            $color-silver;
+$lighter-border-color:         $color-highgray;
+$dark-bg-border-color:         #0e1b25;
 
 // Element Colors
 // ----------------------------------------
 
 $body-background:               $off-white;
-$table-title-color:             #46647e;
-$header-link-color:             #435263;
+$table-title-color:             $d-blue;
 $color-link:                    $medium-prim-color;
 $color-link-hover:              $dark-prim-color;
-$footer-background-color-light: color.adjust($body-background, $lightness: -3%);
-$footer-background-color:       color.adjust($body-background, $lightness: -5%);
-$main-menu-background:          color.adjust($d-blue, $lightness: -3%);
-$main-menu-border-color:        color.adjust($d-blue, $lightness: -12%);
-
-// Border
-// ----------------------------------------
-
-$main-border-color:            #c9d0d3;
-$light-border-color:           #cfd3d5;
-$lighter-border-color:         #e2e2e2;
-$footer-border-color:          color.adjust($body-background, $lightness: -13%);
-
-$dark-bg-border-color: #0e1b25;
+$footer-background-color-light: color.adjust($body-background, $lightness: -3%); //#f2f2f2
+$footer-background-color:       $color-highgray;
+$main-menu-background:          color.adjust($d-blue, $lightness: -3%);          //#203a51
+$main-menu-border-color:        $dark-bg-border-color;
 
 // Main Table
 // ----------------------------------------
 
-$table-color-off-white-dark-1: color.adjust($off-white, $lightness: -1%);
-$table-color-off-white-dark-2: color.adjust($off-white, $lightness: -4%);
-$table-off-white-gradient: color.adjust($off-white, $lightness: -5%);
-$color-lightgray-dark-1: color.adjust($color-lightgray, $lightness: -2%);
-$color-lightgray-dark-2: color.adjust($color-lightgray, $lightness: -5%);
+$table-color-off-white-dark-1: color.adjust($off-white, $lightness: -1%); //#f7f7f7
+$table-color-off-white-dark-2: color.adjust($off-white, $lightness: -4%); //#f0f0f0
+$table-off-white-gradient: $color-highgray;
+$color-lightgray-dark-1: color.adjust($color-lightgray, $lightness: -2%); //#f3f3f3
+$color-lightgray-dark-2: color.adjust($color-lightgray, $lightness: -5%); //#ebebeb
 
 // Button Highlights and Lowlights, Gradients
 // ----------------------------------------
@@ -117,9 +115,9 @@ $primary-color-green-light-3: color.adjust($primary-color-green, $lightness: 24%
 $primary-color-green-light-2: color.adjust($primary-color-green, $lightness: 12%);   // #63d29e
 $primary-color-green-light-1: color.adjust($primary-color-green, $lightness: 6%);    // #4bcc8f
 
-$primary-color-green-dark-1: color.adjust($primary-color-green, $lightness: -9%);      // #2d9d68
-$primary-color-green-dark-2: color.adjust($primary-color-green, $lightness: -15%);     // #268558
-$primary-color-green-dark-3: color.adjust($primary-color-green, $lightness: -20%);     // #20724b
+$primary-color-green-dark-1: color.adjust($primary-color-green, $lightness: -9%);    // #2d9d68
+$primary-color-green-dark-2: color.adjust($primary-color-green, $lightness: -15%);   // #268558
+$primary-color-green-dark-3: color.adjust($primary-color-green, $lightness: -20%);   // #20724b
 
 $primary-color-l-blue-light-1: color.adjust($l-blue, $lightness: 10%);
 $l-blue-gradient-dark-1: color.adjust($l-blue-gradient, $lightness: -5%);
@@ -147,17 +145,17 @@ $color-off-white-dark-1: color.adjust($off-white, $lightness: -3%);
 $color-off-white-dark-2: color.adjust($off-white, $lightness: -5%);
 $color-off-white-dark-3: color.adjust($off-white, $lightness: -6%);
 
-$color-button-box-shadow: rgba(0,0,0,.05);
-$color-active-box-shadow: rgba(0,0,0,.1);
-$color-header-box-shadow: rgba(0,0,0,.3);
-$color-dropdown-box-shadow: rgba(0,0,0,.1);
-$color-table-cell-shadow: rgba(0,0,0,.05);
-$color-modal-box-shadow: rgba(0,0,0,.3);
-$color-modal-overlay-box-shadow: rgba(0,0,0,.2);
+$color-button-box-shadow:             rgba(0,0,0,.05);
+$color-active-box-shadow:             rgba(0,0,0,.1);
+$color-header-box-shadow:             rgba(0,0,0,.3);
+$color-dropdown-box-shadow:           rgba(0,0,0,.1);
+$color-table-cell-shadow:             rgba(0,0,0,.05);
+$color-modal-box-shadow:              rgba(0,0,0,.3);
+$color-modal-overlay-box-shadow:      rgba(0,0,0,.2);
 $color-modal-overlay-gradient-box-shadow: rgba(0,0,0,.4);
-$color-pagination-active-box-shadow: rgba(0,0,0,.5);
+$color-pagination-active-box-shadow:  rgba(0,0,0,.5);
 
-$table-highlight: color.adjust($light-prim-color, $lightness: 28%);
+$table-highlight: $color-highgray;
 
 // Progress Bar
 // ----------------------------------------
@@ -167,18 +165,18 @@ $progress-bar-color:            $l-blue;
 // Modals
 // ----------------------------------------
 
-$modal-heading-color:           #4d4d4d;
-$modal-header-gradient:         color.adjust($color-lightgray, $lightness: -7%);
-$modal-obj-header-gradient:     color.adjust($off-white, $lightness: -3%);
+$modal-heading-color:           $color-neutral-darkgray;
+$modal-header-gradient:         color.adjust($color-lightgray, $lightness: -7%); //#e6e6e6
+$modal-obj-header-gradient:     color.adjust($off-white, $lightness: -3%);       //#f2f2f2
 
 // Nav Colors
 // ----------------------------------------
-$modal-nav-bg-color:            #eeeff0;
-$modal-nav-border-color:        #d6d6d6;
-$modal-nav-link-color:          #646E75;
-$modal-nav-link-active-color:   $header-link-color;
-$subpage-navigation-link-color: $color-silver;    //#fafafa
-$subpage-navigation-link-hover-color: color.adjust($subpage-navigation-link-color, $lightness: -15%);    //#9cabbc
+$modal-nav-bg-color:            $color-highgray;
+$modal-nav-border-color:        $main-border-color;
+$modal-nav-link-color:          $medium-prim-color;
+$modal-nav-link-active-color:   $modal-heading-color;
+$subpage-navigation-link-color: $color-silver;
+$subpage-navigation-link-hover-color: $light-prim-color;
 
 // Alerts
 // ----------------------------------------
@@ -186,22 +184,22 @@ $subpage-navigation-link-hover-color: color.adjust($subpage-navigation-link-colo
 // Success (Green)
 $state-success-text:             #3c763d;
 $state-success-bg:               #dff0d8;
-$state-success-border:           rgb(211.8267110656, 233.0538934426, 203.0861065574); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-success-bg, 1%), $lightness: -3%);
+$state-success-border:           #d4e9cb;
 
 // Info (Blue)
-$state-info-text:                color.adjust(#31708f, $lightness: 5%);
+$state-info-text:                #3d88ad;
 $state-info-bg:                  #d9edf7;
-$state-info-border:              rgb(194.6022156398, 224.3725947867, 239.2577843602); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-info-bg, 1%), $lightness: -5%);
+$state-info-border:              #c2e0ef;
 
 // Warning (Yellow)
 $state-warning-text:             #8a6d3b;
 $state-warning-bg:               #fcf8e3;
-$state-warning-border:           rgb(245.5470578374, 238.7655993294, 203.1629421626); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-warning-bg, 1%), $lightness: -5%);
+$state-warning-border:           #f5efcb;
 
 // Danger (Red)
 $state-danger-text:              #a94442;
 $state-danger-bg:                #f2dede;
-$state-danger-border:            rgb(234.9211137441, 209.1388862559, 209.1388862559); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-danger-bg, 1%), $lightness: -3%);
+$state-danger-border:            #ebd1d1;
 
 // Stats
 // ----------------------------------------

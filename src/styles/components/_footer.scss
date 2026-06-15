@@ -37,7 +37,7 @@
     bottom: 0;
     left: 0;
     background: variables.$footer-background-color;
-    border-top: 1px solid variables.$footer-border-color;
+    border-top: 1px solid variables.$main-border-color;
 
     .feedback-btn {
         width: 90px;
@@ -51,7 +51,7 @@
         a {
             transition: all .2s;
             @include footer-component-padding();
-            border-left: 1px solid variables.$footer-border-color;
+            border-left: 1px solid variables.$main-border-color;
             display: flex;
             padding-left: 5px;
             padding-right: 5px;

@@ -46,8 +46,8 @@
     text-shadow: 0px 1px 0px variables.$white;
 
     &:hover {
-        border: variables.$thin-border-stroke variables.$primary-color-light-blue;
-        box-shadow: 0 0 0 1px variables.$primary-color-light-blue;
+        border: variables.$thin-border-stroke variables.$l-blue;
+        box-shadow: 0 0 0 1px variables.$l-blue;
     }
 
     &:active {

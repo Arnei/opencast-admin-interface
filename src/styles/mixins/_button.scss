@@ -31,48 +31,48 @@
     position: relative;
 
     @if $color == green-dark-bg {
-        box-shadow: inset 0px 1px 0px 0px variables.$primary-color-green-light-1, 0px 2px 3px 1px variables.$color-button-box-shadow;
+        box-shadow: inset 0px 1px 0px 0px variables.$green-light-1, 0px 2px 3px 1px variables.$color-button-box-shadow;
 
-        background: linear-gradient(variables.$primary-color-green, variables.$primary-color-green-dark-1);
+        background: linear-gradient(variables.$green, variables.$green-dark-1);
 
         border: variables.$thin-border-stroke variables.$dark-bg-border-color;
 
         &:hover,
         &:focus  {
             cursor: pointer;
-            background: linear-gradient(variables.$primary-color-green-light-1, variables.$primary-color-green-dark-3);
+            background: linear-gradient(variables.$green-light-1, variables.$green-dark-3);
         }
 
         &:active {
             cursor: pointer;
-            box-shadow: inset 0px 3px 10px 1px variables.$primary-color-green-dark-2;
-            background-color: variables.$primary-color-green-dark-1 !important;
+            box-shadow: inset 0px 3px 10px 1px variables.$green-dark-2;
+            background-color: variables.$green-dark-1 !important;
         }
     }
 
     @else if $color == green {
-        box-shadow: inset 0px 1px 0px 0px variables.$primary-color-green-light-1, 0px 2px 3px 1px variables.$color-button-box-shadow;
+        box-shadow: inset 0px 1px 0px 0px variables.$green-light-1, 0px 2px 3px 1px variables.$color-button-box-shadow;
 
-        background: linear-gradient(variables.$primary-color-green, variables.$primary-color-green-dark-1);
+        background: linear-gradient(variables.$green, variables.$green-dark-1);
 
-        border: variables.$thin-border-stroke variables.$primary-color-green-dark-3;
+        border: variables.$thin-border-stroke variables.$green-dark-3;
 
         &:hover,
         &:focus  {
             cursor: pointer;
-            background: linear-gradient(variables.$primary-color-green-light-1, variables.$primary-color-green-dark-3);
+            background: linear-gradient(variables.$green-light-1, variables.$green-dark-3);
         }
 
         &:active {
             cursor: pointer;
-            box-shadow: inset 0px 3px 10px 1px variables.$primary-color-green-dark-2;
-            background-color: variables.$primary-color-green-dark-1 !important;
+            box-shadow: inset 0px 3px 10px 1px variables.$green-dark-2;
+            background-color: variables.$green-dark-1 !important;
         }
     }
 
     @else if $color == lightblue {
 
-        box-shadow: inset 0px 1px 0px 0px variables.$primary-color-l-blue-light-1, 0px 2px 3px 1px variables.$color-button-box-shadow;
+        box-shadow: inset 0px 1px 0px 0px variables.$l-blue-light-1, 0px 2px 3px 1px variables.$color-button-box-shadow;
 
         background: linear-gradient(variables.$l-blue, variables.$l-blue-gradient);
 
@@ -81,7 +81,7 @@
         &:hover,
         &:focus  {
             cursor: pointer;
-            background: linear-gradient(variables.$primary-color-l-blue-light-1, variables.$l-blue-gradient-dark-2);
+            background: linear-gradient(variables.$l-blue-light-1, variables.$l-blue-gradient-dark-2);
         }
 
         &:active {

@@ -89,7 +89,7 @@
     }
 
     .video-icon {
-        color: variables.$primary-color-green;
+        color: variables.$green;
         font-size: 24px;
     }
 
@@ -100,12 +100,12 @@
     .play {
         float: right;
         margin-left: auto;
-        color: variables.$primary-color-green;
+        color: variables.$green;
         font-size: 24px;
 
         &:active:before,
         &:hover:before {
-            color: variables.$primary-color-green-dark-1;
+            color: variables.$green-dark-1;
         }
     }
 

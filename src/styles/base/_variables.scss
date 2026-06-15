@@ -28,54 +28,41 @@
  *
  */
 
-// Primary Colors
+// Blues
 // ----------------------------------------
-
-$primary-color-green:          #37c180;
-$green:                        $primary-color-green;
-
-$primary-color-light-blue:     #378dd4;
-$l-blue:                       $primary-color-light-blue;
-
-$primary-color-blue:           #24425c;
-$d-blue:                       $primary-color-blue;
-
-$primary-color-grey:           #8c939b;
-$grey:                         $primary-color-grey;
-
-$primary-color-white:          #fafafa;
-$off-white:                    $primary-color-white;
-
-// Secondary Colors
-// ----------------------------------------
-
+$d-blue:                       #24425c;  // "primary color"
+$l-blue:                       #378dd4;  // "primary color"
 $bright-blue:                  #4da1f7;
+
+$l-blue-gradient:              #2b77b9;
+$b-blue-gradient:              #55cef2;
+
 $ref-blue:                     #1d5888;
 $ref-blue-button:              #069;
+
+// Other Colors
+// ----------------------------------------
+$green:                        #37c180;  // "primary color"
 $red:                          #fa1919;
 $alt-red:                      #e45253;
 $orange:                       #ff8c00;
 $yellow:                       #e4d12e;
-$black:                        #000;
-$white:                        #fff;
-
-$l-blue-gradient:           #2b77b9;
-$b-blue-gradient:           #55cef2;
 
 // Gray Scale
 // ----------------------------------------
-$color-black:               #000;
+$black:                     #000;
 $dark-prim-color:           #333;
 $color-darkgray:            #444;
 $color-neutral-darkgray:    #4d4d4d;
 $medium-prim-color:         #666;
-$color-gray:                #898989;
+$color-gray:                #898989;  // "primary color (was #8c939b)"
 $light-prim-color:          #a6a6a6;
 $color-silver:              #CCC;
 $color-midgray:             #e2e2e2;
 $color-highgray:            #ededed;
 $color-lightgray:           #F8F8F8;
-$color-white:               #fff;
+$off-white:                 #fafafa;  // "primary color"
+$white:                     #fff;
 
 // Text
 $global-text-color:            $medium-prim-color;
@@ -112,15 +99,15 @@ $color-lightgray-dark-2: color.adjust($color-lightgray, $lightness: -5%); //#ebe
 // Button Highlights and Lowlights, Gradients
 // ----------------------------------------
 
-$primary-color-green-light-3: color.adjust($primary-color-green, $lightness: 24%);   // #92e0bb
-$primary-color-green-light-2: color.adjust($primary-color-green, $lightness: 12%);   // #63d29e
-$primary-color-green-light-1: color.adjust($primary-color-green, $lightness: 6%);    // #4bcc8f
+$green-light-3: color.adjust($green, $lightness: 24%);   // #92e0bb
+$green-light-2: color.adjust($green, $lightness: 12%);   // #63d29e
+$green-light-1: color.adjust($green, $lightness: 6%);    // #4bcc8f
 
-$primary-color-green-dark-1: color.adjust($primary-color-green, $lightness: -9%);    // #2d9d68
-$primary-color-green-dark-2: color.adjust($primary-color-green, $lightness: -15%);   // #268558
-$primary-color-green-dark-3: color.adjust($primary-color-green, $lightness: -20%);   // #20724b
+$green-dark-1: color.adjust($green, $lightness: -9%);    // #2d9d68
+$green-dark-2: color.adjust($green, $lightness: -15%);   // #268558
+$green-dark-3: color.adjust($green, $lightness: -20%);   // #20724b
 
-$primary-color-l-blue-light-1: color.adjust($l-blue, $lightness: 10%);
+$l-blue-light-1: color.adjust($l-blue, $lightness: 10%);
 $l-blue-gradient-dark-1: color.adjust($l-blue-gradient, $lightness: -5%);
 $l-blue-gradient-dark-2: color.adjust($l-blue-gradient, $lightness: -10%);
 

@@ -125,7 +125,7 @@ const NewUserGeneralTab = <T extends RequiredFormProps>({
 	);
 };
 
-const PasswordStrengthIndicator = ({
+export const PasswordStrengthIndicator = ({
 	password,
 }: {
 	password: string

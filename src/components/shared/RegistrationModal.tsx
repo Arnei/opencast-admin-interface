@@ -76,8 +76,9 @@ const RegistrationModalContent = () => {
 	}>();
 
 	useEffect(() => {
-		fetchRegistrationInfos().then(r => console.log(r));
+		fetchRegistrationInfos();
 		fetchStatisticSummary();
+		// Only run on mount
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

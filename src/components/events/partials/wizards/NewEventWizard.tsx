@@ -48,9 +48,7 @@ const NewEventWizard = ({
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch]);
 
 	// Whether the ACL of a new event is initialized with the ACL of its series.
 	let initEventAclWithSeriesAcl = true;

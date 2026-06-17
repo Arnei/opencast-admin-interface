@@ -71,6 +71,8 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 			fetchNewScheduling: fetchEventInfos,
 			setFieldValue: formik.setFieldValue,
 	}));
+		// Dispatching the backend request should only happen when events change,
+		// and WILL change editedEvents
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formik.values.events]);
 

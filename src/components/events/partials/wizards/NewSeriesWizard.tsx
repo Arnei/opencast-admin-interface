@@ -48,16 +48,13 @@ const NewSeriesWizard = ({
 
 	useEffect(() => {
 		dispatch(removeNotificationWizardForm());
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch]);
 
 	useEffect(() => {
 		// This should set off a web request that will intentionally fail, in order
 		// to check if tobira is available at all
 		dispatch(fetchSeriesDetailsTobiraNew(""));
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [dispatch]);
 
 	const themesEnabled = (orgProperties["admin.themes.enabled"] || "false").toLowerCase() === "true";
 

@@ -241,7 +241,7 @@ export const postNewSeries = (params: {
 		});
 
 		tobira.parentPagePath = existingPages.pop()!.path;
-		tobira["newPages"] = newPages;
+		tobira.newPages = newPages;
 	}
 
 

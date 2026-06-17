@@ -49,6 +49,7 @@ const StartTaskGeneralPage = <T extends RequiredFormProps>({
 		if (formik.values.events.length === 0) {
 			formik.setFieldValue("events", selectedEvents);
 		}
+		// Only run on mount
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

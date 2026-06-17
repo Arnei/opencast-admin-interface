@@ -46,6 +46,7 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 		if (workflowDefinitions.length === 1) {
 			setDefaultValues(formik, workflowDefinitions, workflowDefinitions[0].id);
 		}
+	// We only care to set default values if workflowDef changes
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [workflowDefinitions]);
 

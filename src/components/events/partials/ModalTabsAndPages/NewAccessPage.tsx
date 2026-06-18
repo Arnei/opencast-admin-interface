@@ -25,10 +25,10 @@ import ModalContentTable from "../../../shared/modals/ModalContentTable";
  */
 interface RequiredFormProps {
   metadata: {
-    "dublincore/episode_isPartOf": string,
+    "dublincore/episode_isPartOf"?: string,
   },
   policies: TransformedAcl[],
-  aclTemplate: string,
+  aclTemplate: string, // For TemplateSelector
   // theme: string,
 }
 

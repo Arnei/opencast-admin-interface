@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Notifications from "../../../shared/Notifications";
 import cn from "classnames";
-import { getSelectedRows } from "../../../../selectors/tableSelectors";
+import { getSelectedEvents } from "../../../../selectors/tableSelectors";
 import { useSelectionChanges } from "../../../../hooks/wizardHooks";
 import {
 	checkValidityStartTaskEventSelection,
@@ -34,14 +34,13 @@ const StartTaskGeneralPage = <T extends RequiredFormProps>({
 }) => {
 	const { t } = useTranslation();
 
-	const selectedRows = useAppSelector(state => getSelectedRows(state));
+	const selectedRows = useAppSelector(state => getSelectedEvents(state));
 
 	const {
 		selectedEvents,
 		allChecked,
 		onChangeSelected,
 		onChangeAllSelected,
-		// @ts-expect-error TS(7006):
 	} = useSelectionChanges(formik, selectedRows);
 
 	useEffect(() => {

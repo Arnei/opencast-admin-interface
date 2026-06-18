@@ -325,14 +325,8 @@ export const deleteSeries = (id: Series["id"]): AppThunk => dispatch => {
 // delete series with provided ids
 export const deleteMultipleSeries = (
 	series: {
-		contributors: string[],
-		createdBy: string,
-		creation_date: string,
-		hasEvents: false,
 		id: string,
-		organizers: string[],
 		selected: boolean,
-		title: string,
 	}[],
 ): AppThunk => dispatch => {
 	const data = [];

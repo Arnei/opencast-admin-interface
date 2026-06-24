@@ -2,7 +2,7 @@ name: PRs » Push container image
 
 on:
   workflow_run:
-    workflows: ["PRs » Build container image"]
+    workflows: ["Build » Container image"]
     types:
       - completed
 

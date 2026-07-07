@@ -101,7 +101,7 @@ const EmbeddingCodeModal = ({
 					className="embedSizeButton size_620x349"
 					onClick={e => updateTextArea(e)}
 					tooltipText={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "620x349" }) as ParseKeys}
-					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "620x349" }) as ParseKeys}
+					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "620x349" })}
 				>
 					<span className="span-embedded-code">620x349</span>
 				</ButtonLikeAnchor>
@@ -110,7 +110,7 @@ const EmbeddingCodeModal = ({
 					className="embedSizeButton size_540x304"
 					onClick={e => updateTextArea(e)}
 					tooltipText={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "540x304" }) as ParseKeys}
-					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "540x304" }) as ParseKeys}
+					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "540x304" })}
 				>
 					<span className="span-embedded-code">540x304</span>
 				</ButtonLikeAnchor>
@@ -119,7 +119,7 @@ const EmbeddingCodeModal = ({
 					className="embedSizeButton size_460x259"
 					onClick={e => updateTextArea(e)}
 					tooltipText={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "460x259" }) as ParseKeys}
-					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "460x259" }) as ParseKeys}
+					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "460x259" })}
 				>
 					<span className="span-embedded-code">460x259</span>
 				</ButtonLikeAnchor>
@@ -128,7 +128,7 @@ const EmbeddingCodeModal = ({
 					className="embedSizeButton size_380x214"
 					onClick={e => updateTextArea(e)}
 					tooltipText={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "380x214" }) as ParseKeys}
-					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "380x214" }) as ParseKeys}
+					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "380x214" })}
 				>
 					<span className="span-embedded-code">380x214</span>
 				</ButtonLikeAnchor>
@@ -137,7 +137,7 @@ const EmbeddingCodeModal = ({
 					className="embedSizeButton size_300x169"
 					onClick={e => updateTextArea(e)}
 					tooltipText={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "300x169" }) as ParseKeys}
-					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "300x169" }) as ParseKeys}
+					aria-label={t("EMBEDDING_CODE.GENERATE_TOOLTIP", { size: "300x169" })}
 				>
 					<span className="span-embedded-code">300x169</span>
 				</ButtonLikeAnchor>

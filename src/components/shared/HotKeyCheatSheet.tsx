@@ -5,7 +5,6 @@ import { useHotkeysContext } from "react-hotkeys-hook";
 import { Modal, ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
 import ModalContentTable from "./modals/ModalContentTable";
-import { Hotkey } from "react-hotkeys-hook/dist/types";
 
 /**
  * This component renders the hotkey cheat sheet showing all available hotkeys
@@ -18,7 +17,7 @@ const HotKeyCheatSheet = ({
 	const { t } = useTranslation();
 	const { hotkeys } = useHotkeysContext();
 
-	const checkHotkeys = (hotkeys: readonly Hotkey[], searchkeys: string[]) => {
+	const checkHotkeys = (hotkeys: ReturnType<typeof useHotkeysContext>["hotkeys"], searchkeys: string[]) => {
 		for (const hotkey of hotkeys) {
 			if (!hotkey.keys) { continue; }
 			if (hotkey.keys.length !== searchkeys.length) { continue; }

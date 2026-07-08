@@ -7,7 +7,7 @@ export const postTasks = (
 	values: {
 		events: Event[]
 		configuration: { [key: string] : string }
-		workflow: string
+		workflowId: string
 	},
 ) => (dispatch: AppDispatch) => {
 	const configuration: { [key: string] : string } = {};
@@ -24,7 +24,7 @@ export const postTasks = (
 	}
 
 	const metadataJson = {
-		workflow: values.workflow,
+		workflow: values.workflowId,
 		configuration: workflowConfig,
 	};
 

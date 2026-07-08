@@ -13,7 +13,7 @@ export const formatCaptureAgentForDropdown = (captureAgents: Recording[]) => {
 };
 
 export const formatWorkflowsForDropdown = (workflows: Workflow[]) => {
-	return workflows.map(workflow => ({ label: workflow.title, value: workflow.id }));
+	return workflows.map(workflow => ({ label: workflow.title, value: workflow.id, order: workflow.displayOrder }));
 };
 
 export const formatAclTemplatesForDropdown = (templates: { id: string, value: string }[]) => {

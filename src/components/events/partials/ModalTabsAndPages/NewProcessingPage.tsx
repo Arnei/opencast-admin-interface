@@ -2,21 +2,20 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getWorkflowDef } from "../../../../selectors/workflowSelectors";
 import RenderWorkflowConfig from "../wizards/RenderWorkflowConfig";
-import { setDefaultConfig } from "../../../../utils/workflowPanelUtils";
-import DropDown from "../../../shared/DropDown";
+import { setDefaultValues } from "../../../../utils/workflowPanelUtils";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import { fetchWorkflowDef } from "../../../../slices/workflowSlice";
 import { FormikProps } from "formik";
-import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
 import ModalContentTable from "../../../shared/modals/ModalContentTable";
+import RenderWorkflowSelect from "../wizards/RenderWorkflowSelect";
 
 /**
  * This component renders the processing page for new events in the new event wizard.
  */
 interface RequiredFormProps {
 	sourceMode: string,
-	processingWorkflow: string,
+	workflowId: string,
 }
 
 const NewProcessingPage = <T extends RequiredFormProps>({
@@ -31,7 +30,7 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const workflowDef = useAppSelector(state => getWorkflowDef(state));
+	const workflowDefinitions = useAppSelector(state => getWorkflowDef(state));
 
 	useEffect(() => {
 		// Load workflow definitions for selecting
@@ -44,11 +43,11 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 
 	// Preselect the first item
 	useEffect(() => {
-		if (workflowDef.length === 1) {
-			setDefaultValues(workflowDef[0].id);
+		if (workflowDefinitions.length === 1) {
+			setDefaultValues(formik, workflowDefinitions, workflowDefinitions[0].id);
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [workflowDef]);
+	}, [workflowDefinitions]);
 
 	const previous = () => {
 		// if not UPLOAD is chosen as source mode, then back to source page
@@ -57,17 +56,6 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 		} else {
 			previousPage(formik.values, false);
 		}
-	};
-
-	const setDefaultValues = (value: string) => {
-		const workflowId = value;
-		// fill values with default configuration of chosen workflow
-		const defaultConfiguration = setDefaultConfig(workflowDef, workflowId);
-
-		// set default configuration in formik
-		formik.setFieldValue("configuration", defaultConfiguration);
-		// set chosen workflow in formik
-		formik.setFieldValue("processingWorkflow", workflowId);
 	};
 
 	return (
@@ -79,34 +67,10 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 						{t("EVENTS.EVENTS.NEW.PROCESSING.SELECT_WORKFLOW")}
 					</header>
 					<div className="obj-container padded">
-						{workflowDef.length > 0 ? (
-							<div className="editable">
-								<DropDown
-									value={formik.values.processingWorkflow}
-									text={
-										workflowDef.find(
-											workflow =>
-												formik.values.processingWorkflow === workflow.id,
-										)?.title ?? ""
-									}
-									options={formatWorkflowsForDropdown(workflowDef)}
-									required={true}
-									handleChange={element => {
-										if (element) {
-											setDefaultValues(element.value);
-										}
-									}}
-									placeholder={t(
-										"EVENTS.EVENTS.NEW.PROCESSING.SELECT_WORKFLOW",
-									)}
-									customCSS={{ width: "100%" }}
-								/>
-							</div>
-						) : (
-							<span>
-								{t("EVENTS.EVENTS.NEW.PROCESSING.SELECT_WORKFLOW_EMPTY")}
-							</span>
-						)}
+						<RenderWorkflowSelect
+							formik={formik}
+							workflowDefinitions={workflowDefinitions}
+						/>
 
 						{/* Configuration panel of selected workflow */}
 						<div className="collapsible-box">
@@ -114,10 +78,10 @@ const NewProcessingPage = <T extends RequiredFormProps>({
 								id="new-event-workflow-configuration"
 								className="checkbox-container obj-container"
 							>
-								{formik.values.processingWorkflow ? (
+								{formik.values.workflowId ? (
 									<RenderWorkflowConfig
 										displayDescription
-										workflowId={formik.values.processingWorkflow}
+										workflowId={formik.values.workflowId}
 										// @ts-expect-error TS(7006):
 										formik={formik}
 									/>

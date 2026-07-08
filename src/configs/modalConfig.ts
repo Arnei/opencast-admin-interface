@@ -29,7 +29,7 @@ export const initialFormValuesNewEvents: {
 	scheduleEndMinute: string,
 	repeatOn: ("MO" | "TU" | "WE" | "TH" | "FR" | "SA" | "SU")[],
 	location: string,
-	processingWorkflow: string,
+	workflowId: string,
 	configuration: { [key: string]: string },
 	aclTemplate: string,
 	policies: TransformedAcl[],
@@ -48,7 +48,7 @@ export const initialFormValuesNewEvents: {
 	repeatOn: [],
 	location: "",
 	// deviceInputs: [],
-	processingWorkflow: "",
+	workflowId: "",
 	configuration: {},
 	aclTemplate: "",
 	policies: [],
@@ -203,11 +203,11 @@ export const initialFormValuesNewUser: {
 // InitialValues of Formik form (others computed dynamically depending on responses from backend)
 export const initialFormValuesStartTask: {
 	events: Event[],
-	workflow: string,
+	workflowId: string,
 	configuration: { [key: string]: string },
 } = {
 	events: [],
-	workflow: "",
+	workflowId: "",
 	configuration: {},
 };
 

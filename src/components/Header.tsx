@@ -125,7 +125,7 @@ const Header = () => {
 		// Fetching health status information at mount
 		loadHealthStatus().then(r => console.info(r));
 		// Fetch health status every minute
-		const interval = setInterval(() => dispatch(fetchHealthStatus()), 5000);
+		const interval = setInterval(() => { dispatch(fetchHealthStatus()); }, 5000);
 
 		// Event listener for handle a click outside of dropdown menu
 		window.addEventListener("mousedown", handleClickOutside);
@@ -345,7 +345,7 @@ const MenuNotify = ({
 				<li key={key}>
 					{!!service.status && (
 						<ButtonLikeAnchor
-							onClick={() => redirectToServices()}
+							onClick={() => { redirectToServices(); }}
 						>
 							<span> {service.name} </span>
 							{service.error ? (
@@ -468,7 +468,7 @@ const MenuUser = ({
 	return (
 		<ul className="dropdown-ul">
 			<li>
-				<ButtonLikeAnchor onClick={() => showChangePasswordModal()}>
+				<ButtonLikeAnchor onClick={() => { showChangePasswordModal(); }}>
 					<span>{t("USER_MENU.CHANGE_PASSWORD")}</span>
 				</ButtonLikeAnchor>
 			</li>

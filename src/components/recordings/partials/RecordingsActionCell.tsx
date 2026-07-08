@@ -34,7 +34,7 @@ const RecordingsActionCell = ({
 		<>
 			{/* view details location/recording */}
 			<ButtonLikeAnchor
-				onClick={() => showRecordingDetails()}
+				onClick={() => { showRecordingDetails(); }}
 				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_LOCATIONS_DETAILS_VIEW"}
 				// tooltipText={"RECORDINGS.RECORDINGS.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns

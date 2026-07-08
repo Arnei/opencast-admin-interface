@@ -160,12 +160,13 @@ const DropDown = <T, >({
 	};
 
 	const loadOptionsAsync = (inputValue: string, callback: (options: DropDownOption[]) => void) => {
-		setTimeout(async () => {
+		const timeout = async () => {
 			callback(formatOptions(
 				fetchOptions ? await fetchOptions(inputValue) : filterOptions(inputValue),
 				required,
 			));
-		}, 1000);
+		};
+		setTimeout(() => { timeout(); }, 1000);
 	};
 
 	const loadOptions = (

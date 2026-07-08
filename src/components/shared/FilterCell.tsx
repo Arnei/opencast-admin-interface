@@ -1,7 +1,7 @@
 import { getFilters } from "../../selectors/tableFilterSelectors";
 import { editFilterValue } from "../../slices/tableFilterSlice";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
-import { Resource } from "../../slices/tableSlice";
+import { Resource, setOffset, setPageActive } from "../../slices/tableSlice";
 import { AsyncThunk } from "@reduxjs/toolkit";
 import { ParseKeys } from "i18next";
 import { ReactNode } from "react";
@@ -36,6 +36,8 @@ const FilterCell = <T, >({
 	const addFilter = async (filterValue: string) => {
 		const filter = filterMap.find(({ name }) => name === filterName);
 		if (filter) {
+			dispatch(setOffset(0));
+			dispatch(setPageActive(0));
 			dispatch(editFilterValue({ filterName: filter.name, value: filterValue, resource }));
 			await dispatch(fetchResource());
 			dispatch(loadResourceIntoTable());

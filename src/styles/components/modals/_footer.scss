@@ -41,6 +41,8 @@
         @include button.btn(green);
 
         &.cancel {
+            float: left;
+            margin-left: 3%;
             @include button.btn(white);
         }
 

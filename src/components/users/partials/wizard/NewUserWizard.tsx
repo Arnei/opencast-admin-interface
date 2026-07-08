@@ -1,7 +1,4 @@
-import { useState } from "react";
 import { Formik } from "formik";
-import { useTranslation } from "react-i18next";
-import cn from "classnames";
 import NewUserGeneralTab from "./NewUserGeneralTab";
 import UserRolesTab from "./UserRolesTab";
 import { initialFormValuesNewUser } from "../../../../configs/modalConfig";
@@ -9,9 +6,10 @@ import { getUsernames } from "../../../../selectors/userSelectors";
 import { NewUserSchema } from "../../../../utils/validate";
 import { NewUser, postNewUser, UserRole } from "../../../../slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store";
-import ButtonLikeAnchor from "../../../shared/ButtonLikeAnchor";
-import WizardNavigationButtons from "../../../shared/wizard/WizardNavigationButtons";
 import { Role } from "../../../../slices/aclSlice";
+import WizardStepper, { WizardStep } from "../../../shared/wizard/WizardStepper";
+import { usePageFunctions } from "../../../../hooks/wizardHooks";
+import NewUserSummaryPage from "./NewUserSummaryPage";
 
 /**
  * This component renders the new user wizard
@@ -21,16 +19,39 @@ const NewUserWizard = ({
 }: {
 	close: () => void,
 }) => {
-	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
 	const usernames = useAppSelector(state => getUsernames(state));
 
-	const [tab, setTab] = useState(0);
+	const {
+		page,
+		nextPage,
+		previousPage,
+		setPage,
+		pageCompleted,
+		setPageCompleted,
+	} = usePageFunctions(0);
 
-	const openTab = (tabNr: number) => {
-		setTab(tabNr);
-	};
+	type StepName = "metadata" | "roles" | "summary";
+	type Step = WizardStep & {
+		name: StepName,
+	}
+
+	// Caption of steps used by Stepper
+	const steps: Step[] = [
+		{
+			translation: "USERS.USERS.DETAILS.TABS.USER",
+			name: "metadata",
+		},
+		{
+			translation: "USERS.USERS.DETAILS.TABS.ROLES",
+			name: "roles",
+		},
+		{
+			translation: "USERS.USERS.DETAILS.TABS.SUMMARY",
+			name: "summary",
+		},
+	];
 
 	const handleSubmit = (values: {
 			username: string,
@@ -54,23 +75,6 @@ const NewUserWizard = ({
 
 	return (
 		<>
-			{/* Head navigation*/}
-			<nav className="modal-nav">
-				<ButtonLikeAnchor
-					className={cn("wider", { active: tab === 0 })}
-					onClick={() => openTab(0)}
-				>
-					{t("USERS.USERS.DETAILS.TABS.USER")}
-				</ButtonLikeAnchor>
-				<ButtonLikeAnchor
-					className={cn("wider", { active: tab === 1 })}
-					onClick={() => openTab(1)}
-					tooltipText="USERS.USERS.DETAILS.DESCRIPTION.ROLES"
-				>
-					{t("USERS.USERS.DETAILS.TABS.ROLES")}
-				</ButtonLikeAnchor>
-			</nav>
-
 			{/* Initialize overall form */}
 			<Formik
 				initialValues={initialFormValuesNewUser}
@@ -81,17 +85,33 @@ const NewUserWizard = ({
 				{formik => {
 					return (
 						<>
-							{tab === 0 && <NewUserGeneralTab formik={formik} />}
-							{tab === 1 && <UserRolesTab formik={formik} />}
-
-							{/* Navigation buttons and validation */}
-							<WizardNavigationButtons
-								isLast
-								formik={formik}
-								nextPage={() => formik.handleSubmit()}
-								previousPage={() => close()}
-								cancelTranslationString={"CANCEL"}
+							<WizardStepper
+								steps={steps}
+								activePageIndex={page}
+								setActivePage={setPage}
+								completed={pageCompleted}
+								setCompleted={setPageCompleted}
+								isValid={formik.isValid}
 							/>
+							{steps[page].name === "metadata" &&
+								<NewUserGeneralTab
+									formik={formik}
+									nextPage={nextPage}
+								/>
+							}
+							{steps[page].name === "roles" &&
+								<UserRolesTab
+									formik={formik}
+									nextPage={nextPage}
+									previousPage={previousPage}
+								/>
+							}
+							{steps[page].name === "summary" &&
+								<NewUserSummaryPage
+									formik={formik}
+									previousPage={previousPage}
+								/>
+							}
 						</>
 					);
 				}}

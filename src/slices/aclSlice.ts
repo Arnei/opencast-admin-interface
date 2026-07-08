@@ -261,8 +261,11 @@ export const checkAcls = (acls: TransformedAcl[]) => (dispatch: AppDispatch, get
 			bothRights = true;
 		}
 
-		// check if each policy has read or write right (at least one checkbox should be checked)
-		if (!acls[i].read && !acls[i].write) {
+		// check if each policy has either
+		//   - read rights
+		//   - write rights
+		//   - custom action rights
+		if (!acls[i].read && !acls[i].write && acls[i].actions.length === 0) {
 			check = false;
 		}
 	}

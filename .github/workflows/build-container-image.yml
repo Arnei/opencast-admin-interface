@@ -31,7 +31,7 @@ jobs:
           outputs: type=docker,dest=${{ runner.temp }}/build.tar
 
       - name: Upload docker image to GHA artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ github.run_id }}
           path: ${{ runner.temp }}/build.tar

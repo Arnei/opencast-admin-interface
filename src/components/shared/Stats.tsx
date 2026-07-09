@@ -59,7 +59,7 @@ const Stats = () => {
 		// Load stats on mount
 		loadStats();
 
-		const fetchEventsInterval = setInterval(() => loadStats(), 5000);
+		const fetchEventsInterval = setInterval(() => { loadStats(); }, 5000);
 
 		return () => clearInterval(fetchEventsInterval);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,7 +76,7 @@ const Stats = () => {
 							tooltipText={"DASHBOARD.BUTTON_TOOLTIP"}
 							tooltipParams={{ filterName: t(st.description as ParseKeys) }}
 							aria-label={t("DASHBOARD.BUTTON_TOOLTIP", { filterName: t(st.description as ParseKeys) })}
-							onClick={() => showStatsFilter(st)}
+							onClick={() => { showStatsFilter(st); }}
 						>
 							<div>{st.count}</div>
 							{/* Show the description of the status, if defined,

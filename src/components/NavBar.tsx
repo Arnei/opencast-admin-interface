@@ -75,7 +75,7 @@ const NavBar = ({
 
 	useHotkeys(
 		(create && create.hotkeySequence) ?? [],
-		() => showNewResourceModal(),
+		() => { showNewResourceModal(); },
 		{ description: create && create.hotkeyDescription ? t(create.hotkeyDescription) : undefined },
 		[showNewResourceModal],
 	);
@@ -115,7 +115,7 @@ const NavBar = ({
 					{hasAccess(create.accessRole, user) && (
 						<BaseButton
 							className="add"
-							onClick={showNewResourceModal}
+							onClick={() => { showNewResourceModal(); }}
 							style={{ display: "flex", alignItems: "center" }}
 						>
 							<LuPlus className="btn-group-icon" />

@@ -17,7 +17,7 @@ const SchedulingLocation = ({
 	disabled: boolean
 	title: ParseKeys
 	placeholder: ParseKeys
-	callback: (value: string) => void
+	callback: (value: string) => void | Promise<void>
 }) => {
 	const { t } = useTranslation();
 

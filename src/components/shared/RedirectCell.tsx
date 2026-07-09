@@ -39,7 +39,7 @@ const RedirectCell = ({
 		<ButtonLikeAnchor
 			className="button-like-anchor crosslink"
 			tooltipText={tooltipText}
-			onClick={() => redirectToResource(filterValue)}
+			onClick={() => { redirectToResource(filterValue); }}
 		>
 			{children}
 		</ButtonLikeAnchor>

@@ -179,7 +179,7 @@ const EditableDateValue = ({
 			<DatePicker
 				ref={ref}
 				selected={!isNaN(Date.parse(field.value as string)) ? new Date(field.value as string) : null}
-				onChange={value => setFieldValue(field.name, value)}
+				onChange={value => { setFieldValue(field.name, value); }}
 				showTimeInput
 				showYearDropdown
 				showMonthDropdown
@@ -312,7 +312,7 @@ const EditableSingleValueTime = ({
 			<DatePicker
 				ref={ref}
 				selected={typeof field.value === "string" ? parseISO(field.value) : field.value as Date}
-				onChange={value => setFieldValue(field.name, value)}
+				onChange={value => { setFieldValue(field.name, value); }}
 				showTimeSelect
 				showTimeSelectOnly
 				dateFormat="p"
@@ -407,7 +407,11 @@ const EditableSingleSelectDropDown = ({
 			options={options}
 			fetchOptions={fetchOptions}
 			required={metadataField.required}
-			handleChange={element => element && setFieldValue(field.name, element.value)}
+			handleChange={element => {
+				if (element) {
+					setFieldValue(field.name, element.value);
+				}
+			}}
 			placeholder={focused
 				? `-- ${t("SELECT_NO_OPTION_SELECTED")} --`
 				: `${t("SELECT_NO_OPTION_SELECTED")}`

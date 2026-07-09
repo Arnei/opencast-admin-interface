@@ -28,8 +28,7 @@ type ConfigurationPanelField = {
 }
 
 export type Workflow = {
-	configurationPanel: string,  // XML
-	configurationPanelJson: string | ConfigurationPanelField[],  // 'string' will always be the empty string
+	configurationPanelJson: ConfigurationPanelField[],
 	description: string,
 	displayOrder: number,
 	id: string,
@@ -53,12 +52,11 @@ const initialState: WorkflowState = {
 };
 
 // fetch workflow definitions from server
-export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef", async (
-	type: "tasks" | "delete-event" | "event-details" | "new-event-upload" | "new-event-schedule" | "default",
-) => {
+export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef", async (type: string) => {
+	type backendWorkflow = Omit<Workflow, "configurationPanelJson"> & { configurationPanelJson: string };
 	type NewProcessing = {
 		default_workflow_id: string,
-		workflows: Workflow[],
+		workflows: backendWorkflow[],
 	}
 	let urlParams;
 
@@ -102,16 +100,16 @@ export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef",
 	// and then `fulfilled` or `rejected` actions based on the promise.
 	const res = await axios.get<NewProcessing>("/admin-ng/event/new/processing?", { params: urlParams });
 
-	let workflows = camelcaseKeys(res.data.workflows);
+	const workflows = camelcaseKeys(res.data.workflows);
 
-	workflows = workflows.map((workflow: Workflow) => {
+	const parsedWorkflows = workflows.map(workflow => {
 		if (workflow.configurationPanelJson.length > 0) {
 			return {
 				...workflow,
 				// TODO: Handle JSON parsing errors
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				configurationPanelJson: JSON.parse(
-					workflow.configurationPanelJson as string,
+					workflow.configurationPanelJson,
 				),
 			};
 		} else {
@@ -121,7 +119,7 @@ export const fetchWorkflowDef = createAppAsyncThunk("workflow/fetchWorkflowDef",
 
 	const workflowDef = {
 		defaultWorkflowId: res.data.default_workflow_id,
-		workflows: workflows,
+		workflows: parsedWorkflows,
 	};
 
 	return workflowDef;

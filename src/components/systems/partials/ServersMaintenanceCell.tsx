@@ -31,7 +31,7 @@ const ServersMaintenanceCell = ({
 			{hasAccess("ROLE_UI_SERVERS_MAINTENANCE_EDIT", user) && (
 				<input
 					type="checkbox"
-					onChange={e => onClickCheckbox(e)}
+					onChange={e => { onClickCheckbox(e); }}
 					name="maintenanceStatus"
 					checked={row.maintenance}
 				/>

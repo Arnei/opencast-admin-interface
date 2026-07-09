@@ -160,7 +160,7 @@ const TableFilters = ({
 	useEffect(() => {
 		if (itemValue) {
 			// Call to apply filter changes with 600MS debounce!
-			const applyFilterChangesDebouncedTimeoutId = setTimeout(applyFilterChangesDebounced, 600);
+			const applyFilterChangesDebouncedTimeoutId = setTimeout(() => { applyFilterChangesDebounced(); }, 600);
 
 			return () => clearTimeout(applyFilterChangesDebouncedTimeoutId);
 		}
@@ -226,7 +226,7 @@ const TableFilters = ({
 
 	useHotkeys(
     availableHotkeys.general.REMOVE_FILTERS.sequence,
-    () => removeFilters(),
+    () => { removeFilters(); },
 		{ description: t(availableHotkeys.general.REMOVE_FILTERS.description) ?? undefined },
     [removeFilters],
   );
@@ -349,7 +349,7 @@ const TableFilters = ({
 										}
 										{/* Remove icon in blue area around filter */}
 										<ButtonLikeAnchor
-											onClick={() => removeFilter(filter)}
+											onClick={() => { removeFilter(filter); }}
 											tooltipText="TABLE_FILTERS.REMOVE"
 										>
 											<LuX />
@@ -362,7 +362,7 @@ const TableFilters = ({
 						{/* Remove icon to clear all filters */}
 						{filterMap.some(e => e.value) &&
 							<ButtonLikeAnchor
-								onClick={removeFilters}
+								onClick={() => { removeFilters(); }}
 								tooltipText="TABLE_FILTERS.CLEAR"
 								className="table-filter-button"
 							>

@@ -368,7 +368,7 @@ const ResourceDetailsAccessPolicyTab = ({
 									}
 
 									{/* Save and cancel buttons */}
-									{!transactions.readOnly && <SaveEditFooter
+									{!transactions.readOnly && formik.dirty && <SaveEditFooter
 										active={policyChanged && formik.dirty}
 										reset={() => resetPolicies(formik.resetForm)}
 										submit={() => saveAccess(formik.values, false)}

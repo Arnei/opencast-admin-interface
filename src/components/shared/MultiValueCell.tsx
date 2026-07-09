@@ -45,7 +45,7 @@ const MultiValueCell = ({
 		values.map((value, key) => (
 			<ButtonLikeAnchor
 				key={key}
-				onClick={() => addFilter(value)}
+				onClick={() => { addFilter(value); }}
 				className={"metadata-entry"}
 				tooltipText={tooltipText}
 			>

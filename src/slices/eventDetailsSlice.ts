@@ -1816,21 +1816,21 @@ export const deleteCommentReply = createAppAsyncThunk("eventDetails/deleteCommen
 
 export const saveWorkflowConfig = (params: {
 	values: {
-		workflowDefinition: string,
+		workflowId: string,
 		configuration: { [key: string]: unknown } | undefined
 	},
 	eventId: Event["id"]
 }): AppThunk => dispatch => {
 // export const saveWorkflowConfig = createAppAsyncThunk("eventDetails/saveWorkflowConfig", async (params: {
 // 	values: {
-// 		workflowDefinition: string,
+// 		workflowId: string,
 // 		configuration: { [key: string]: unknown } | undefined
 // 	},
 // 	eventId: Event["id"]
 // }, { dispatch }) => {
 	const { values, eventId } = params;
 	const jsonData = {
-		id: values.workflowDefinition,
+		id: values.workflowId,
 		configuration: values.configuration,
 	};
 

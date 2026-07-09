@@ -54,11 +54,11 @@ const StartTaskModal = ({
 
 	const validateFormik = (values: {
 		events: Event[],
-		workflow: string,
+		workflowId: string,
 	}) => {
 		const errors: {
 			events?: string,
-			workflow?: string,
+			workflowId?: string,
 		} = {};
 		if (!checkValidityStartTaskEventSelection(values)) {
 			errors.events = "Not on all events task startable!";
@@ -66,11 +66,11 @@ const StartTaskModal = ({
 		if (
 			steps[page].name !== "general" &&
 			!(
-				!!values.workflow &&
-				values.workflow !== ""
+				!!values.workflowId &&
+				values.workflowId !== ""
 			)
 		) {
-			errors.workflow = "Workflow not selected!";
+			errors.workflowId = "Workflow not selected!";
 		}
 		return errors;
 	};

@@ -40,7 +40,7 @@ const AclsActionsCell = ({
 		<>
 			{/* edit/show ACL details */}
 			<ButtonLikeAnchor
-				onClick={showAclDetails}
+				onClick={() => { showAclDetails(); }}
 				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_ACLS_EDIT"}
 				tooltipText={"USERS.ACLS.TABLE.TOOLTIP.DETAILS"}

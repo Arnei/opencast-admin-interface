@@ -251,7 +251,7 @@
     // ----------------------------------------
 
     .details-link {
-        color: variables.$l-blue;
+        color: variables.$ref-blue;
         white-space: nowrap;
         display: flex;
         align-items: center;
@@ -262,7 +262,7 @@
         }
 
         &:hover {
-            color: color.adjust(variables.$l-blue, $lightness: -20%);
+            color: color.adjust(variables.$ref-blue, $lightness: -20%);
         }
     }
 

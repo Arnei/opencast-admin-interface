@@ -4,6 +4,7 @@ import { Field } from "../../../shared/Field";
 import { FormikProps } from "formik";
 import { NotificationComponent } from "../../../shared/Notifications";
 import ModalContent from "../../../shared/modals/ModalContent";
+import { PasswordStrengthIndicator } from "./NewUserGeneralTab";
 
 /**
  * This component renders the general user information tab in the users details modal.
@@ -105,6 +106,9 @@ const EditUserGeneralTab = <T extends RequiredFormProps>({
 						}
 					/>
 				</div>
+					<PasswordStrengthIndicator
+						password={formik.values.password}
+					/>
 			</div>
 		</ModalContent>
 	);

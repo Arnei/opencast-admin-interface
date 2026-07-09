@@ -367,7 +367,7 @@ const NewTobiraPage = <T extends TobiraFormProps>({
 		{/* Render buttons for saving or resetting updated path */}
 		{mode.edit && <SaveEditFooter
 			active={formik.values.selectedPage !== undefined}
-			reset={() => formik.setFieldValue("selectedPage", undefined)}
+			reset={() => { formik.setFieldValue("selectedPage", undefined); }}
 			submit={() => formik.handleSubmit()}
 			{...{ isValid }}
 		/>}

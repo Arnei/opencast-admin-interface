@@ -1,4 +1,20 @@
+import { FormikProps } from "formik";
 import { Workflow, FieldSetField } from "../slices/workflowSlice";
+
+// Set workflow id in formik when changing workflow, and initialize configuration
+export const setDefaultValues = <T extends { workflowId: string} >(
+	formik: FormikProps<T>,
+	workflowDefinitions: Workflow[],
+	workflowId: string,
+) => {
+	// fill values with default configuration of chosen workflow
+	const defaultConfiguration = setDefaultConfig(workflowDefinitions, workflowId);
+
+	// set default configuration in formik
+	formik.setFieldValue("configuration", defaultConfiguration);
+	// set chosen workflow in formik
+	formik.setFieldValue("workflowId", workflowId);
+};
 
 // fill values with default configuration of chosen workflow
 export const setDefaultConfig = (workflowDefinitions: Workflow[], workflowId: string) => {
@@ -38,8 +54,7 @@ const fillDefaultConfig = (
       defaultConfiguration[field.name] = field.value;
     } else if (field.type === "datetime-local") {
       const date = new Date(new Date().toString().split("GMT")[0] + " UTC").toISOString().split(".")[0];
-      defaultConfiguration[field.name] = date;
-      field.defaultValue = date;
+      defaultConfiguration[field.name] = field.value ? field.value : date;
     // set value in default configuration
     } else {
       defaultConfiguration[field.name] = field.value;

@@ -40,7 +40,7 @@ const UsersActionCell = ({
 		<>
 			{/* edit/show user details */}
 			<ButtonLikeAnchor
-				onClick={() => showUserDetails()}
+				onClick={() => { showUserDetails(); }}
 				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_USERS_EDIT"}
 				tooltipText={"USERS.USERS.TABLE.TOOLTIP.DETAILS"}

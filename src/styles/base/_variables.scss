@@ -148,8 +148,8 @@ $modal-nav-bg-color:            #eeeff0;
 $modal-nav-border-color:        #d6d6d6;
 $modal-nav-link-color:          #646E75;
 $modal-nav-link-active-color:   $header-link-color;
-$subpage-navigation-link-color: color.adjust($header-link-color, $lightness: 25%);    //#fafafa
-$subpage-navigation-link-hover-color: color.adjust($header-link-color, $lightness: 35%);    //#9cabbc
+$subpage-navigation-link-color: $color-silver;    //#fafafa
+$subpage-navigation-link-hover-color: color.adjust($subpage-navigation-link-color, $lightness: -15%);    //#9cabbc
 
 // Stats
 // ----------------------------------------

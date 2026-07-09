@@ -108,6 +108,18 @@ const NewSourcePage = <T extends RequiredFormProps>({
 		return inputDevices.length > 0 && hasAnyDeviceAccess(user, inputDevices);
 	};
 
+	const nextPageWithCheck = async () => {
+		removeOldNotifications();
+		const noConflicts = await dispatch(checkConflicts(formik.values));
+		if (Array.isArray(noConflicts)) {
+			setConflicts(noConflicts);
+		}
+		if ((typeof noConflicts == "boolean" && noConflicts)
+			|| (Array.isArray(noConflicts) && noConflicts.length === 0)) {
+			nextPage(formik.values);
+		}
+	};
+
 	return (
 		<>
 			<ModalContentTable>
@@ -211,17 +223,7 @@ const NewSourcePage = <T extends RequiredFormProps>({
 			{/* Button for navigation to next page and previous page */}
 			<WizardNavigationButtons
 				formik={formik}
-				nextPage={async () => {
-					removeOldNotifications();
-					const noConflicts = await dispatch(checkConflicts(formik.values));
-					if (Array.isArray(noConflicts)) {
-						setConflicts(noConflicts);
-					}
-					if ((typeof noConflicts == "boolean" && noConflicts)
-						|| (Array.isArray(noConflicts) && noConflicts.length === 0)) {
-						nextPage(formik.values);
-					}
-				}}
+				nextPage={() => { nextPageWithCheck(); }}
 				previousPage={previousPage}
 			/>
 		</>

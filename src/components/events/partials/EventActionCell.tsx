@@ -91,7 +91,7 @@ const EventActionCell = ({
 			{/* If event belongs to a series then the corresponding series details can be opened */}
 			{!!row.series && (
 				<ButtonLikeAnchor
-					onClick={onClickSeriesDetails}
+					onClick={() => { onClickSeriesDetails(); }}
 					className={"action-cell-button more-series"}
 					editAccessRole={"ROLE_UI_SERIES_DETAILS_VIEW"}
 					tooltipText={"EVENTS.SERIES.TABLE.TOOLTIP.DETAILS"}

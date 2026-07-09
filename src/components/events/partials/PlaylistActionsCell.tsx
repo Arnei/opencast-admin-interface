@@ -27,7 +27,7 @@ const PlaylistActionsCell = ({
   return <>
     {/* playlist details */}
     <ButtonLikeAnchor
-      onClick={() => showPlaylistDetailsModal()}
+      onClick={() => { showPlaylistDetailsModal(); }}
       className={"action-cell-button"}
       editAccessRole={"ROLE_UI_PLAYLISTS_DETAILS_VIEW"}
     >

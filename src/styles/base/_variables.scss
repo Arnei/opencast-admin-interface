@@ -22,96 +22,189 @@
  */
 
 
-// Logo
+/**
+ *
+ * ---------------- COLORS ----------------
+ *
+ */
+
+// Blues
 // ----------------------------------------
-
-$logo-width:                  100px;
-$logo-height:                 20px;
-
-// Primary Colors
-// ----------------------------------------
-
-$primary-color-green:          #37c180;
-$green:                        $primary-color-green;
-
-$primary-color-light-blue:     #378dd4;
-$l-blue:                       $primary-color-light-blue;
-
-$primary-color-blue:           #24425c;
-$d-blue:                       $primary-color-blue;
-
-$primary-color-grey:           #8c939b;
-$grey:                         $primary-color-grey;
-
-$primary-color-white:          #fafafa;
-$off-white:                    $primary-color-white;
-
-// Secondary Colors
-// ----------------------------------------
-
+$d-blue:                       #24425c;  // "primary color"
+$l-blue:                       #378dd4;  // "primary color"
 $bright-blue:                  #4da1f7;
+
+$l-blue-gradient:              #2b77b9;
+$b-blue-gradient:              #55cef2;
+
 $ref-blue:                     #1d5888;
 $ref-blue-button:              #069;
+
+// Other Colors
+// ----------------------------------------
+$green:                        #37c180;  // "primary color"
 $red:                          #fa1919;
 $alt-red:                      #e45253;
 $orange:                       #ff8c00;
 $yellow:                       #e4d12e;
-$black:                        #000;
-$white:                        #fff;
 
-$color-black:               #000;
+// Gray Scale
+// ----------------------------------------
+$black:                     #000;
+$dark-prim-color:           #333;
 $color-darkgray:            #444;
-$color-gray:                #898989;
+$color-neutral-darkgray:    #4d4d4d;
+$medium-prim-color:         #666;
+$color-gray:                #898989;  // "primary color (was #8c939b)"
+$light-prim-color:          #a6a6a6;
 $color-silver:              #CCC;
+$color-midgray:             #e2e2e2;
+$color-highgray:            #ededed;
 $color-lightgray:           #F8F8F8;
-$color-white:               #fff;
+$off-white:                 #fafafa;  // "primary color"
+$white:                     #fff;
 
-$l-blue-gradient:           #2b77b9;
-$b-blue-gradient:           #55cef2;
-
-
-
-// Primary color with light/medium/darker shades
-$prim-color:                   color.adjust(#fff, $lightness: -50%);
-$light-prim-color:             color.adjust($prim-color, $lightness: 15%);  //#a6a6a6
-$medium-prim-color:            color.adjust($prim-color, $lightness: -10%); //#666666
-$dark-prim-color:              color.adjust($prim-color, $lightness: -30%); //#333333
-
+// Text
 $global-text-color:            $medium-prim-color;
+$global-text-color-light:      color.adjust($global-text-color, $lightness: 6%); //#757575
+
+// Border
+// ----------------------------------------
+
+$main-border-color:            $color-silver;
+$lighter-border-color:         $color-midgray;
+$dark-bg-border-color:         #0e1b25;
 
 // Element Colors
 // ----------------------------------------
 
 $body-background:               $off-white;
-$table-title-color:             #46647e;
-$header-link-color:             #435263;
+$table-title-color:             $d-blue;
 $color-link:                    $medium-prim-color;
 $color-link-hover:              $dark-prim-color;
+$footer-background-color-light: color.adjust($body-background, $lightness: -3%); //#f2f2f2
+$footer-background-color:       $color-highgray;
+$main-menu-background:          color.adjust($d-blue, $lightness: -3%);          //#203a51
+$main-menu-border-color:        $dark-bg-border-color;
 
-// Highlights and Lowlights
-// ----------------------------------------
-$primary-color-green-light-3: color.adjust($primary-color-green, $lightness: 24%);   // #92e0bb
-$primary-color-green-light-2: color.adjust($primary-color-green, $lightness: 12%);   // #63d29e
-$primary-color-green-light-1: color.adjust($primary-color-green, $lightness: 6%);    // #4bcc8f
-
-$primary-color-green-dark-1: color.adjust($primary-color-green, $lightness: -9%);      // #2d9d68
-$primary-color-green-dark-2: color.adjust($primary-color-green, $lightness: -15%);     // #268558
-$primary-color-green-dark-3: color.adjust($primary-color-green, $lightness: -20%);     // #20724b
-
-$table-highlight: color.adjust($light-prim-color, $lightness: 28%);
-
-// Border
+// Main Table
 // ----------------------------------------
 
-$main-border-color:            #c9d0d3;
-$light-border-color:           #cfd3d5;
-$lighter-border-color:         #e2e2e2;
-$main-border-radius:           4px;
-$thin-border:                  1px;
-$thin-border-stroke:           $thin-border solid;
-$mid-border-stroke:            2px solid;
+$table-color-off-white-dark-1: color.adjust($off-white, $lightness: -1%); //#f7f7f7
+$table-color-off-white-dark-2: color.adjust($off-white, $lightness: -4%); //#f0f0f0
+$table-off-white-gradient: $color-highgray;
+$color-lightgray-dark-1: color.adjust($color-lightgray, $lightness: -2%); //#f3f3f3
+$color-lightgray-dark-2: color.adjust($color-lightgray, $lightness: -5%); //#ebebeb
 
-$dark-bg-border-color: #0e1b25;
+// Button Highlights and Lowlights, Gradients
+// ----------------------------------------
+
+$green-light-3: color.adjust($green, $lightness: 24%);   // #92e0bb
+$green-light-2: color.adjust($green, $lightness: 12%);   // #63d29e
+$green-light-1: color.adjust($green, $lightness: 6%);    // #4bcc8f
+
+$green-dark-1: color.adjust($green, $lightness: -9%);    // #2d9d68
+$green-dark-2: color.adjust($green, $lightness: -15%);   // #268558
+$green-dark-3: color.adjust($green, $lightness: -20%);   // #20724b
+
+$l-blue-light-1: color.adjust($l-blue, $lightness: 10%);
+$l-blue-gradient-dark-1: color.adjust($l-blue-gradient, $lightness: -5%);
+$l-blue-gradient-dark-2: color.adjust($l-blue-gradient, $lightness: -10%);
+
+$bright-blue-dark-1: color.adjust($bright-blue, $lightness: -5%);
+$bright-blue-dark-2: color.adjust($bright-blue, $lightness: -10%);
+$b-blue-gradient-light-1: color.adjust($b-blue-gradient, $lightness: 5%);
+$b-blue-gradient-light-2: color.adjust($b-blue-gradient, $lightness: 10%);
+
+$alt-red-light-1: color.adjust($alt-red, $lightness: 5%);
+$alt-red-light-2: color.adjust($alt-red, $lightness: 10%);
+$alt-red-dark-1: color.adjust($alt-red, $lightness: -5%);
+$alt-red-dark-2: color.adjust($alt-red, $lightness: -10%);
+$alt-red-dark-3: color.adjust($alt-red, $lightness: -20%);
+$alt-red-dark-4: color.adjust($alt-red, $lightness: -30%);
+
+$main-border-color-dark-1: color.adjust($main-border-color, $lightness: -2%);
+$white-dark-1: color.adjust($white, $lightness: -4%);
+$color-lightgray-dark-1: color.adjust($color-lightgray, $lightness: -4%);
+$color-lightgray-dark-2: color.adjust($color-lightgray, $lightness: -10%);
+
+$white-semidark: color.adjust($white, $lightness: -2%);
+$color-off-white-dark-1: color.adjust($off-white, $lightness: -3%);
+$color-off-white-dark-2: color.adjust($off-white, $lightness: -5%);
+$color-off-white-dark-3: color.adjust($off-white, $lightness: -6%);
+
+$color-button-box-shadow:             rgba(0,0,0,.05);
+$color-active-box-shadow:             rgba(0,0,0,.1);
+$color-header-box-shadow:             rgba(0,0,0,.3);
+$color-dropdown-box-shadow:           rgba(0,0,0,.1);
+$color-table-cell-shadow:             rgba(0,0,0,.05);
+$color-modal-box-shadow:              rgba(0,0,0,.3);
+$color-modal-overlay-box-shadow:      rgba(0,0,0,.2);
+$color-modal-overlay-gradient-box-shadow: rgba(0,0,0,.4);
+$color-pagination-active-box-shadow:  rgba(0,0,0,.5);
+
+$table-highlight: $color-highgray;
+
+// Progress Bar
+// ----------------------------------------
+
+$progress-bar-color:            $l-blue;
+
+// Modals
+// ----------------------------------------
+
+$modal-heading-color:           $color-neutral-darkgray;
+$modal-header-gradient:         color.adjust($color-lightgray, $lightness: -7%); //#e6e6e6
+$modal-obj-header-gradient:     color.adjust($off-white, $lightness: -3%);       //#f2f2f2
+
+// Nav Colors
+// ----------------------------------------
+$modal-nav-bg-color:            $color-highgray;
+$modal-nav-border-color:        $main-border-color;
+$modal-nav-link-color:          $medium-prim-color;
+$modal-nav-link-active-color:   $modal-heading-color;
+$subpage-navigation-link-color: $color-silver;
+$subpage-navigation-link-hover-color: $light-prim-color;
+
+// Alerts
+// ----------------------------------------
+
+// Success (Green)
+$state-success-text:             #3c763d;
+$state-success-bg:               #dff0d8;
+$state-success-border:           #d4e9cb;
+
+// Info (Blue)
+$state-info-text:                #3d88ad;
+$state-info-bg:                  #d9edf7;
+$state-info-border:              #c2e0ef;
+
+// Warning (Yellow)
+$state-warning-text:             #8a6d3b;
+$state-warning-bg:               #fcf8e3;
+$state-warning-border:           #f5efcb;
+
+// Danger (Red)
+$state-danger-text:              #a94442;
+$state-danger-bg:                #f2dede;
+$state-danger-border:            #ebd1d1;
+
+// Stats
+// ----------------------------------------
+$stats-color: $subpage-navigation-link-color;
+$stats-hover-color: $subpage-navigation-link-hover-color;
+
+/**
+ *
+ * -------------- DIMENSIONS---------------
+ *
+ */
+
+// Logo
+// ----------------------------------------
+
+$logo-width:                  100px;
+$logo-height:                 20px;
 
 // Form
 // ----------------------------------------
@@ -120,18 +213,17 @@ $input-height:                 40px;
 $btn-height:                   39px;
 
 
-
-// Progress Bar
-// ----------------------------------------
-
-$progress-bar-color:            $l-blue;
-
-
-
 // Inputs
 // ----------------------------------------
 $small-input-width:             130px;
 
+// Border
+// ----------------------------------------
+
+$main-border-radius:           4px;
+$thin-border:                  1px;
+$thin-border-stroke:           $thin-border solid;
+$mid-border-stroke:            2px solid;
 
 
 // Modals
@@ -140,21 +232,6 @@ $small-input-width:             130px;
 $modal-width:                   800px;
 $modal-col-width:               358px;
 $modal-full-col-width:          100%;
-$modal-heading-color:           #4d4d4d;
-
-// Nav Colors
-// ----------------------------------------
-$modal-nav-bg-color:            #eeeff0;
-$modal-nav-border-color:        #d6d6d6;
-$modal-nav-link-color:          #646E75;
-$modal-nav-link-active-color:   $header-link-color;
-$subpage-navigation-link-color: $color-silver;    //#fafafa
-$subpage-navigation-link-hover-color: color.adjust($subpage-navigation-link-color, $lightness: -15%);    //#9cabbc
-
-// Stats
-// ----------------------------------------
-$stats-color: $subpage-navigation-link-color;
-$stats-hover-color: $subpage-navigation-link-hover-color;
 
 // Layout
 // ----------------------------------------
@@ -205,29 +282,6 @@ $img-path:                      "/src/img/";
 
 // Alerts
 // ----------------------------------------
-
-
-// Colors
-
-// Success (Green)
-$state-success-text:             #3c763d;
-$state-success-bg:               #dff0d8;
-$state-success-border:           rgb(211.8267110656, 233.0538934426, 203.0861065574); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-success-bg, 1%), $lightness: -3%);
-
-// Info (Blue)
-$state-info-text:                color.adjust(#31708f, $lightness: 5%);
-$state-info-bg:                  #d9edf7;
-$state-info-border:              rgb(194.6022156398, 224.3725947867, 239.2577843602); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-info-bg, 1%), $lightness: -5%);
-
-// Warning (Yellow)
-$state-warning-text:             #8a6d3b;
-$state-warning-bg:               #fcf8e3;
-$state-warning-border:           rgb(245.5470578374, 238.7655993294, 203.1629421626); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-warning-bg, 1%), $lightness: -5%);
-
-// Danger (Red)
-$state-danger-text:              #a94442;
-$state-danger-bg:                #f2dede;
-$state-danger-border:            rgb(234.9211137441, 209.1388862559, 209.1388862559); //Old bourbon code that calculated these values: color.adjust(shade.shade($state-danger-bg, 1%), $lightness: -3%);
 
 // Transition
 $alert-transition: color 300ms ease-in;

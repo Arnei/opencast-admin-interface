@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../../base/variables";
 
 /**
@@ -30,7 +29,7 @@
     width: 100%;
     height: 40px;
     line-height: 40px;
-    background: linear-gradient(to bottom, variables.$color-lightgray, color.adjust(variables.$color-lightgray, $lightness: -7%));
+    background: linear-gradient(to bottom, variables.$color-lightgray, variables.$modal-header-gradient);
     border-bottom: 1px solid variables.$main-border-color;
     border-bottom-left-radius: variables.$main-border-radius;
     border-bottom-right-radius: variables.$main-border-radius;

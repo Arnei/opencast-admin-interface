@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../base/variables";
 
 /**
@@ -22,13 +21,6 @@
  *
  */
 
-
-// Footer Variables
-// ----------------------------------------
-
-$footer-border-color: color.adjust(variables.$body-background, $lightness: -13%);
-$footer-background-color: color.adjust(variables.$body-background, $lightness: -5%);
-
 @mixin footer-component-padding() {
     padding-top: 10px;
     padding-bottom: 12px;
@@ -43,8 +35,8 @@ $footer-background-color: color.adjust(variables.$body-background, $lightness: -
     position: fixed;
     bottom: 0;
     left: 0;
-    background: $footer-background-color;
-    border-top: 1px solid $footer-border-color;
+    background: variables.$footer-background-color;
+    border-top: 1px solid variables.$main-border-color;
 
     .feedback-btn {
         width: 90px;
@@ -58,19 +50,15 @@ $footer-background-color: color.adjust(variables.$body-background, $lightness: -
         a {
             transition: all .2s;
             @include footer-component-padding();
-            border-left: 1px solid $footer-border-color;
-            text-align: center;
-            display: block;
+            border-left: 1px solid variables.$main-border-color;
+            display: flex;
             padding-left: 5px;
             padding-right: 5px;
+            gap: 6px;
+            justify-content: center;
 
             &:hover {
-                background: rgba(variables.$white, 0.8);
-            }
-
-            &:before {
-                content: "\f086";
-                margin-right: 6px;
+                background: variables.$off-white;
             }
         }
     }

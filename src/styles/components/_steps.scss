@@ -37,12 +37,12 @@
     }
 
     .MuiStepLabel-labelContainer .Mui-active {
-        border-bottom: 1px solid variables.$primary-color-blue;
+        border-bottom: 1px solid variables.$d-blue;
         font-weight: 800;
     }
 
     .Mui-active svg {
-        color: variables.$primary-color-blue !important;
+        color: variables.$d-blue !important;
         transform: none !important;
     }
 
@@ -86,10 +86,10 @@
         background: variables.$main-border-color;
         background: linear-gradient(
             to left,
-            rgba(variables.$modal-nav-border-color, 0) 5%,
-            rgba(variables.$modal-nav-border-color, 1) 25%,
-            rgba(variables.$modal-nav-border-color, 1) 75%,
-            rgba(variables.$modal-nav-border-color, 0) 95%
+            transparent 5%,
+            variables.$modal-nav-border-color 25%,
+            variables.$modal-nav-border-color 75%,
+            transparent 95%
         );
     }
 

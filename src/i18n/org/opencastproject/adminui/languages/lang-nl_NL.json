@@ -1454,7 +1454,8 @@
 					"USER": "Bruger",
 					"ROLES": "Roller",
 					"EXTERNALROLES": "Eksterne roller",
-					"EFFECTIVEROLES": "Effektive roller"
+					"EFFECTIVEROLES": "Effektive roller",
+					"SUMMARY": "Oversigt"
 				},
 				"DESCRIPTION": {
 					"ROLES": "Roller og grupper, som kan, eller allerede er, tildeles brugeren.",

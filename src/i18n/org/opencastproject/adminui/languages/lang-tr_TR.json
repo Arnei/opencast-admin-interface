@@ -1454,7 +1454,8 @@
 					"USER": "Kullanıcı",
 					"ROLES": "Roller",
 					"EXTERNALROLES": "Dış Roller",
-					"EFFECTIVEROLES": "Etkili Roller"
+					"EFFECTIVEROLES": "Etkili Roller",
+					"SUMMARY": "Özet"
 				},
 				"DESCRIPTION": {
 					"ROLES": "Kullanıcıya önceden atanabilen veya atanmış roller ve gruplar.",

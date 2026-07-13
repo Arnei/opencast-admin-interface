@@ -1454,7 +1454,8 @@
 					"USER": "Uporabnik",
 					"ROLES": "Vloge",
 					"EXTERNALROLES": "Zunanje vloge",
-					"EFFECTIVEROLES": "Veljavne vloge"
+					"EFFECTIVEROLES": "Veljavne vloge",
+					"SUMMARY": "Povzetek"
 				},
 				"DESCRIPTION": {
 					"ROLES": "Vloge in skupine, ki jih je mogoče dodeliti uporabniku ali so mu že bile dodeljene.",

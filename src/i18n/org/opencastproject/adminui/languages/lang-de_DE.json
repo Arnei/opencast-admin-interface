@@ -1454,7 +1454,8 @@
 					"USER": "Benutzer",
 					"ROLES": "Rollen",
 					"EXTERNALROLES": "Externe Rollen",
-					"EFFECTIVEROLES": "Effektive Rollen"
+					"EFFECTIVEROLES": "Effektive Rollen",
+					"SUMMARY": "Zusammenfassung"
 				},
 				"DESCRIPTION": {
 					"ROLES": "Rollen und Gruppen, die dem Benutzer zugeordnet sind oder ihm zugeordnet werden können.",

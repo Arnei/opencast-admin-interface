@@ -75,12 +75,6 @@ const Header = () => {
 		await dispatch(fetchHealthStatus());
 	};
 
-	useEffect(() => {
-		dispatch(fetchRegistration());
-		dispatch(fetchLatestToU());
-		dispatch(fetchIsUpToDate());
-	}, [dispatch]);
-
 	const hideMenuHelp = () => {
 		setMenuHelp(false);
 	};
@@ -161,6 +155,10 @@ const Header = () => {
 	}, []);
 
 	useEffect(() => {
+		dispatch(fetchRegistration());
+		dispatch(fetchLatestToU());
+		dispatch(fetchIsUpToDate());
+
 		if (!user) { return; }
 
 		const isAdmin = user.isAdmin || user.isOrgAdmin;
@@ -172,7 +170,7 @@ const Header = () => {
 		if (isAdmin && !isLocalhost && dismissedLongEnough && registration == null) {
 		  showRegistrationModal();
 		}
-	}, [user, registration]);
+	}, [user, registration, dispatch]);
 	return (
 		<>
 			<header className="primary-header">

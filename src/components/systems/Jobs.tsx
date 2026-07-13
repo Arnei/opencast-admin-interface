@@ -3,16 +3,17 @@ import { getTotalJobs } from "../../selectors/jobSelectors";
 import {
 	loadJobsIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchJobs } from "../../slices/jobSlice";
+import { fetchJobs, Job } from "../../slices/jobSlice";
 import { systemsLinks } from "./partials/SystemsNavigation";
 import TablePage from "../shared/TablePage";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of jobs
  */
 const Jobs = () => {
 	return (
-		<TablePage
+		<TablePage<Row & Job>
 			resource={"jobs"}
 			fetchResource={fetchJobs}
 			loadResourceIntoTable={loadJobsIntoTable}

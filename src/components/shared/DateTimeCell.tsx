@@ -4,9 +4,9 @@ import { getFilters } from "../../selectors/tableFilterSelectors";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
 import { renderValidDate } from "../../utils/dateUtils";
 import { ParseKeys } from "i18next";
-import { AsyncThunk } from "@reduxjs/toolkit";
 import { Resource } from "../../slices/tableSlice";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
+import { GenericAsyncThunk } from "../../utils/utils";
 
 /**
  * This component renders the start date cells of events in the table view
@@ -22,7 +22,7 @@ const DateTimeCell = ({
 	resource: Resource
 	date: string
 	filterName: string
-	fetchResource: AsyncThunk<any, void, any>
+	fetchResource: GenericAsyncThunk
 	loadResourceIntoTable: () => AppThunk
 	tooltipText?: ParseKeys
 }) => {
@@ -53,7 +53,7 @@ const DateTimeCell = ({
 	return (
 		// Link template for start date of event
 		<ButtonLikeAnchor
-			onClick={() => addFilter(date)}
+			onClick={() => { addFilter(date); }}
 			className={"crosslink"}
 			tooltipText={tooltipText}
 		>

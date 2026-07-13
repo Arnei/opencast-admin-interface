@@ -46,7 +46,7 @@ const ThemesActionsCell = ({
 		<>
 			{/* edit themes */}
 			<ButtonLikeAnchor
-				onClick={() => showThemeDetails()}
+				onClick={() => { showThemeDetails(); }}
 				className={"action-cell-button"}
 				editAccessRole={"ROLE_UI_THEMES_EDIT"}
 				// tooltipText={"CONFIGURATION.THEMES.TABLE.TOOLTIP.DETAILS"} // Disabled due to performance concerns

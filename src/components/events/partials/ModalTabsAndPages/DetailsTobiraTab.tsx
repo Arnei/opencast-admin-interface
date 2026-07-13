@@ -136,7 +136,9 @@ const DetailsTobiraTab = ({ kind, id }: DetailsTobiraTabProps) => {
 	return <>
 		<div className="modal-content">
 			{tabHierarchy === "edit-path" && <EventDetailsTabHierarchyNavigation
-				openSubTab={openSubTab}
+				openSubTab={(tabType: TobiraTabHierarchy) => {
+					void openSubTab(tabType);
+				}}
 				hierarchyDepth={0}
 				translationKey0="EVENTS.SERIES.DETAILS.TOBIRA.DISCARD"
 				subTabArgument0="main"
@@ -216,7 +218,7 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 						{i18nKey === "SERIES" && <ButtonLikeAnchor
 							style={{ margin: 5 }}
 							className="edit pull-right"
-							onClick={() => openSubTab("edit-path")}
+							onClick={() => { openSubTab("edit-path"); }}
 							tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.MOUNT_SERIES"
 						>
 							<LuSquarePen className="pen" />
@@ -257,7 +259,7 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 							<ButtonLikeAnchor
 								style={{ margin: 5 }}
 								className="edit pull-right"
-								onClick={() => openSubTab("edit-path", hostPage)}
+								onClick={() => { openSubTab("edit-path", hostPage); }}
 								tooltipText="EVENTS.SERIES.DETAILS.TOBIRA.EDIT_PATH"
 							>
 								<LuSquarePen className="pen" />
@@ -266,7 +268,7 @@ const TobiraTable = ({ tobiraData, i18nKey, openSubTab, handleDelete }: TobiraTa
 								close={() => deleteConfirmationModalRef.current?.close?.()}
 								resourceName={hostPage.path}
 								resourceId={null}
-								deleteMethod={() => handleDelete(hostPage)}
+								deleteMethod={() => { handleDelete(hostPage); }}
 								resourceType="TOBIRA_PATH"
 								modalRef={deleteConfirmationModalRef}
 							/>

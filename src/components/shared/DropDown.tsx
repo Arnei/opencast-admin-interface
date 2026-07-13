@@ -4,15 +4,15 @@ import {
 	dropDownSpacingTheme,
 	dropDownStyle,
 } from "../../utils/componentStyles";
-import { GroupBase, MenuListProps, Props, SelectInstance } from "react-select";
+import { GroupBase, MenuListProps, SelectInstance } from "react-select";
 import { ParseKeys } from "i18next";
 import { FixedSizeList, ListChildComponentProps } from "react-window";
-import AsyncSelect from "react-select/async";
+import AsyncSelect, { AsyncProps } from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
-export type DropDownOption = {
+export type DropDownOption<T> = {
 	label: string,
-	value: string | number,
+	value: T | "",
 	order?: number
 }
 
@@ -20,7 +20,7 @@ export type DropDownOption = {
  * This component renders a dropdown menu using react-select
  */
 const DropDown = <T, >({
-	ref = React.createRef<SelectInstance<any, boolean, GroupBase<any>>>(),
+	ref = React.createRef<SelectInstance<DropDownOption<T>, boolean, GroupBase<DropDownOption<T>>>>(),
 	value,
 	text,
 	options,
@@ -41,10 +41,10 @@ const DropDown = <T, >({
 	customCSS,
 	fetchOptions,
 }: {
-	ref?: React.RefObject<SelectInstance<any, boolean, GroupBase<any>> | null>
+	ref?: React.RefObject<SelectInstance<DropDownOption<T>, boolean, GroupBase<DropDownOption<T>>> | null>
 	value: T
 	text: string,
-	options?: DropDownOption[],
+	options?: DropDownOption<T>[],
 	required: boolean,
 	handleChange: (option: {value: T, label: string} | null) => void
 	placeholder: string
@@ -65,13 +65,13 @@ const DropDown = <T, >({
 		optionPaddingTop?: number,
 		optionLineHeight?: string
 	},
-	fetchOptions?: (inputValue: string) => Promise<{ label: string, value: string }[]>
+	fetchOptions?: (inputValue: string) => Promise<DropDownOption<T>[]>
 }) => {
 	const { t } = useTranslation();
 
 	const selectRef = ref;
 
-	const style = dropDownStyle(customCSS ?? {});
+	const style = dropDownStyle<T>(customCSS ?? {});
 
 	useEffect(() => {
 		// Ensure menu has focus when opened programmatically
@@ -87,7 +87,7 @@ const DropDown = <T, >({
 	};
 
 	const formatOptions = (
-		unformattedOptions: DropDownOption[],
+		unformattedOptions: DropDownOption<T>[],
 		required: boolean,
 	) => {
 		// Translate
@@ -130,7 +130,7 @@ const DropDown = <T, >({
 	/**
 	 * Custom component for list virtualization
 	 */
-	const MenuList = (props: MenuListProps<DropDownOption, false>) => {
+	const MenuList = (props: MenuListProps<DropDownOption<T>, false>) => {
 		const { children, maxHeight } = props;
 
 		console.log("Menu List render");
@@ -159,24 +159,29 @@ const DropDown = <T, >({
 		return [];
 	};
 
-	const loadOptionsAsync = (inputValue: string, callback: (options: DropDownOption[]) => void) => {
-		setTimeout(async () => {
+	const loadOptionsAsync = (inputValue: string, callback: (options: DropDownOption<T>[]) => void) => {
+		const timeout = async () => {
 			callback(formatOptions(
 				fetchOptions ? await fetchOptions(inputValue) : filterOptions(inputValue),
 				required,
 			));
-		}, 1000);
+		};
+		setTimeout(() => { timeout(); }, 1000);
 	};
 
 	const loadOptions = (
 		_inputValue: string,
-		callback: (options: DropDownOption[]) => void,
+		callback: (options: DropDownOption<T>[]) => void,
 	) => {
 		callback(formatOptions(filterOptions(_inputValue), required));
 	};
 
 
-  const commonProps: Props = {
+	const commonProps: AsyncProps<
+		DropDownOption<T>,
+		boolean,
+		GroupBase<DropDownOption<T>>
+	> = {
 		tabIndex: tabIndex,
 		theme: theme => (dropDownSpacingTheme(theme)),
 		styles: style,
@@ -200,7 +205,6 @@ const DropDown = <T, >({
 		isDisabled: disabled,
 		openMenuOnFocus: openMenuOnFocus,
 		menuPlacement: menuPlacement ?? "auto",
-
 		// @ts-expect-error: React-Select typing does not account for the typing of option it itself requires
 		components: { MenuList },
 	};

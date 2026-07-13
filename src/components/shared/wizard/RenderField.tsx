@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import cn from "classnames";
 import { getMetadataCollectionFieldName, transformListProvider } from "../../../utils/resourceUtils";
 import { getCurrentLanguageInformation } from "../../../utils/utils";
-import DropDown from "../DropDown";
+import DropDown, { DropDownOption } from "../DropDown";
 import { parseISO } from "date-fns";
 import { FieldProps } from "formik";
 import { MetadataField } from "../../../slices/eventSlice";
@@ -32,6 +32,7 @@ const RenderField = ({
 	const { t } = useTranslation();
 
 	// TODO: Figure out how to type a ref that could have multiple types
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const editableRef = useRef<any>(null);
 	const [focused, setFocused] = useState(false);
 	const onFocus = () => setFocused(true);
@@ -178,7 +179,7 @@ const EditableDateValue = ({
 			<DatePicker
 				ref={ref}
 				selected={!isNaN(Date.parse(field.value as string)) ? new Date(field.value as string) : null}
-				onChange={value => setFieldValue(field.name, value)}
+				onChange={value => { setFieldValue(field.name, value); }}
 				showTimeInput
 				showYearDropdown
 				showMonthDropdown
@@ -197,17 +198,17 @@ const EditableDateValue = ({
 };
 
 // renders editable field for selecting value via dropdown
-type EditableSingleSelectProps = ({
-	field: FieldProps["field"]
+type EditableSingleSelectProps<T> = ({
+	field: FieldProps<T>["field"]
 	metadataField: MetadataField
 	text: string
 	form: FieldProps["form"]
 	isFirstField?: boolean,
 	focused: boolean,
 	setFocused: (open: boolean) => void
-	ref: React.RefObject<SelectInstance<any, boolean, GroupBase<any>>>
+	ref: React.RefObject<SelectInstance<DropDownOption<T>, boolean, GroupBase<DropDownOption<T>>> | null>
 })
-const EditableSingleSelect = (props: EditableSingleSelectProps) => {
+const EditableSingleSelect = (props: EditableSingleSelectProps<string>) => {
 	const {
 		field,
 		metadataField,
@@ -311,7 +312,7 @@ const EditableSingleValueTime = ({
 			<DatePicker
 				ref={ref}
 				selected={typeof field.value === "string" ? parseISO(field.value) : field.value as Date}
-				onChange={value => setFieldValue(field.name, value)}
+				onChange={value => { setFieldValue(field.name, value); }}
 				showTimeSelect
 				showTimeSelectOnly
 				dateFormat="p"
@@ -341,7 +342,7 @@ const EditableSingleSelectSeries = ({
 	focused,
 	setFocused,
 	ref,
-}: EditableSingleSelectProps) => {
+}: EditableSingleSelectProps<string>) => {
 	const [label, setLabel] = useState("");
 
 	useEffect(() => {
@@ -381,7 +382,7 @@ const EditableSingleSelectSeries = ({
 	/>;
 };
 
-const EditableSingleSelectDropDown = ({
+const EditableSingleSelectDropDown = <T, >({
 	field,
 	metadataField,
 	text,
@@ -392,21 +393,28 @@ const EditableSingleSelectDropDown = ({
 	focused,
 	setFocused,
 	ref,
-}: EditableSingleSelectProps & Pick<
-	Parameters<typeof DropDown>[0],
-	"options" | "fetchOptions"
->) => {
+}: EditableSingleSelectProps<T> &
+{ options?: DropDownOption<T>[];
+	fetchOptions?: (
+		inputValue: string
+	) => Promise<DropDownOption<T>[]>;
+ },
+) => {
 	const { t } = useTranslation();
 
 	return (
 		<DropDown
 			ref={ref}
-			value={field.value as string}
+			value={field.value}
 			text={text}
 			options={options}
 			fetchOptions={fetchOptions}
 			required={metadataField.required}
-			handleChange={element => element && setFieldValue(field.name, element.value)}
+			handleChange={element => {
+				if (element) {
+					setFieldValue(field.name, element.value);
+				}
+			}}
 			placeholder={focused
 				? `-- ${t("SELECT_NO_OPTION_SELECTED")} --`
 				: `${t("SELECT_NO_OPTION_SELECTED")}`

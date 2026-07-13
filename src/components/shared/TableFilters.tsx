@@ -22,9 +22,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 import moment from "moment";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
 import { renderValidDate } from "../../utils/dateUtils";
-import { getCurrentLanguageInformation } from "../../utils/utils";
+import { GenericAsyncThunk, getCurrentLanguageInformation } from "../../utils/utils";
 import DropDown from "./DropDown";
-import { AsyncThunk } from "@reduxjs/toolkit";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import SearchContainer from "./SearchContainer";
@@ -41,7 +40,7 @@ const TableFilters = ({
 	loadResourceIntoTable,
 	resource,
 }: {
-	loadResource: AsyncThunk<any, void, any>,
+	loadResource: GenericAsyncThunk,
 	loadResourceIntoTable: () => AppThunk,
 	resource: Resource,
 }) => {
@@ -159,7 +158,7 @@ const TableFilters = ({
 	useEffect(() => {
 		if (itemValue) {
 			// Call to apply filter changes with 600MS debounce!
-			const applyFilterChangesDebouncedTimeoutId = setTimeout(applyFilterChangesDebounced, 600);
+			const applyFilterChangesDebouncedTimeoutId = setTimeout(() => { applyFilterChangesDebounced(); }, 600);
 
 			return () => clearTimeout(applyFilterChangesDebouncedTimeoutId);
 		}
@@ -225,7 +224,7 @@ const TableFilters = ({
 
 	useHotkeys(
     availableHotkeys.general.REMOVE_FILTERS.sequence,
-    () => removeFilters(),
+    () => { removeFilters(); },
 		{ description: t(availableHotkeys.general.REMOVE_FILTERS.description) ?? undefined },
     [removeFilters],
   );
@@ -348,7 +347,7 @@ const TableFilters = ({
 										}
 										{/* Remove icon in blue area around filter */}
 										<ButtonLikeAnchor
-											onClick={() => removeFilter(filter)}
+											onClick={() => { removeFilter(filter); }}
 											tooltipText="TABLE_FILTERS.REMOVE"
 										>
 											<LuX />
@@ -361,7 +360,7 @@ const TableFilters = ({
 						{/* Remove icon to clear all filters */}
 						{filterMap.some(e => e.value) &&
 							<ButtonLikeAnchor
-								onClick={removeFilters}
+								onClick={() => { removeFilters(); }}
 								tooltipText="TABLE_FILTERS.CLEAR"
 								className="table-filter-button"
 							>

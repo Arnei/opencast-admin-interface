@@ -3,16 +3,17 @@ import {
 	loadAclsIntoTable,
 } from "../../thunks/tableThunks";
 import { getTotalAcls } from "../../selectors/aclSelectors";
-import { fetchAcls } from "../../slices/aclSlice";
+import { AclResult, fetchAcls } from "../../slices/aclSlice";
 import { usersLinks } from "./partials/UsersNavigation";
 import TablePage from "../shared/TablePage";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of acls
  */
 const Acls = () => {
 	return (
-		<TablePage
+		<TablePage<Row & AclResult>
 			resource={"acls"}
 			fetchResource={fetchAcls}
 			loadResourceIntoTable={loadAclsIntoTable}

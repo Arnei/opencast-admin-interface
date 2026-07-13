@@ -4,7 +4,7 @@ import { FieldAttributes } from "formik/dist/Field";
 /**
  * Wrapper for the Formik Fields
  */
-export const Field = (props: FieldAttributes<any>) => {
+export const Field = (props: FieldAttributes<unknown>) => {
   return (
     <FormikFastField
       {...props}

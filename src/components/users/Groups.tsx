@@ -3,16 +3,17 @@ import { groupsTemplateMap } from "../../configs/tableConfigs/groupsTableMap";
 import {
 	loadGroupsIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchGroups } from "../../slices/groupSlice";
+import { fetchGroups, Group } from "../../slices/groupSlice";
 import { usersLinks } from "./partials/UsersNavigation";
 import TablePage from "../shared/TablePage";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of groups
  */
 const Groups = () => {
 	return (
-		<TablePage
+		<TablePage<Row & Group>
 			resource={"groups"}
 			fetchResource={fetchGroups}
 			loadResourceIntoTable={loadGroupsIntoTable}

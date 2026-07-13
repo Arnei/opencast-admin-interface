@@ -12,6 +12,7 @@ import RenderMultiField from "../../../shared/wizard/RenderMultiField";
 import { getUserInformation } from "../../../../selectors/userInfoSelectors";
 import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
+	MetadataField,
 	MetadataFieldSelected,
 	postEditMetadata,
 	updateBulkMetadata,
@@ -83,7 +84,7 @@ const EditMetadataEventsModal = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleSubmit = (values: { [key: string]: unknown }) => {
+	const handleSubmit = (values: { [key: string]: MetadataField["value"] }) => {
 		const response = dispatch(updateBulkMetadata({ metadataFields, values }));
 		console.info(response);
 		close();

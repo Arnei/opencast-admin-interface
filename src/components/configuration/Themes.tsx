@@ -1,15 +1,16 @@
 import { themesTemplateMap } from "../../configs/tableConfigs/themesTableMap";
 import { getTotalThemes } from "../../selectors/themeSelectors";
 import { loadThemesIntoTable } from "../../thunks/tableThunks";
-import { fetchThemes } from "../../slices/themeSlice";
+import { fetchThemes, ThemeDetailsType } from "../../slices/themeSlice";
 import TablePage from "../shared/TablePage";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of events
  */
 const Themes = () => {
 	return (
-		<TablePage
+		<TablePage<Row & ThemeDetailsType>
 			resource={"themes"}
 			fetchResource={fetchThemes}
 			loadResourceIntoTable={loadThemesIntoTable}

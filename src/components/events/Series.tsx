@@ -12,6 +12,7 @@ import {
 	fetchSeries,
 	fetchSeriesMetadata,
 	fetchSeriesThemes,
+	Series as SeriesRow,
 	showActionsSeries,
 } from "../../slices/seriesSlice";
 import { fetchSeriesDetailsTobiraNew } from "../../slices/seriesSlice";
@@ -22,6 +23,7 @@ import TableActionDropdown from "../shared/TableActionDropdown";
 import { fetchAclDefaults } from "../../slices/aclSlice";
 import TablePage from "../shared/TablePage";
 import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of series
@@ -54,7 +56,7 @@ const Series = () => {
 
 	return (
 		<>
-			<TablePage
+			<TablePage<Row & SeriesRow>
 				resource={"series"}
 				fetchResource={fetchSeries}
 				loadResourceIntoTable={loadSeriesIntoTable}

@@ -1,18 +1,25 @@
 /* this file contains syles as javascript objects for syled components */
 
-import { StylesConfig, Theme } from "react-select";
+import { GroupBase, StylesConfig, Theme } from "react-select";
+import { DropDownOption } from "../components/shared/DropDown";
 
 // colors
 const colorDropDownMain = "#aaa";
 const colorDropDownNormalFocus = "#5897fb";
 const colorDropDownDarkerFocus = "#2a62bc";
 
-export function dropDownStyle(customCss: {
-	isMetadataStyle?: boolean,
-	width?: number | string,
-	optionPaddingTop?: number,
-	optionLineHeight?: string,
-}): StylesConfig {
+export function dropDownStyle<T>(
+	customCss: {
+		isMetadataStyle?: boolean,
+		width?: number | string,
+		optionPaddingTop?: number,
+		optionLineHeight?: string,
+	},
+): StylesConfig<
+	DropDownOption<T>,
+	false,
+	GroupBase<DropDownOption<T>>
+> {
 	const width = customCss.width ?? 250;
 
 	return {

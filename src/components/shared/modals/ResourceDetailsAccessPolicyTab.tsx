@@ -69,9 +69,10 @@ const ResourceDetailsAccessPolicyTab = ({
 	header: ParseKeys,
 	policies: TransformedAcl[],
 	policyTemplateId: number,
-	fetchHasActiveTransactions?: AsyncThunk<{ active: boolean }, string, any>
+	fetchHasActiveTransactions?: AsyncThunk<{ active: boolean }, string, object>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	fetchAccessPolicies: AsyncThunk<any, string, any>,
-	saveNewAccessPolicies: AsyncThunk<boolean, { id: string, policies: { acl: Acl }, override?: boolean }, any>
+	saveNewAccessPolicies: AsyncThunk<boolean, { id: string, policies: { acl: Acl }, override?: boolean }, object>
 	descriptionText: ParseKeys,
 	buttonText: ParseKeys,
 	policyTableHeaderText: ParseKeys,

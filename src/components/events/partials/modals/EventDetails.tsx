@@ -80,6 +80,7 @@ const EventDetails = ({
 	eventId: string,
 	policyChanged: boolean,
 	setPolicyChanged: (value: boolean) => void,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	formikRef: React.RefObject<FormikProps<any> | null>
 }) => {
 	const { t } = useTranslation();

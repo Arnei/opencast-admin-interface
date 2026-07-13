@@ -42,25 +42,25 @@ import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
 import { LuChevronDown, LuChevronLeft, LuChevronRight, LuChevronUp } from "react-icons/lu";
-import { AsyncThunk } from "@reduxjs/toolkit";
 import { useLocation } from "react-router";
+import { GenericAsyncThunk } from "../../utils/utils";
 
 const containerPageSize = React.createRef<HTMLDivElement>();
 
-export type TemplateMap = {
-	[key: string]: ({ row }: { row: any }) => JSX.Element | JSX.Element[]
+export type TemplateMap<T> = {
+	[key: string]: ({ row }: { row: T }) => JSX.Element | JSX.Element[]
 }
 
 /**
  * This component renders the table in the table views of resources
  */
-const Table = ({
+const Table = <T extends Row, >({
 	templateMap,
 	fetchResource,
 	loadResourceIntoTable,
 }: {
-	templateMap: TemplateMap
-	fetchResource: AsyncThunk<any, void, any>,
+	templateMap: TemplateMap<T>
+	fetchResource: GenericAsyncThunk,
 	loadResourceIntoTable: () => AppThunk,
 }) => {
 	const { t } = useTranslation();
@@ -269,7 +269,7 @@ const TableHeadRows = ({ forceDeselectAll }: { forceDeselectAll: () => unknown }
 	);
 };
 
-const TableBody = ({ templateMap }: { templateMap: TemplateMap }) => {
+const TableBody = <T extends Row, >({ templateMap }: { templateMap: TemplateMap<T> }) => {
 	const { t } = useTranslation();
 
 	const columnCount = useAppSelector(state => getTableColumns(state).length);
@@ -300,7 +300,7 @@ const TableBody = ({ templateMap }: { templateMap: TemplateMap }) => {
 	);
 };
 
-const TableRows = ({ templateMap }: { templateMap: TemplateMap }) => {
+const TableRows = <T extends Row, >({ templateMap }: { templateMap: TemplateMap<T> }) => {
 	const rowKeys = useAppSelector(selectRowIds);
 
 	return (
@@ -316,11 +316,11 @@ const TableRows = ({ templateMap }: { templateMap: TemplateMap }) => {
 	);
 };
 
-const TableRow = ({ rowKey, templateMap }: { rowKey: string, templateMap: TemplateMap }) => {
+const TableRow = <T extends Row, >({ rowKey, templateMap }: { rowKey: string, templateMap: TemplateMap<T> }) => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const row = useAppSelector(state => selectRowById(state, rowKey));
+	const row = useAppSelector(state => selectRowById(state, rowKey)) as T;
 
 	const columns = useAppSelector(state => getTableColumns(state));
 	const multiSelect = useAppSelector(state => getMultiSelect(state));
@@ -386,7 +386,7 @@ const TableRow = ({ rowKey, templateMap }: { rowKey: string, templateMap: Templa
 };
 
 // Apply a column template and render corresponding components
-const ColumnTemplate = ({ row, column, templateMap }: {row: Row, column: TableColumn, templateMap: TemplateMap}) => {
+const ColumnTemplate = <T extends Row, >({ row, column, templateMap }: {row: T, column: TableColumn, templateMap: TemplateMap<T>}) => {
 	if (!column.template) {
 		return <></>;
 	}

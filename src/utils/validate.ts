@@ -1,6 +1,7 @@
 import { UploadAssetsTrack } from "./../slices/eventSlice";
 import * as Yup from "yup";
 import { MetadataCatalog } from "../slices/eventSlice";
+import { AnySchema } from "yup";
 
 /**
  * This File contains all schemas used for validation with yup in the context of events and series
@@ -10,7 +11,7 @@ import { MetadataCatalog } from "../slices/eventSlice";
  * Dynamically create a schema for a required metadata field
  */
 export function createMetadataSchema(
-	schema: { [key: string]: unknown; },
+	schema: { [key: string]: AnySchema; },
 	config: { id: string; required: boolean; type: string; },
 ) {
 	const { id, required, type } = config;
@@ -21,7 +22,7 @@ export function createMetadataSchema(
 	let validationType: "string" | "array" | "date" = "string";
 	const validations: {
 		type: string,
-		params: any[],
+		params: unknown[],
 	}[] = [
 		{
 			type: "required",
@@ -64,7 +65,7 @@ export function createMetadataSchema(
  */
 export const MetadataSchema = (catalog: MetadataCatalog) => {
 	const schema = catalog.fields.reduce(createMetadataSchema, {});
-	const schemaKeyReplace: { [key: string]: any} = {};
+	const schemaKeyReplace: { [key: string]: AnySchema} = {};
 	for (const [key, value] of Object.entries(schema)) {
 		schemaKeyReplace[catalog.flavor + "_" + key] = value;
 	}
@@ -236,7 +237,7 @@ export const EditUserSchema = Yup.object().shape({
 	name: Yup.string().required("Required"),
 	email: Yup.string().email().required("Required"),
 	passwordConfirmation: Yup.string().when("password", {
-		is: (value: any) => !!value,
+		is: (value: string) => !!value,
 		then: () => Yup.string()
 			.oneOf([Yup.ref("password"), undefined], "Passwords must match")
 			.required("Required"),
@@ -245,7 +246,7 @@ export const EditUserSchema = Yup.object().shape({
 
 export const PasswordSchema = Yup.object().shape({
 	passwordConfirmation: Yup.string().when("password", {
-		is: (value: any) => !!value,
+		is: (value: string) => !!value,
 		then: () => Yup.string()
 			.oneOf([Yup.ref("password"), undefined], "Passwords must match")
 			.required("Required"),

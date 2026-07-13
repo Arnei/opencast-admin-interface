@@ -3,16 +3,17 @@ import { getTotalServers } from "../../selectors/serverSelectors";
 import {
 	loadServersIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchServers } from "../../slices/serverSlice";
+import { fetchServers, Server } from "../../slices/serverSlice";
 import { systemsLinks } from "./partials/SystemsNavigation";
 import TablePage from "../shared/TablePage";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of servers
  */
 const Servers = () => {
 	return (
-		<TablePage
+		<TablePage<Row & Server>
 			resource={"servers"}
 			fetchResource={fetchServers}
 			loadResourceIntoTable={loadServersIntoTable}

@@ -22,9 +22,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 import moment from "moment";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
 import { renderValidDate } from "../../utils/dateUtils";
-import { getCurrentLanguageInformation } from "../../utils/utils";
+import { GenericAsyncThunk, getCurrentLanguageInformation } from "../../utils/utils";
 import DropDown from "./DropDown";
-import { AsyncThunk } from "@reduxjs/toolkit";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import SearchContainer from "./SearchContainer";
@@ -41,7 +40,7 @@ const TableFilters = ({
 	loadResourceIntoTable,
 	resource,
 }: {
-	loadResource: AsyncThunk<any, void, any>,
+	loadResource: GenericAsyncThunk,
 	loadResourceIntoTable: () => AppThunk,
 	resource: Resource,
 }) => {

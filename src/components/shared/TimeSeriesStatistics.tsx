@@ -2,7 +2,7 @@ import { useState } from "react";
 import moment from "moment";
 import { getCurrentLanguageInformation } from "../../utils/utils";
 import DatePicker from "react-datepicker";
-import { Formik, FormikErrors } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { Field } from "./Field";
 import BarChart from "./BarChart";
 import {
@@ -20,6 +20,12 @@ import { DataResolution, Statistics, TimeMode } from "../../slices/statisticsSli
 import { ParseKeys } from "i18next";
 import { LuChevronLeft, LuChevronRight, LuDownload } from "react-icons/lu";
 
+type InitialValues = {
+	timeMode: TimeMode,
+	dataResolution: DataResolution,
+	fromDate: string,
+	toDate: string,
+}
 
 /**
  * This component visualizes statistics with data of type time series
@@ -49,7 +55,7 @@ const TimeSeriesStatistics = ({
 	timeMode: TimeMode,
 	dataResolution: DataResolution,
 	statDescription: string,
-	onChange: AsyncThunk<Statistics[], { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, any>,
+	onChange: AsyncThunk<Statistics[], { id: string, providerId: string, from: string | Date, to: string | Date, dataResolution: DataResolution, timeMode: TimeMode, }, object>,
 	exportUrl: string,
 	exportFileName: (statsTitle: string) => string,
 	totalValue: number,
@@ -81,7 +87,7 @@ const TimeSeriesStatistics = ({
 
 	// change formik values and get new statistic values from API
 	const change = (
-		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		setFieldValue: FormikHelpers<InitialValues>["setFieldValue"],
 		timeMode: TimeMode,
 		from: string,
 		to: string,
@@ -92,9 +98,9 @@ const TimeSeriesStatistics = ({
 			to = moment(from).clone().endOf(timeMode).format("YYYY-MM-DD");
 			setStartDatepicker(new Date(from));
 			setEndDatepicker(new Date(to));
-			setFormikValue("fromDate", from);
-			setFormikValue("toDate", to);
-			setFormikValue("dataResolution", fixedDataResolutions(timeMode));
+			setFieldValue("fromDate", from);
+			setFieldValue("toDate", to);
+			setFieldValue("dataResolution", fixedDataResolutions(timeMode));
 			dataResolution = fixedStatisticDataResolutions(timeMode);
 		}
 		dispatch(onChange({ id: resourceId, providerId, from, to, dataResolution, timeMode }));
@@ -103,25 +109,25 @@ const TimeSeriesStatistics = ({
 	// change time mode in formik and get new values from API
 	const changeTimeMode = (
 		newTimeMode: TimeMode,
-		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		setFieldValue: FormikHelpers<InitialValues>["setFieldValue"],
 		from: string,
 		to: string,
 		dataResolution: DataResolution,
 	) => {
-		setFormikValue("timeMode", newTimeMode);
-		change(setFormikValue, newTimeMode, from, to, dataResolution);
+		setFieldValue("timeMode", newTimeMode);
+		change(setFieldValue, newTimeMode, from, to, dataResolution);
 	};
 
 	// change custom time granularity in formik and get new values from API
 	const changeGranularity = (
 		granularity: DataResolution,
-		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		setFieldValue: FormikHelpers<InitialValues>["setFieldValue"],
 		timeMode: TimeMode,
 		from: string,
 		to: string,
 	) => {
-		setFormikValue("dataResolution", granularity);
-		change(setFormikValue, timeMode, from, to, granularity);
+		setFieldValue("dataResolution", granularity);
+		change(setFieldValue, timeMode, from, to, granularity);
 	};
 
 	// format selected time to display as name of timeframe
@@ -136,7 +142,7 @@ const TimeSeriesStatistics = ({
 
 	// change to and from dates in formik to previous timeframe and get new values from API
 	const selectPrevious = (
-		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		setFieldValue: FormikHelpers<InitialValues>["setFieldValue"],
 		from: string,
 		timeMode: TimeMode,
 		dataResolution: DataResolution,
@@ -146,12 +152,12 @@ const TimeSeriesStatistics = ({
 			.subtract(1, timeMode + "s" as moment.unitOfTime.DurationConstructor)
 			.format("YYYY-MM-DD");
 		const to = newFrom;
-		change(setFormikValue, timeMode, newFrom, to, dataResolution);
+		change(setFieldValue, timeMode, newFrom, to, dataResolution);
 	};
 
 	// change to and from dates in formik to next timeframe and get new values from API
 	const selectNext = (
-		setFormikValue: (field: string, value: any) => Promise<void | FormikErrors<any>>,
+		setFieldValue: FormikHelpers<InitialValues>["setFieldValue"],
 		from: string,
 		timeMode: TimeMode,
 		dataResolution: DataResolution,
@@ -161,12 +167,12 @@ const TimeSeriesStatistics = ({
 			.add(1, timeMode + "s" as moment.unitOfTime.DurationConstructor)
 			.format("YYYY-MM-DD");
 		const to = newFrom;
-		change(setFormikValue, timeMode, newFrom, to, dataResolution);
+		change(setFieldValue, timeMode, newFrom, to, dataResolution);
 	};
 
 	return (
 		/* Initialize form */
-		<Formik
+		<Formik<InitialValues>
 			enableReinitialize
 			initialValues={{
 				timeMode: timeMode,

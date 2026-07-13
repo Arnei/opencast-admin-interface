@@ -1,6 +1,6 @@
 import moment from "moment";
 import { makeTwoDigits } from "./utils";
-import { FormikErrors } from "formik";
+import { FormikHelpers } from "formik";
 
 /**
  * This File contains methods concerning dates
@@ -106,7 +106,7 @@ export const calculateDuration = (
 const setDuration = (
 	startDate: Date,
 	endDate: Date,
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 ) => {
 	const { durationHours, durationMinutes } = calculateDuration(
 		startDate,
@@ -140,7 +140,7 @@ const changeStart = (
 		minute: string,
 	},
 	formikValues: RequiredFormikValues,
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	const startDate = makeDate(start.date, start.hour, start.minute);
@@ -171,7 +171,7 @@ const changeStart = (
 export const changeStartDate = (
 	value: Date,
 	formikValues: RequiredFormikValues & { scheduleStartHour: string, scheduleStartMinute: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -191,7 +191,7 @@ export const changeStartDate = (
 export const changeStartHour = (
 	value: string,
 	formikValues: RequiredFormikValues & { scheduleStartDate: string | number, scheduleStartMinute: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -213,7 +213,7 @@ export const changeStartHour = (
 export const changeStartMinute = (
 	value: string,
 	formikValues: RequiredFormikValues & { scheduleStartDate: string | number, scheduleStartHour: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -240,7 +240,7 @@ const changeEnd = (
 		minute: string,
 	},
 	formikValues: RequiredFormikValues & { scheduleStartDate: string | number, scheduleStartHour: string, scheduleStartMinute: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	const endDate = makeDate(
@@ -274,7 +274,7 @@ const changeEnd = (
 export const changeEndHour = (
 	value: string,
 	formikValues: RequiredFormikValues & { scheduleStartDate: string | number, scheduleStartHour: string, scheduleStartMinute: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -295,7 +295,7 @@ export const changeEndHour = (
 export const changeEndMinute = (
 	value: string,
 	formikValues: RequiredFormikValues & { scheduleStartDate: string | number, scheduleStartHour: string, scheduleStartMinute: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -318,7 +318,7 @@ const changeDuration = (
 	eventId: string,
 	duration: { hours: string, minutes: string },
 	formikValues: RequiredFormikValues & { scheduleStartDate: string | number, scheduleStartHour: string, scheduleStartMinute: string },
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	const startDate = makeDate(
@@ -353,7 +353,7 @@ export const changeDurationHour = (
 		scheduleStartMinute: string,
 		scheduleDurationMinutes: string
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -379,7 +379,7 @@ export const changeDurationMinute = (
 		scheduleStartMinute: string,
 		scheduleDurationHours: string
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -408,7 +408,7 @@ const changeStartMultiple = (
 	formikValues: RequiredFormikValues & {
 		scheduleEndDate: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	const startDate = makeDate(start.date, start.hour, start.minute);
@@ -454,7 +454,7 @@ export const changeStartDateMultiple = (
 		scheduleStartHour: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -478,7 +478,7 @@ export const changeStartHourMultiple = (
 		scheduleStartDate: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -504,7 +504,7 @@ export const changeStartMinuteMultiple = (
 		scheduleStartDate: string,
 		scheduleStartHour: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -532,7 +532,7 @@ export const changeEndDateMultiple = (
 		scheduleStartHour: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -580,7 +580,7 @@ const changeEndMultiple = (
 		scheduleStartHour: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	let endDate = makeDate(formikValues.scheduleStartDate, end.hour, end.minute);
@@ -621,7 +621,7 @@ export const changeEndHourMultiple = (
 		scheduleStartHour: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -647,7 +647,7 @@ export const changeEndMinuteMultiple = (
 		scheduleStartHour: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -678,7 +678,7 @@ const changeDurationMultiple = (
 		scheduleStartHour: string,
 		scheduleStartMinute: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
 	const startDate = makeDate(
@@ -718,7 +718,7 @@ export const changeDurationHourMultiple = (
 		scheduleStartMinute: string,
 		scheduleDurationMinutes: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {
@@ -745,7 +745,7 @@ export const changeDurationMinuteMultiple = (
 		scheduleStartMinute: string,
 		scheduleDurationHours: string,
 	},
-	setFieldValue: (field: string, value: string) => Promise<void | FormikErrors<any>>,
+	setFieldValue: FormikHelpers<unknown>["setFieldValue"],
 	eventId = "",
 	checkConflicts?: (id: string, startDate: Date, endDate: Date, ca: string) => unknown,
 ) => {

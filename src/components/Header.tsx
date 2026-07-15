@@ -7,6 +7,7 @@ import opencastLogo from "../img/opencast-white.svg?url";
 import { setSpecificServiceFilter } from "../slices/tableFilterSlice";
 import { getErrorCount, getHealthStatus } from "../selectors/healthSelectors";
 import {
+	getRegistrationLoaded,
 	getRegistration,
 	getAbleToRegister,
 	getAgreedLatestToU,
@@ -67,6 +68,7 @@ const Header = () => {
 	const isAbleToRegister = useAppSelector(state => getAbleToRegister(state));
 	const agreedLatestToU = useAppSelector(state => getAgreedLatestToU(state));
 	const user = useAppSelector(state => getUserInformation(state));
+	const registrationLoaded = useAppSelector(state => getRegistrationLoaded(state));
 	const registration = useAppSelector(state => getRegistration(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
 	const displayTerms = (orgProperties["org.opencastproject.admin.display_terms"] || "false").toLowerCase() === "true";
@@ -169,10 +171,10 @@ const Header = () => {
 		const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 		const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
 
-		if (isAdmin && !isLocalhost && dismissedLongEnough && registration == null) {
+		if (isAdmin && !isLocalhost && dismissedLongEnough && registrationLoaded && registration == null) {
 		  showRegistrationModal();
 		}
-	}, [user, registration]);
+	}, [user, registration, registrationLoaded]);
 	return (
 		<>
 			<header className="primary-header">

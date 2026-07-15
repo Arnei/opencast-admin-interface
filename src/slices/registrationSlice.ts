@@ -10,6 +10,7 @@ export type Registration = {
 }
 
 export type RegistrationState = {
+  loaded: boolean,
   registration: Registration | null,
   latestToU: string,
   ableToRegister: boolean,
@@ -24,6 +25,7 @@ type StateUpdate = {
 
 // Initial state of health status in redux store
 const initialState: RegistrationState = {
+  loaded: false,
   registration: null,
   latestToU: "uninitialized",
   ableToRegister: false,
@@ -52,8 +54,7 @@ export const fetchIsUpToDate = createAppAsyncThunk("registration/isUpToDate", as
 const registrationSlice = createSlice({
   name: "registration",
   initialState,
-  reducers: {
-  },
+  reducers: {},
   // These are used for thunks
   extraReducers: builder => {
     builder
@@ -66,6 +67,7 @@ const registrationSlice = createSlice({
           latestToU: state.latestToU,
         };
         state.agreedToToU = agreedLatestTerms(state, updatedState);
+        state.loaded = true;
       })
       .addCase(fetchLatestToU.fulfilled, (state, action: PayloadAction<
         string

@@ -3,6 +3,7 @@ import { RootState } from "../store";
 /**
  * This file contains selectors regarding information about the registration status
  */
+export const getRegistrationLoaded = (state: RootState) => state.registration.loaded;
 // Are we registered at all
 export const getRegistration = (state: RootState) => state.registration.registration;
 // Are we able to talk to register.opencast.org

@@ -21,7 +21,9 @@ import ModalContentTable from "../../../shared/modals/ModalContentTable";
 import { addNotification } from "../../../../slices/notificationSlice";
 import { NOTIFICATION_CONTEXT } from "../../../../configs/modalConfig";
 
-
+type InitialValues = {
+	[key: string]: string | string[];
+}
 export type MetadataValues = {
   [key: string]: string | string[];
 }

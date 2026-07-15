@@ -166,7 +166,7 @@ export const NewSeriesSchema = {
 };
 
 // Validation Schema used in new playlist wizard (each step has its own yup validation object)
-export const NewPlaylistSchema: Record<string, Yup.ObjectSchema<any>> = {
+export const NewPlaylistSchema = {
 	// For metadata validation see MetadataSchema
 	"metadata": Yup.object().shape({}),
 	"entries": Yup.object().shape({}),

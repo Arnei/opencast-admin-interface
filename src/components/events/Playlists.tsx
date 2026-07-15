@@ -1,5 +1,8 @@
 ;import TablePage from "../shared/TablePage";
-import { fetchPlaylists } from "../../slices/playlistSlice";
+import {
+  fetchPlaylists,
+  Playlist as PlaylistRow,
+ } from "../../slices/playlistSlice";
 import { loadPlaylistsIntoTable } from "../../thunks/tableThunks";
 import { getTotalPlaylists } from "../../selectors/playlistSelectors";
 import { eventsLinks } from "./partials/EventsNavigation";
@@ -7,6 +10,7 @@ import { playlistsTemplateMap } from "../../configs/tableConfigs/playlistsTableM
 import PlaylistDetailsModal from "./partials/modals/PlaylistDetailsModal";
 import { useAppDispatch } from "../../store";
 import { fetchAclDefaults } from "../../slices/aclSlice";
+import { Row } from "../../slices/tableSlice";
 
 
 /**
@@ -20,7 +24,7 @@ const Playlists = () => {
   };
 
   return <>
-    <TablePage
+    <TablePage<Row & PlaylistRow>
       resource={"playlists"}
       fetchResource={fetchPlaylists}
       loadResourceIntoTable={loadPlaylistsIntoTable}

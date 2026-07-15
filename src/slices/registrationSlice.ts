@@ -50,51 +50,51 @@ export const fetchIsUpToDate = createAppAsyncThunk("registration/isUpToDate", as
 });
 
 const registrationSlice = createSlice({
-	name: "registration",
-	initialState,
-	reducers: {
-		setError(state, action: PayloadAction<{
-			error: RegistrationState["error"],
-		}>) {
-			state.error = action.payload.error;
-		},
-	},
-	// These are used for thunks
-	extraReducers: builder => {
-		builder
-			/* .addCase(fetchRegistration.pending, state => {
-				state.statusHealth = "loading";
-			}) */
-			.addCase(fetchRegistration.fulfilled, (state, action: PayloadAction<
-				Registration
-			>) => {
+  name: "registration",
+  initialState,
+  reducers: {
+    setError(state, action: PayloadAction<{
+      error: RegistrationState["error"],
+    }>) {
+      state.error = action.payload.error;
+    },
+  },
+  // These are used for thunks
+  extraReducers: builder => {
+    builder
+      /* .addCase(fetchRegistration.pending, state => {
+        state.statusHealth = "loading";
+      }) */
+      .addCase(fetchRegistration.fulfilled, (state, action: PayloadAction<
+        Registration
+      >) => {
         state.registration = action.payload;
         const updatedState = {
           registration: state.registration,
           latestToU: state.latestToU,
         };
         state.agreedToToU = agreedLatestTerms(state, updatedState);
-			})
-			.addCase(fetchLatestToU.fulfilled, (state, action: PayloadAction<
-				string
-			>) => {
+      })
+      .addCase(fetchLatestToU.fulfilled, (state, action: PayloadAction<
+        string
+      >) => {
         state.latestToU = action.payload;
         const updatedState = {
           registration: state.registration,
           latestToU: state.latestToU,
         };
         state.agreedToToU = agreedLatestTerms(state, updatedState);
-			})
-			.addCase(fetchIsUpToDate.fulfilled, (state, action: PayloadAction<
-				boolean
-			>) => {
+      })
+      .addCase(fetchIsUpToDate.fulfilled, (state, action: PayloadAction<
+        boolean
+      >) => {
         // This is true if the core can talk to https://register.opencast.org/, false otherwise
         state.isRegistering = action.payload;
-			})
-			/* .addCase(fetchHealthStatus.rejected, (state, action) => {
+      })
+      /* .addCase(fetchHealthStatus.rejected, (state, action) => {
         state.error = true;
-			}) */;
-	},
+      }) */;
+  },
 });
 
 const agreedLatestTerms = (_state: WritableDraft<RegistrationState>, updatedState: Temp) => {

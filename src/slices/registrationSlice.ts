@@ -17,7 +17,7 @@ export type RegistrationState = {
   error: boolean
 };
 
-type Temp = {
+type StateUpdate = {
   registration: Registration | null,
   latestToU: string,
 };
@@ -97,7 +97,7 @@ const registrationSlice = createSlice({
   },
 });
 
-const agreedLatestTerms = (_state: WritableDraft<RegistrationState>, updatedState: Temp) => {
+const agreedLatestTerms = (_state: WritableDraft<RegistrationState>, updatedState: StateUpdate) => {
   if (null != updatedState.registration && "uninitialized" != updatedState.latestToU) {
     return updatedState.registration.termsVersionAgreed === updatedState.latestToU;
   }

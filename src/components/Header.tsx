@@ -364,6 +364,7 @@ const MenuNotify = ({
 	showRegistrationModal: () => void,
 	hideNotificationMenu: () => void,
 }) => {
+	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
@@ -409,7 +410,7 @@ const MenuNotify = ({
 						onClick={() => showAdoptersRegistrationModal()}
 					>
 						<span className="wide-text">Registration</span>
-						<span className="multi-value multi-value-yellow">Unregistered</span>
+						<span className="multi-value multi-value-yellow">{t("ADOPTER_REGISTRATION.NOTIFICATION.UNREGISTERED")}</span>
 					</ButtonLikeAnchor>
 				</li>
 			}
@@ -419,7 +420,7 @@ const MenuNotify = ({
 						onClick={() => showAdoptersRegistrationModal()}
 					>
 						<span className="wide-text">Registration</span>
-						<span className="multi-value multi-value-yellow">Updated ToU</span>
+						<span className="multi-value multi-value-yellow">{t("ADOPTER_REGISTRATION.NOTIFICATION.UPDATED_TOU")}</span>
 					</ButtonLikeAnchor>
 				</li>
 			}

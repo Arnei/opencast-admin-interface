@@ -479,6 +479,10 @@
 			"DELETE_SUBMIT_STATE": {
 				"TEXT": "Are you sure you want to delete your registration data?"
 			}
+		},
+		"NOTIFICATION": {
+			"UNREGISTERED": "Unregistered",
+			"UPDATED_TOU": "Updated ToU"
 		}
 	},
 	"EVENTS": {

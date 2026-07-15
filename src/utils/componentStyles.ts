@@ -1,18 +1,26 @@
 /* this file contains syles as javascript objects for syled components */
 
-import { StylesConfig, Theme } from "react-select";
+import { GroupBase, StylesConfig, Theme } from "react-select";
+import { DropDownOption } from "../components/shared/DropDown";
+import { PageSizeOption } from "../components/shared/Table";
 
 // colors
 const colorDropDownMain = "#aaa";
 const colorDropDownNormalFocus = "#4da1f7";
 const colorDropDownDarkerFocus = "#2a62bc";
 
-export function dropDownStyle(customCss: {
-	isMetadataStyle?: boolean,
-	width?: number | string,
-	optionPaddingTop?: number,
-	optionLineHeight?: string,
-}): StylesConfig {
+export function dropDownStyle<T>(
+	customCss: {
+		isMetadataStyle?: boolean,
+		width?: number | string,
+		optionPaddingTop?: number,
+		optionLineHeight?: string,
+	},
+): StylesConfig<
+	DropDownOption<T>,
+	boolean,
+	GroupBase<DropDownOption<T>>
+> {
 	const width = customCss.width ?? 250;
 
 	return {
@@ -151,7 +159,7 @@ export const dropDownSpacingTheme = (theme: Theme) => ({
 /**
  * Style specific to the page size component
  */
-export const pageSizeStyles: StylesConfig<any, false> = {
+export const pageSizeStyles: StylesConfig<PageSizeOption, false> = {
 	container: (base, _state) => ({
 		...base,
 		position: "absolute",

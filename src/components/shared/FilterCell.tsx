@@ -25,7 +25,7 @@ const FilterCell = <T, >({
 		children: ReactNode
 		cellTooltipText?: ParseKeys
 	}[]
-	fetchResource: AsyncThunk<T, void, any>
+	fetchResource: AsyncThunk<T, void, object>
 	loadResourceIntoTable: () => AppThunk,
 }) => {
 	const dispatch = useAppDispatch();

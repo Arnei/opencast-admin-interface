@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import cn from "classnames";
 import { getMetadataCollectionFieldName, transformListProvider } from "../../../utils/resourceUtils";
 import { getCurrentLanguageInformation } from "../../../utils/utils";
-import DropDown from "../DropDown";
+import DropDown, { DropDownOption } from "../DropDown";
 import { parseISO } from "date-fns";
 import { FieldProps } from "formik";
 import { MetadataField } from "../../../slices/eventSlice";
@@ -33,6 +33,7 @@ const RenderField = ({
 	const { t } = useTranslation();
 
 	// TODO: Figure out how to type a ref that could have multiple types
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const editableRef = useRef<any>(null);
 	const [focused, setFocused] = useState(false);
 	const onFocus = () => setFocused(true);
@@ -198,17 +199,17 @@ const EditableDateValue = ({
 };
 
 // renders editable field for selecting value via dropdown
-type EditableSingleSelectProps = ({
-	field: FieldProps["field"]
+type EditableSingleSelectProps<T> = ({
+	field: FieldProps<T>["field"]
 	metadataField: MetadataField
 	text: string
 	form: FieldProps["form"]
 	isFirstField?: boolean,
 	focused: boolean,
 	setFocused: (open: boolean) => void
-	ref: React.RefObject<SelectInstance<any, boolean, GroupBase<any>>>
+	ref: React.RefObject<SelectInstance<DropDownOption<T>, boolean, GroupBase<DropDownOption<T>>> | null>
 })
-const EditableSingleSelect = (props: EditableSingleSelectProps) => {
+const EditableSingleSelect = (props: EditableSingleSelectProps<string>) => {
 	const {
 		field,
 		metadataField,
@@ -342,7 +343,7 @@ const EditableSingleSelectSeries = ({
 	focused,
 	setFocused,
 	ref,
-}: EditableSingleSelectProps) => {
+}: EditableSingleSelectProps<string>) => {
 	const [label, setLabel] = useState("");
 
 	useEffect(() => {
@@ -382,7 +383,7 @@ const EditableSingleSelectSeries = ({
 	/>;
 };
 
-const EditableSingleSelectDropDown = ({
+const EditableSingleSelectDropDown = <T, >({
 	field,
 	metadataField,
 	text,
@@ -393,16 +394,19 @@ const EditableSingleSelectDropDown = ({
 	focused,
 	setFocused,
 	ref,
-}: EditableSingleSelectProps & Pick<
-	Parameters<typeof DropDown>[0],
-	"options" | "fetchOptions"
->) => {
+}: EditableSingleSelectProps<T> &
+{ options?: DropDownOption<T>[];
+	fetchOptions?: (
+		inputValue: string
+	) => Promise<DropDownOption<T>[]>;
+ },
+) => {
 	const { t } = useTranslation();
 
 	return (
 		<DropDown
 			ref={ref}
-			value={field.value as string}
+			value={field.value}
 			text={text}
 			options={options}
 			fetchOptions={fetchOptions}

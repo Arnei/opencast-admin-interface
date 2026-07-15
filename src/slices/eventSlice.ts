@@ -27,7 +27,7 @@ import { TransformedAcl } from "./aclDetailsSlice";
 import { TableConfig } from "../configs/tableConfigs/aclsTableConfig";
 import { Publication } from "./eventDetailsSlice";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
-import { FormikErrors } from "formik";
+import { FormikHelpers } from "formik";
 
 /**
  * This file contains redux reducer for actions affecting the state of events
@@ -345,13 +345,13 @@ export const updateBulkMetadata = (params: {
 		notFound?: string[],
 		runningWorkflow?: string[],
 	},
-	values: { [key: string]: unknown }
+	values: { [key: string]: MetadataField["value"] }
 }): AppThunk => dispatch => {
 	const { metadataFields, values } = params;
 
 	const formData = new URLSearchParams();
 	formData.append("eventIds", JSON.stringify(metadataFields.merged));
-	const metadata : { flavor: string, title: string, fields: any[]}[] = [
+	const metadata : { flavor: string, title: string, fields: MetadataField[]}[] = [
 		{
 			flavor: "dublincore/episode",
 			title: "EVENTS.EVENTS.DETAILS.CATALOG.EPISODE",
@@ -713,7 +713,7 @@ export const deleteMultipleEvent = (events: Event[]): AppThunk => dispatch => {
 export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", async (params: {
 	events: Event[],
 	fetchNewScheduling: boolean,
-	setFormikValue: (field: string, value: EditedEvents[]) => Promise<void | FormikErrors<any>>
+	setFieldValue: FormikHelpers<{ editedEvents: EditedEvents[]; }>["setFieldValue"],
 }, { getState }) => {
 	type FetchScheduling = {
 		eventId: string,
@@ -726,7 +726,7 @@ export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", asy
 		start: string, // Date string
 		end: string, // Date string
 	};
-	const { events, fetchNewScheduling, setFormikValue } = params;
+	const { events, fetchNewScheduling, setFieldValue } = params;
 
 	let editedEvents = [];
 
@@ -789,7 +789,7 @@ export const fetchScheduling = createAppAsyncThunk("events/fetchScheduling", asy
 
 	const responseSeriesOptions = await fetchSeriesOptions();
 
-	setFormikValue("editedEvents", editedEvents);
+	setFieldValue("editedEvents", editedEvents);
 
 	return { editedEvents, responseSeriesOptions };
 });

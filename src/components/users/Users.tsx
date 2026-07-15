@@ -3,16 +3,17 @@ import { getTotalUsers } from "../../selectors/userSelectors";
 import {
 	loadUsersIntoTable,
 } from "../../thunks/tableThunks";
-import { fetchUsers } from "../../slices/userSlice";
+import { fetchUsers, User } from "../../slices/userSlice";
 import { usersLinks } from "./partials/UsersNavigation";
 import TablePage from "../shared/TablePage";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of users
  */
 const Users = () => {
 	return (
-		<TablePage
+		<TablePage<Row & User>
 			resource={"users"}
 			fetchResource={fetchUsers}
 			loadResourceIntoTable={loadUsersIntoTable}

@@ -51,6 +51,7 @@ const SeriesDetails = ({
 	seriesId: string
 	policyChanged: boolean
 	setPolicyChanged: (policyChanged: boolean) => void
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	formikRef: React.RefObject<FormikProps<any> | null>
 }) => {
 	const { t } = useTranslation();

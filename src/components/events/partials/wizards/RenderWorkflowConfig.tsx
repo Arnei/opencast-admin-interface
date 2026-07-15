@@ -13,7 +13,7 @@ import { FieldSetField } from "../../../../slices/workflowSlice";
  * wizard chosen via dropdown.
  */
 interface RequiredFormProps {
-	configuration?: { [key: string]: any }
+	configuration?: { [key: string]: unknown }
 }
 
 const RenderWorkflowConfig = <T extends RequiredFormProps>({
@@ -154,7 +154,7 @@ const RenderField = <T extends RequiredFormProps>({
 }: {
 	field: FieldSetField,
 	formik: FormikProps<T>,
-	validate?: (value: any) => string | undefined,
+	validate?: (value: string) => string | undefined,
 }) => {
 	// id used for Field and label
 	const uuid = uuidv4();

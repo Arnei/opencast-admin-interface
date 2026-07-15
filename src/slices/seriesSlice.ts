@@ -222,10 +222,13 @@ export const postNewSeries = (params: {
 	const access = prepareAccessPolicyRulesForPost(values.policies);
 
 	// Tobira
-	const tobira: any = {};
+	const tobira: {
+		parentPagePath?: string
+		newPages?: { name?: string, pathSegment: string }[]
+	} = {};
 	if (values.selectedPage && values.breadcrumbs) {
-		const existingPages: any[] = [];
-		const newPages: any[] = [];
+		const existingPages: TobiraPage[] = [];
+		const newPages: { name?: string, pathSegment: string }[] = [];
 		values.breadcrumbs.concat(values.selectedPage).forEach(function (page: TobiraPage) {
 			if (page.new) {
 				newPages.push({
@@ -237,9 +240,7 @@ export const postNewSeries = (params: {
 			}
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-		tobira["parentPagePath"] = existingPages.pop().path;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		tobira.parentPagePath = existingPages.pop()!.path;
 		tobira["newPages"] = newPages;
 	}
 
@@ -249,12 +250,11 @@ export const postNewSeries = (params: {
 		options: unknown,
 		access: typeof access,
 		theme?: number,
-		tobira?: any
+		tobira?: typeof tobira
 	} = {
 		metadata: metadata,
 		options: {},
 		access: access,
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		tobira: tobira,
 	};
 

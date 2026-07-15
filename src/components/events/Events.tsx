@@ -21,6 +21,7 @@ import { availableHotkeys } from "../../configs/hotkeysConfig";
 import { fetchAssetUploadOptions } from "../../thunks/assetsThunks";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
+	Event,
 	fetchEventMetadata,
 	fetchEvents,
 	setShowActions,
@@ -32,6 +33,7 @@ import TableActionDropdown from "../shared/TableActionDropdown";
 import { fetchAclDefaults } from "../../slices/aclSlice";
 import TablePage from "../shared/TablePage";
 import SeriesDetailsModal from "./partials/modals/SeriesDetailsModal";
+import { Row } from "../../slices/tableSlice";
 
 /**
  * This component renders the table view of events
@@ -69,7 +71,7 @@ const Events = () => {
 
 	return (
 		<>
-			<TablePage
+			<TablePage<Row & Event>
 				resource={"events"}
 				fetchResource={fetchEvents}
 				loadResourceIntoTable={loadEventsIntoTable}

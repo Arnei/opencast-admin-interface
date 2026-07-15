@@ -69,7 +69,7 @@ const EditScheduledEventsEditPage = <T extends RequiredFormProps>({
 		dispatch(fetchScheduling({
 			events: formik.values.events,
 			fetchNewScheduling: fetchEventInfos,
-			setFormikValue: formik.setFieldValue,
+			setFieldValue: formik.setFieldValue,
 	}));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [formik.values.events]);

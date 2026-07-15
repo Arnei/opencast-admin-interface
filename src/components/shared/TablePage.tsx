@@ -5,15 +5,15 @@ import Table, { TemplateMap } from "../shared/Table";
 import Notifications from "../shared/Notifications";
 import { CreateType, NavBarLink } from "../NavBar";
 import { AppThunk, RootState, useAppSelector } from "../../store";
-import { Resource } from "../../slices/tableSlice";
-import { AsyncThunk } from "@reduxjs/toolkit";
+import { Resource, Row } from "../../slices/tableSlice";
 import { ParseKeys } from "i18next";
 import MainPage from "./MainPage";
+import { GenericAsyncThunk } from "../../utils/utils";
 
 /**
  * This component renders a generic page with a table
  */
-const TablePage = ({
+const TablePage = <T extends Row, >({
 	resource,
 	fetchResource,
 	loadResourceIntoTable,
@@ -26,14 +26,14 @@ const TablePage = ({
 	children,
 }: {
 	resource: Resource
-	fetchResource: AsyncThunk<any, void, any>,
+	fetchResource: GenericAsyncThunk,
 	loadResourceIntoTable: () => AppThunk,
 	getTotalResources: (state: RootState) => number,
 	navBarLinks: NavBarLink[]
 	navBarCreate?: CreateType
 	navBarChildren?: ReactNode
 	caption: ParseKeys
-	templateMap: TemplateMap
+	templateMap: TemplateMap<T>
 	children?: ReactNode
 }) => {
 	const { t } = useTranslation();

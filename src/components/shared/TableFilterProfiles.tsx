@@ -15,11 +15,11 @@ import { FilterData, loadFilterProfile } from "../../slices/tableFilterSlice";
 import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
 import { useHotkeys } from "react-hotkeys-hook";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
-import { AsyncThunk } from "@reduxjs/toolkit";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
 import { Resource } from "../../slices/tableSlice";
 import { LuSettings, LuX } from "react-icons/lu";
+import { GenericAsyncThunk } from "../../utils/utils";
 
 /**
  * This component renders the table filter profiles in the upper right corner when clicked on settings icon of the
@@ -34,7 +34,7 @@ const TableFiltersProfiles = ({
 }: {
 	showFilterSettings: boolean,
 	setFilterSettings: (_: boolean) => void,
-	loadResource: AsyncThunk<any, void, any>,
+	loadResource: GenericAsyncThunk,
 	loadResourceIntoTable: () => AppThunk,
 	resource: Resource,
 }) => {

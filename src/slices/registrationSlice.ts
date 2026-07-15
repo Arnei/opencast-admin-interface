@@ -12,7 +12,7 @@ export type Registration = {
 export type RegistrationState = {
   registration: Registration | null,
   latestToU: string,
-  isRegistering: boolean,
+  ableToRegister: boolean,
   agreedToToU: boolean,
   error: boolean
 };
@@ -26,7 +26,7 @@ type StateUpdate = {
 const initialState: RegistrationState = {
   registration: null,
   latestToU: "uninitialized",
-  isRegistering: false,
+  ableToRegister: false,
   agreedToToU: false,
   error: false,
 };
@@ -86,7 +86,7 @@ const registrationSlice = createSlice({
         boolean
       >) => {
         // This is true if the core can talk to https://register.opencast.org/, false otherwise
-        state.isRegistering = action.payload;
+        state.ableToRegister = action.payload;
       });
   },
 });

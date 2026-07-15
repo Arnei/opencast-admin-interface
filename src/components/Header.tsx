@@ -8,7 +8,7 @@ import { setSpecificServiceFilter } from "../slices/tableFilterSlice";
 import { getErrorCount, getHealthStatus } from "../selectors/healthSelectors";
 import {
 	getRegistration,
-	getIsRegistering,
+	getAbleToRegister,
 	getAgreedLatestToU,
 } from "../selectors/registrationSelectors";
 import {
@@ -64,7 +64,7 @@ const Header = () => {
 
 	const healthStatus = useAppSelector(state => getHealthStatus(state));
 	const errorCounter = useAppSelector(state => getErrorCount(state));
-	const isUpToDate = useAppSelector(state => getIsRegistering(state));
+	const isAbleToRegister = useAppSelector(state => getAbleToRegister(state));
 	const agreedLatestToU = useAppSelector(state => getAgreedLatestToU(state));
 	const user = useAppSelector(state => getUserInformation(state));
 	const registration = useAppSelector(state => getRegistration(state));
@@ -237,9 +237,9 @@ const Header = () => {
 							<Tooltip active={!displayMenuNotify} title={t("SYSTEM_NOTIFICATIONS")}>
 								<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element">
 									<LuBell className="header-icon"/>
-									{(errorCounter !== 0 || !agreedLatestToU || !isUpToDate) && (
+									{(errorCounter !== 0 || !agreedLatestToU || !isAbleToRegister) && (
 										<span id="error-count" className="badge">
-											{errorCounter + (!agreedLatestToU || !isUpToDate ? 1 : 0)}
+											{errorCounter + (!agreedLatestToU || !isAbleToRegister ? 1 : 0)}
 										</span>
 									)}
 								</BaseButton>
@@ -248,7 +248,7 @@ const Header = () => {
 							{displayMenuNotify && (
 								<MenuNotify
 									healthStatus={healthStatus}
-									registering={isUpToDate}
+									registering={isAbleToRegister}
 									updatedToU={agreedLatestToU}
 									showRegistrationModal={showRegistrationModal}
 									hideNotificationMenu={hideNotificationMenu}

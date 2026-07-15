@@ -53,11 +53,6 @@ const registrationSlice = createSlice({
   name: "registration",
   initialState,
   reducers: {
-    setError(state, action: PayloadAction<{
-      error: RegistrationState["error"],
-    }>) {
-      state.error = action.payload.error;
-    },
   },
   // These are used for thunks
   extraReducers: builder => {
@@ -97,8 +92,6 @@ const agreedLatestTerms = (_state: WritableDraft<RegistrationState>, updatedStat
   }
   return false;
 };
-
-export const { setError } = registrationSlice.actions;
 
 // Export the slice reducer as the default export
 export default registrationSlice.reducer;

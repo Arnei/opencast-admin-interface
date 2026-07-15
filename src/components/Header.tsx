@@ -403,26 +403,26 @@ const MenuNotify = ({
 					)}
 				</li>
 			))}
-      {!registering &&
-        <li>
-          <ButtonLikeAnchor
-            onClick={() => showAdoptersRegistrationModal()}
-          >
-            <span className="wide-text">Registration</span>
-            <span className="multi-value multi-value-yellow">Unregistered</span>
-				  </ButtonLikeAnchor>
-        </li>
-      }
-      {registering && !updatedToU &&
-        <li>
-          <ButtonLikeAnchor
-            onClick={() => showAdoptersRegistrationModal()}
-          >
-            <span className="wide-text">Registration</span>
-            <span className="multi-value multi-value-yellow">Updated ToU</span>
-				  </ButtonLikeAnchor>
-        </li>
-      }
+			{!registering &&
+				<li>
+					<ButtonLikeAnchor
+						onClick={() => showAdoptersRegistrationModal()}
+					>
+						<span className="wide-text">Registration</span>
+						<span className="multi-value multi-value-yellow">Unregistered</span>
+					</ButtonLikeAnchor>
+				</li>
+			}
+			{registering && !updatedToU &&
+				<li>
+					<ButtonLikeAnchor
+						onClick={() => showAdoptersRegistrationModal()}
+					>
+						<span className="wide-text">Registration</span>
+						<span className="multi-value multi-value-yellow">Updated ToU</span>
+					</ButtonLikeAnchor>
+				</li>
+			}
 		</ul>
 	);
 };

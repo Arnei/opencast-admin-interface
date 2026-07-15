@@ -62,9 +62,6 @@ const registrationSlice = createSlice({
   // These are used for thunks
   extraReducers: builder => {
     builder
-      /* .addCase(fetchRegistration.pending, state => {
-        state.statusHealth = "loading";
-      }) */
       .addCase(fetchRegistration.fulfilled, (state, action: PayloadAction<
         Registration
       >) => {
@@ -90,10 +87,7 @@ const registrationSlice = createSlice({
       >) => {
         // This is true if the core can talk to https://register.opencast.org/, false otherwise
         state.isRegistering = action.payload;
-      })
-      /* .addCase(fetchHealthStatus.rejected, (state, action) => {
-        state.error = true;
-      }) */;
+      });
   },
 });
 

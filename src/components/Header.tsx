@@ -158,7 +158,9 @@ const Header = () => {
 		dispatch(fetchRegistration());
 		dispatch(fetchLatestToU());
 		dispatch(fetchIsUpToDate());
+	}, [dispatch]);
 
+	useEffect(() => {
 		if (!user) { return; }
 
 		const isAdmin = user.isAdmin || user.isOrgAdmin;
@@ -170,7 +172,7 @@ const Header = () => {
 		if (isAdmin && !isLocalhost && dismissedLongEnough && registration == null) {
 		  showRegistrationModal();
 		}
-	}, [user, registration, dispatch]);
+	}, [user, registration]);
 	return (
 		<>
 			<header className="primary-header">

@@ -79,6 +79,8 @@ export function isSeries(row: Row | Event | Series | Recording | Server | Job | 
 	return (row as Series).organizers !== undefined;
 }
 
+export type Meh = Event | Series | Recording | Server | Job | Service | User | Group | AclResult | ThemeDetailsType
+
 // TODO: Improve row typing. While this somewhat correctly reflects the current state of our code, it is rather annoying to work with.
 export type Row = {
 	id: string, // For use with entityAdapter. Directly taken from event/series etc. if available

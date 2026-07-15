@@ -41,9 +41,9 @@ const DetailsMetadataTab = ({
 	metadata: MetadataCatalog[],
 	updateResource: AsyncThunk<void, {
 		id: string;
-		values: { [key: string]: any; };
+		values: InitialValues;
 		catalog: MetadataCatalog;
-	}, any> // (id: string, values: { [key: string]: any }, catalog: MetadataCatalog) => void,
+	}, object> // (id: string, values: { [key: string]: any }, catalog: MetadataCatalog) => void,
 	editAccessRole: string,
 	formikRef?: React.RefObject<FormikProps<MetadataValues> | null>
 	header?: ParseKeys
@@ -53,7 +53,7 @@ const DetailsMetadataTab = ({
 
 	const user = useAppSelector(state => getUserInformation(state));
 
-	const handleSubmit = (values: { [key: string]: any }, catalog: MetadataCatalog) => {
+	const handleSubmit = (values: InitialValues, catalog: MetadataCatalog) => {
 		dispatch(updateResource({ id: resourceId, values, catalog }))
 			.unwrap()
 			.then(() => {
@@ -76,7 +76,7 @@ const DetailsMetadataTab = ({
 
 	// set current values of metadata fields as initial values
 	const getInitialValues = (metadataCatalog: MetadataCatalog) => {
-		const initialValues: { [key: string]: any } = {};
+		const initialValues: { [key: string]: MetadataCatalog["fields"][0]["value"] } = {};
 
 		// Transform metadata fields and their values provided by backend (saved in redux)
 		metadataCatalog.fields.forEach(field => {
@@ -86,7 +86,7 @@ const DetailsMetadataTab = ({
 		return initialValues;
 	};
 
-	const checkValidity = (formik: FormikProps<any>) => {
+	const checkValidity = (formik: FormikProps<InitialValues>) => {
 		if (formik.dirty && formik.isValid && hasAccess(editAccessRole, user)) {
 			// check if user provided values differ from initial ones
 			return !_.isEqual(formik.values, formik.initialValues);

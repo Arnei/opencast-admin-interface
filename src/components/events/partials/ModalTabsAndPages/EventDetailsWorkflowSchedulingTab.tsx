@@ -24,7 +24,7 @@ import RenderWorkflowSelect from "../wizards/RenderWorkflowSelect";
 type InitialValues = {
 	workflowId: string;
 	configuration: {
-			[key: string]: any;
+			[key: string]: unknown;
 	} | undefined;
 }
 

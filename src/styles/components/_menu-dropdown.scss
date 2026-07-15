@@ -30,11 +30,11 @@
 
     // Base Properties
     $padding: 8px 0;
-    $background-color: rgba(variables.$white, 0.98    );
+    $background-color: variables.$white;
     $border-stroke: 1px;
-    $border-color: rgba(variables.$black, 0.1);
+    $border-color: variables.$color-dropdown-box-shadow;
     $border-radius: variables.$main-border-radius;
-    $box-shadow: 0 1px 3px rgba(variables.$black, 0.1), 0 0 1px $border-stroke rgba(variables.$black, 0.1);
+    $box-shadow: 0 1px 3px variables.$color-dropdown-box-shadow, 0 0 1px $border-stroke variables.$color-dropdown-box-shadow;
     $point-width: 7px;
     $point-height: 7px;
     $point-position-from-right: 10px;

@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../base/variables";
 
 /**
@@ -30,7 +29,7 @@
     margin-bottom: 10px;
     background-color: variables.$white;
     border-radius: variables.$main-border-radius;
-    border: 1px solid color.adjust(variables.$l-blue, $lightness: -10%);
+    border: 1px solid variables.$l-blue-gradient;
 
     &.compact {
         height: 8px;
@@ -44,23 +43,16 @@
     font-size: 12px;
     line-height: 24px;
     color: variables.$white;
-    text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.2);
     text-align: center;
     background-color: variables.$progress-bar-color;
-    background: linear-gradient(to bottom, variables.$l-blue, variables.$l-blue-gradient);
-    border-right: 1px solid color.adjust(variables.$l-blue, $lightness: -15%);
+    background: linear-gradient(to bottom, variables.$b-blue-gradient, variables.$bright-blue);
+    border-right: 1px solid variables.$d-blue;
     transition: width 600ms ease;
 
+    &[aria-valuenow="0"],
     &[aria-valuenow="1"],
     &[aria-valuenow="2"] {
         min-width: 30px;
-    }
-
-    &[aria-valuenow="0"] {
-        min-width: 30px;
-        background-color: transparent;
-        background-image: none;
-        box-shadow: none;
     }
 
     &.bad {
@@ -79,7 +71,7 @@
         background: variables.$l-blue;
     }
     &.verystrong {
-        background: linear-gradient(variables.$primary-color-green, variables.$primary-color-green-dark-1);
+        background: linear-gradient(variables.$green, variables.$green-dark-1);
     }
 }
 

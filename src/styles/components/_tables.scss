@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../base/variables";
 @use "../mixins/mixins-config";
 @use "../mixins/button";
@@ -42,13 +41,10 @@
     }
 
     button {
-        $highlight-blue: variables.$ref-blue;
-
-        color: $highlight-blue;
-        text-shadow: 0 1px 0 rgba(variables.$white, 0.75);
+        color: variables.$ref-blue;
 
         &:hover {
-            color: color.adjust($highlight-blue, $lightness: 10%);
+            color: variables.$l-blue;
         }
     }
 }
@@ -86,10 +82,10 @@
         &.sortable {
             cursor: pointer;
             &:hover {
-                background: linear-gradient(to bottom, variables.$off-white, color.adjust(variables.$off-white, $lightness: -5%));
+                background: linear-gradient(to bottom, variables.$off-white, variables.$table-off-white-gradient);
             }
             &:active {
-                box-shadow: inset 0 3px 10px 2px rgba(variables.$black, 0.05);
+                box-shadow: inset 0 3px 10px 2px variables.$color-table-cell-shadow;
             }
         }
         // Layout
@@ -115,7 +111,7 @@
         border-left: 1px solid variables.$white;
         border-bottom: 1px solid $border-color;
         user-select: none;
-        background: linear-gradient(to bottom, color.adjust(variables.$off-white, $lightness: -1%), color.adjust(variables.$off-white, $lightness: -5%));
+        background: linear-gradient(to bottom, variables.$table-color-off-white-dark-1, variables.$table-off-white-gradient);
 
         // Typography
         line-height: 35px;
@@ -131,8 +127,8 @@
 
         // Darken tbl when sorted on
         &.col-sort {
-            background: color.adjust(variables.$off-white, $lightness: -4%);
-            box-shadow: inset 0 3px 10px 2px rgba(variables.$black, 0.05);
+            background: variables.$table-color-off-white-dark-2;
+            box-shadow: inset 0 3px 10px 2px variables.$color-table-cell-shadow;
         }
 
         // Special column
@@ -187,12 +183,12 @@
                 .chevron-up {
                     position: relative;
                     top: 3px;
-                    color: variables.$grey;
+                    color: variables.$color-gray;
                 }
                 .chevron-down {
                     position: relative;
                     top: -3px;
-                    color: variables.$grey;
+                    color: variables.$color-gray;
                 }
                 .active {
                     color: variables.$color-darkgray;
@@ -228,7 +224,7 @@
         // at the bottom of rows.
         &.total {
             > td {
-                background: color.adjust(variables.$color-lightgray, $lightness: -2%);
+                background: variables.$color-lightgray-dark-1;
                 color: variables.$medium-prim-color;
                 font-weight: bold;
 
@@ -240,7 +236,7 @@
         }
 
         &.darker-row {
-            background: color.adjust(variables.$color-lightgray, $lightness: -5%);
+            background: variables.$color-lightgray-dark-2;
         }
 
         &.disabled {
@@ -375,7 +371,7 @@
                 }
 
                 > hr {
-                    background: color.adjust(variables.$main-border-color, $lightness: 10%);
+                    background: variables.$lighter-border-color;
                     height: 1px;
                     border: none;
                 }

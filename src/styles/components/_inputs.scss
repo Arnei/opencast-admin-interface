@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../base/variables";
 @use "../mixins/button";
 
@@ -51,7 +50,7 @@ textarea {
     }
 
     &:hover {
-        border: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -20%);
+        border: variables.$thin-border-stroke variables.$dark-prim-color;
     }
 
     &:focus {
@@ -99,7 +98,7 @@ select[multiple] {
     height: 40px;
     position: relative;
 
-    outline: variables.$thin-border-stroke color.adjust(variables.$main-border-color, $lightness: -2%);
+    outline: variables.$thin-border-stroke variables.$main-border-color;
     border-radius: variables.$main-border-radius;
 
     input.search {
@@ -199,14 +198,14 @@ select[multiple] {
   border: 1px solid variables.$main-border-color;
   border-radius: 4px;
   padding: 0px 8px;
-  color: variables.$color-black;
+  color: variables.$black;
   margin-right: 8px;
   white-space: nowrap;
 }
 
 /* Right text */
 .file-text {
-  color: variables.$color-white;
+  color: variables.$white;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

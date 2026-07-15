@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import _ from "lodash";
 import DatePicker from "react-datepicker";
-import { Formik, FormikErrors, FormikProps } from "formik";
+import { Formik, FormikHelpers, FormikProps } from "formik";
 import Notifications from "../../../shared/Notifications";
 import {
 	getSchedulingConflicts,
@@ -143,7 +143,7 @@ const EventDetailsSchedulingTab = ({
 	};
 
 	// changes the inputs in the formik
-	const changeInputs = (deviceId: Recording["id"], setFieldValue: (field: string, value: any) => Promise<void | FormikErrors<any>>) => {
+	const changeInputs = (deviceId: Recording["id"], setFieldValue: FormikHelpers<InitialValues>["setFieldValue"]) => {
 		setFieldValue("captureAgent", deviceId);
 		setFieldValue("inputs", []);
 	};

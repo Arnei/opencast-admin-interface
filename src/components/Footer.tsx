@@ -6,6 +6,7 @@ import {
 import { useAppSelector } from "../store";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
+import { LuMessagesSquare } from "react-icons/lu";
 
 /**
  * Component that renders the footer
@@ -58,7 +59,10 @@ const Footer: React.FC = () => {
 				{/* Only render if a feedback URL is set*/}
 				{!!orgProperties && !!orgProperties[feedbackUrlPropertyId] && (
 					<div className="feedback-btn" id="feedback-btn">
-						<a href={orgProperties[feedbackUrlPropertyId]}>Feedback</a>
+						<a href={orgProperties[feedbackUrlPropertyId]}>
+							<LuMessagesSquare />
+							<p>Feedback</p>
+						</a>
 					</div>
 				)}
 			</div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { Field } from "./Field";
 import TermsOfUsePage from "./modals/TermsOfUsePage";
 import { countries, states, systemTypes } from "../../configs/adopterRegistrationConfig";
@@ -8,11 +9,18 @@ import cn from "classnames";
 import { AdopterRegistrationSchema } from "../../utils/validate";
 import {
 	Registration,
+	Statistics,
+	fetchRegistration,
+	fetchStatistics,
+	postAdopterRegistration,
 	deleteAdopterRegistration,
-	fetchAdopterRegistration,
-	fetchAdopterStatisticsSummary,
-	postRegistration,
-} from "../../utils/adopterRegistrationUtils";
+} from "../../slices/registrationSlice";
+import {
+	getRegistrationLoaded,
+	getRegistration,
+	getStatisticsLoaded,
+	getStatistics,
+} from "../../selectors/registrationSelectors";
 import ModalContent from "./modals/ModalContent";
 import { Modal, ModalHandle } from "./modals/Modal";
 import { ParseKeys } from "i18next";
@@ -47,11 +55,17 @@ const RegistrationModal = ({
 
 const RegistrationModalContent = () => {
 	const { t } = useTranslation();
+	const dispatch = useAppDispatch();
+
+	const registrationLoaded = useAppSelector(state => getRegistrationLoaded(state));
+	const registration = useAppSelector(state => getRegistration(state));
+	const statisticsLoaded = useAppSelector(state => getStatisticsLoaded(state));
+	const statistics = useAppSelector(state => getStatistics(state));
 
 	// current state of the modal that is shown
 	const [state, setState] = useState<keyof typeof states>("information");
 	// initial values for Formik
-	const [initialValues, setInitialValues] = useState<Registration & { agreedToPolicy: boolean, registered: boolean }>({
+	const [initialValues, setInitialValues] = useState<Registration & { registered: boolean, statistics: Statistics | null }>({
 		contactMe: false,
 		systemType: "",
 		allowsStatistics: false,
@@ -66,20 +80,27 @@ const RegistrationModalContent = () => {
 		street: "",
 		streetNo: "",
 		email: "",
+		termsVersionAgreed: "",
 		agreedToPolicy: false,
+		dateModified: "",
+		dateCreated: "",
 		registered: false,
+		statistics: null,
 	});
 
-	const [statisticsSummary, setStatisticsSummary] = useState<{
-		general: { [key: string]: unknown },
-		statistics: { [key: string]: unknown },
-	}>();
+	useEffect(() => {
+		if (!registrationLoaded) {
+			dispatch(fetchRegistration());
+		}
+		if (!statisticsLoaded) {
+			dispatch(fetchStatistics());
+		}
+	}, [registrationLoaded, statisticsLoaded, dispatch]);
 
 	useEffect(() => {
-		fetchRegistrationInfos().then(r => console.log(r));
-		fetchStatisticSummary();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		setInitialValues(initialValues => ({ ...initialValues, ...registration, statistics: { ...statistics } }));
+	}, [registration, statistics]);
+
 
 	const onClickContinue = () => {
 		// if state is deleteSubmit then delete infos about adaptor else show next state
@@ -90,23 +111,13 @@ const RegistrationModalContent = () => {
 		}
 	};
 
-	const fetchRegistrationInfos = async () => {
-		const registrationInfo = await fetchAdopterRegistration();
-
-		// merge response into initial values for formik
-		setInitialValues({ ...initialValues, ...registrationInfo });
-	};
-
-	const fetchStatisticSummary = async () => {
-		const info = await fetchAdopterStatisticsSummary();
-
-		setStatisticsSummary(info);
-	};
 
 	const handleSubmit = (values: Registration) => {
 		// post request for adopter information
-		postRegistration(values)
+		postAdopterRegistration(values)
 			.then(() => {
+				// Refetch the registration data since otherwise what we just submitted does not show up if the user immediately returns to the modal
+				dispatch(fetchRegistration());
 				// show thank you state
 				return setState(states[state].nextState[0] as keyof typeof states);
 			})
@@ -616,7 +627,10 @@ const RegistrationModalContent = () => {
 							<p>{t("ADOPTER_REGISTRATION.MODAL.SUMMARY_STATE.GENERAL_HEADER")}</p>
 							<div className="scrollbox">
 								<pre>
-									{JSON.stringify(formik.values, null, "\t")}
+									{JSON.stringify(Object.fromEntries(
+										Object.entries(formik.values)
+										.filter(([key, _]) => key != "statistics"))
+									, null, "\t")}
 								</pre>
 							</div>
 							<br />
@@ -626,7 +640,7 @@ const RegistrationModalContent = () => {
 								<p>{t("ADOPTER_REGISTRATION.MODAL.SUMMARY_STATE.STATS_HEADER")}</p>
 								<div className="scrollbox">
 									<pre>
-										{JSON.stringify(statisticsSummary?.statistics, null, "\t")}
+										{JSON.stringify(formik.values.statistics, null, "\t")}
 									</pre>
 								</div>
 							</>

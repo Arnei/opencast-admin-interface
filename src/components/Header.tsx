@@ -27,9 +27,9 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
 import {
-  fetchRegistration,
-  fetchLatestToU,
-  fetchIsUpToDate,
+	fetchRegistration,
+	fetchLatestToU,
+	fetchIsUpToDate,
 } from "../slices/registrationSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { Tooltip } from "./shared/Tooltip";

@@ -21,6 +21,7 @@ import { removeNotificationWizardForm } from "../../../../slices/notificationSli
 import { useTranslation } from "react-i18next";
 import { formatWorkflowsForDropdown } from "../../../../utils/dropDownUtils";
 import ModalContent from "../../../shared/modals/ModalContent";
+import { setDefaultConfig } from "../../../../utils/workflowPanelUtils";
 
 type InitialValues = {
 	workflowDefinition: string;
@@ -66,16 +67,17 @@ const EventDetailsWorkflowSchedulingTab = ({
 	};
 
 	const setInitialValues = () => {
-		let initialConfig = undefined;
-
+		let configFromDatabase = undefined;
 		if (baseWorkflow.configuration) {
-			initialConfig = parseBooleanInObject(baseWorkflow.configuration);
+			configFromDatabase = parseBooleanInObject(baseWorkflow.configuration);
 		}
-
-		return {
-			workflowDefinition: "workflowId" in workflow && !!workflow.workflowId
+		const workflowId = "workflowId" in workflow && !!workflow.workflowId
 				? workflow.workflowId
-				: baseWorkflow.workflowId,
+				: baseWorkflow.workflowId;
+		const initialConfigValuesFromWorkflowDef = setDefaultConfig(workflowDefinitions, workflowId);
+		const initialConfig = { ...initialConfigValuesFromWorkflowDef, ...configFromDatabase };
+		return {
+			workflowDefinition: workflowId,
 			configuration: initialConfig,
 		};
 	};

@@ -16,9 +16,7 @@ import {
 	deleteAdopterRegistration,
 } from "../../slices/registrationSlice";
 import {
-	getRegistrationLoaded,
 	getRegistration,
-	getStatisticsLoaded,
 	getStatistics,
 } from "../../selectors/registrationSelectors";
 import ModalContent from "./modals/ModalContent";
@@ -57,9 +55,7 @@ const RegistrationModalContent = () => {
 	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 
-	const registrationLoaded = useAppSelector(state => getRegistrationLoaded(state));
 	const registration = useAppSelector(state => getRegistration(state));
-	const statisticsLoaded = useAppSelector(state => getStatisticsLoaded(state));
 	const statistics = useAppSelector(state => getStatistics(state));
 
 	// current state of the modal that is shown

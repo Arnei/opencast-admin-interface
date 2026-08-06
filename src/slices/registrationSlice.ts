@@ -43,7 +43,6 @@ export type Statistics = {
 export type RegistrationState = {
   registrationLoaded: boolean,
   registration: Registration,
-  statisticsLoaded: boolean,
   statistics: Statistics,
   latestToU: string,
   ableToRegister: boolean,
@@ -74,7 +73,6 @@ const initialState: RegistrationState = {
     dateModified: "",
     dateCreated: "",
   },
-  statisticsLoaded: false,
   statistics: {
     statistics: {
       /* the linter doesn't like these, but those are the names.  Should we change them?
@@ -197,7 +195,6 @@ const registrationSlice = createSlice({
         Statistics
       >) => {
         state.statistics = action.payload;
-        state.statisticsLoaded = true;
       });
   },
 });

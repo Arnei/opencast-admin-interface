@@ -7,7 +7,6 @@ export const getRegistrationLoaded = (state: RootState) => state.registration.re
 // Are we registered at all
 export const getRegistration = (state: RootState) => state.registration.registration;
 
-export const getStatisticsLoaded = (state: RootState) => state.registration.statisticsLoaded;
 // Gather the system statistics reportable to the registration server
 export const getStatistics = (state: RootState) => state.registration.statistics;
 

@@ -116,8 +116,6 @@ const RegistrationModalContent = () => {
 		// post request for adopter information
 		postAdopterRegistration(values)
 			.then(() => {
-				// Refetch the registration data since otherwise what we just submitted does not show up if the user immediately returns to the modal
-				dispatch(fetchRegistration());
 				// show thank you state
 				return setState(states[state].nextState[0] as keyof typeof states);
 			})

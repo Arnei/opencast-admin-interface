@@ -411,7 +411,7 @@ const MenuNotify = ({
 					<ButtonLikeAnchor
 						onClick={() => showAdoptersRegistrationModal()}
 					>
-						<span className="wide-text">Registration</span>
+						<span className="wide-text">{t("ADOPTER_REGISTRATION.NOTIFICATION.TYPE")}</span>
 						<span className="multi-value">{t("ADOPTER_REGISTRATION.NOTIFICATION.UNREGISTERED")}</span>
 					</ButtonLikeAnchor>
 				</li>
@@ -421,7 +421,7 @@ const MenuNotify = ({
 					<ButtonLikeAnchor
 						onClick={() => showAdoptersRegistrationModal()}
 					>
-						<span className="wide-text">Registration</span>
+						<span className="wide-text">{t("ADOPTER_REGISTRATION.NOTIFICATION.TYPE")}</span>
 						<span className="multi-value multi-value-yellow">{t("ADOPTER_REGISTRATION.NOTIFICATION.UPDATED_TOU")}</span>
 					</ButtonLikeAnchor>
 				</li>

@@ -481,6 +481,7 @@
 			}
 		},
 		"NOTIFICATION": {
+			"TYPE": "Registration",
 			"UNREGISTERED": "Unregistered",
 			"UPDATED_TOU": "Updated ToU"
 		}

@@ -128,36 +128,36 @@ export const fetchStatistics = createAppAsyncThunk("registration/statistics", as
 });
 
 
-  // post request for adopter information
-  export const postAdopterRegistration = async (
-    values: Registration,
-  ) => {
-    // build body
-    const body = new URLSearchParams();
-    body.append("contactMe", values.contactMe.toString());
-    body.append("systemType", values.systemType);
-    body.append("allowsStatistics", values.allowsStatistics.toString());
-    body.append("allowsErrorReports", values.allowsErrorReports.toString());
-    body.append("organisationName", values.organisationName);
-    body.append("departmentName", values.departmentName);
-    body.append("country", values.country);
-    body.append("postalCode", values.postalCode);
-    body.append("city", values.city);
-    body.append("firstName", values.firstName);
-    body.append("lastName", values.lastName);
-    body.append("street", values.street);
-    body.append("streetNo", values.streetNo);
-    body.append("email", values.email);
-    body.append("agreedToPolicy", values.agreedToPolicy.toString());
-    body.append("registered", "true");
+// post request for adopter information
+export const postAdopterRegistration = async (
+  values: Registration,
+) => {
+  // build body
+  const body = new URLSearchParams();
+  body.append("contactMe", values.contactMe.toString());
+  body.append("systemType", values.systemType);
+  body.append("allowsStatistics", values.allowsStatistics.toString());
+  body.append("allowsErrorReports", values.allowsErrorReports.toString());
+  body.append("organisationName", values.organisationName);
+  body.append("departmentName", values.departmentName);
+  body.append("country", values.country);
+  body.append("postalCode", values.postalCode);
+  body.append("city", values.city);
+  body.append("firstName", values.firstName);
+  body.append("lastName", values.lastName);
+  body.append("street", values.street);
+  body.append("streetNo", values.streetNo);
+  body.append("email", values.email);
+  body.append("agreedToPolicy", values.agreedToPolicy.toString());
+  body.append("registered", "true");
 
-    // save adopter information and return next state
-    await axios.post("/admin-ng/adopter/registration", body, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-  };
+  // save adopter information and return next state
+  await axios.post("/admin-ng/adopter/registration", body, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};
 
 // delete adopter information
 export const deleteAdopterRegistration = async () => {

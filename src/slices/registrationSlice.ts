@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { createAppAsyncThunk } from "../createAsyncThunkWithTypes";
 
 export type Registration = {
@@ -101,10 +101,23 @@ const initialState: RegistrationState = {
   error: false,
 };
 
+interface ApiError {
+  message: string,
+  status: number,
+}
+
 // This is the registration itself
-export const fetchRegistration = createAppAsyncThunk("registration/fetchRegistration", async () => {
+export const fetchRegistration = createAppAsyncThunk<Registration, void, { rejectValue: ApiError }>("registration/fetchRegistration", async (_, { rejectWithValue }) => {
+  try {
   const res = await axios.get<Registration>("/admin-ng/adopter/registration");
   return res.data;
+  } catch (err) {
+    const error = err as AxiosError<ApiError>;
+    if (!error.response) {
+      throw err; // Throws a generic network/runtime error if no response exists
+    }
+    return rejectWithValue(error.response.data);
+  }
 });
 
 // This is the latest ToU ID.  It's a string like APRIL_2020.
@@ -179,6 +192,14 @@ const registrationSlice = createSlice({
       >) => {
         state.registration = action.payload;
         state.registrationLoaded = true;
+      })
+      .addCase(fetchRegistration.rejected, (state, action) => {
+        // The endpoint returns 404 if there's no registration data
+        if (action.payload?.status === 404) {
+          state.registrationLoaded = true;
+        } else {
+          state.error = true;
+        }
       })
       .addCase(fetchLatestToU.fulfilled, (state, action: PayloadAction<
         string

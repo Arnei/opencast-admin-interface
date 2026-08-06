@@ -412,7 +412,7 @@ const MenuNotify = ({
 						onClick={() => showAdoptersRegistrationModal()}
 					>
 						<span className="wide-text">Registration</span>
-						<span className="multi-value multi-value-yellow">{t("ADOPTER_REGISTRATION.NOTIFICATION.UNREGISTERED")}</span>
+						<span className="multi-value">{t("ADOPTER_REGISTRATION.NOTIFICATION.UNREGISTERED")}</span>
 					</ButtonLikeAnchor>
 				</li>
 			}

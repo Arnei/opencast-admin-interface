@@ -89,13 +89,9 @@ const RegistrationModalContent = () => {
 	});
 
 	useEffect(() => {
-		if (!registrationLoaded) {
-			dispatch(fetchRegistration());
-		}
-		if (!statisticsLoaded) {
-			dispatch(fetchStatistics());
-		}
-	}, [registrationLoaded, statisticsLoaded, dispatch]);
+		dispatch(fetchRegistration());
+		dispatch(fetchStatistics());
+	}, [dispatch]);
 
 	useEffect(() => {
 		setInitialValues(initialValues => ({ ...initialValues, ...registration, statistics: { ...statistics } }));

@@ -61,7 +61,7 @@ const RegistrationModalContent = () => {
 	// current state of the modal that is shown
 	const [state, setState] = useState<keyof typeof states>("information");
 	// initial values for Formik
-	const [initialValues, setInitialValues] = useState<Registration & { registered: boolean, statistics: Statistics | null }>({
+	const [initialValues, setInitialValues] = useState<Registration & { registered: boolean }>({
 		contactMe: false,
 		systemType: "",
 		allowsStatistics: false,
@@ -81,7 +81,12 @@ const RegistrationModalContent = () => {
 		dateModified: "",
 		dateCreated: "",
 		registered: false,
-		statistics: null,
+	});
+
+	const [statisticsValues, setStatistics] = useState<Statistics>({
+		statistics: {
+			version: "",
+		},
 	});
 
 	useEffect(() => {
@@ -90,9 +95,12 @@ const RegistrationModalContent = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		setInitialValues(initialValues => ({ ...initialValues, ...registration, statistics: { ...statistics } }));
-	}, [registration, statistics]);
+		setInitialValues(initialValues => ({ ...initialValues, ...registration }));
+	}, [registration]);
 
+	useEffect(() => {
+		setStatistics(statisticsValues => ({ ...statisticsValues, ...statistics }));
+	}, [statistics]);
 
 	const onClickContinue = () => {
 		// if state is deleteSubmit then delete infos about adaptor else show next state
@@ -619,10 +627,7 @@ const RegistrationModalContent = () => {
 							<p>{t("ADOPTER_REGISTRATION.MODAL.SUMMARY_STATE.GENERAL_HEADER")}</p>
 							<div className="scrollbox">
 								<pre>
-									{JSON.stringify(Object.fromEntries(
-										Object.entries(formik.values)
-										.filter(([key, _]) => key != "statistics"))
-									, null, "\t")}
+									{JSON.stringify(formik.values, null, "\t")}
 								</pre>
 							</div>
 							<br />
@@ -632,7 +637,7 @@ const RegistrationModalContent = () => {
 								<p>{t("ADOPTER_REGISTRATION.MODAL.SUMMARY_STATE.STATS_HEADER")}</p>
 								<div className="scrollbox">
 									<pre>
-										{JSON.stringify(formik.values.statistics, null, "\t")}
+										{JSON.stringify(statisticsValues, null, "\t")}
 									</pre>
 								</div>
 							</>

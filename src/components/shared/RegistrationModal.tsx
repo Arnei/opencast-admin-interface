@@ -61,7 +61,7 @@ const RegistrationModalContent = () => {
 	// current state of the modal that is shown
 	const [state, setState] = useState<keyof typeof states>("information");
 	// initial values for Formik
-	const [initialValues, setInitialValues] = useState<Registration & { registered: boolean }>({
+	const [registrationValues, setRegistration] = useState<Registration & { registered: boolean }>({
 		contactMe: false,
 		systemType: "",
 		allowsStatistics: false,
@@ -95,7 +95,7 @@ const RegistrationModalContent = () => {
 	}, [dispatch]);
 
 	useEffect(() => {
-		setInitialValues(initialValues => ({ ...initialValues, ...registration }));
+		setRegistration(registrationValues => ({ ...registrationValues, ...registration }));
 	}, [registration]);
 
 	useEffect(() => {
@@ -277,7 +277,7 @@ const RegistrationModalContent = () => {
 
 		{/* shows registration form containing adaptor information */}
 		<Formik
-			initialValues={initialValues}
+			initialValues={registrationValues}
 			enableReinitialize
 			validationSchema={AdopterRegistrationSchema}
 			onSubmit={values => handleSubmit(values)}

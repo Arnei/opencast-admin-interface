@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	dropDownSpacingTheme,
@@ -14,6 +14,17 @@ export type DropDownOption<T> = {
 	label: string,
 	value: T | "",
 	order?: number
+}
+
+function MenuListRow({
+	index,
+	names,
+	style,
+}: RowComponentProps<{
+	names: string[];
+}>) {
+	const name = names[index];
+	return <div style={style}>{name}</div>;
 }
 
 /**
@@ -132,7 +143,7 @@ const DropDown = <T, >({
 	/**
 	 * Custom component for list virtualization
 	 */
-	const MenuList = (props: MenuListProps<DropDownOption<T>, false>) => {
+	const MenuList = useCallback((props: MenuListProps<DropDownOption<T>, false>) => {
 		const { children, maxHeight } = props;
 
 		return Array.isArray(children) ? (
@@ -151,18 +162,7 @@ const DropDown = <T, >({
 				/>
 			</div>
 		) : null;
-	};
-
-	function MenuListRow({
-		index,
-		names,
-		style,
-	}: RowComponentProps<{
-		names: string[];
-	}>) {
-		const name = names[index];
-		return <div style={style}>{name}</div>;
-	}
+	}, [itemHeight]);
 
 	const filterOptions = (inputValue: string) => {
 		if (options) {

@@ -217,7 +217,7 @@ const DropDown = <T, >({
 		onMenuClose: () => openMenu(false),
 		isDisabled: disabled,
 		openMenuOnFocus: openMenuOnFocus,
-		menuPlacement: menuPlacement ?? "auto",
+		menuPlacement: menuPlacement,
 		components: { MenuList },
 	};
 

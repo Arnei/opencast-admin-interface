@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	dropDownSpacingTheme,
@@ -20,7 +20,7 @@ export type DropDownOption<T> = {
  * This component renders a dropdown menu using react-select
  */
 const DropDown = <T, >({
-	ref = React.createRef<SelectInstance<DropDownOption<T>, boolean, GroupBase<DropDownOption<T>>>>(),
+	ref,
 	value,
 	text,
 	options,
@@ -69,7 +69,8 @@ const DropDown = <T, >({
 }) => {
 	const { t } = useTranslation();
 
-	const selectRef = ref;
+	const internalRef = useRef<SelectInstance<DropDownOption<T>, boolean, GroupBase<DropDownOption<T>>> | null>(null);
+	const selectRef = ref ?? internalRef;
 
 	const style = dropDownStyle<T>(customCSS ?? {});
 

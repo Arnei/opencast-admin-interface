@@ -141,7 +141,7 @@ const Header = () => {
 
 
 		// Fetching health status information at mount
-		loadHealthStatus().then(r => console.info(r));
+		loadHealthStatus();
 		// Fetch health status every minute
 		const interval = setInterval(() => { dispatch(fetchHealthStatus()); }, 5000);
 

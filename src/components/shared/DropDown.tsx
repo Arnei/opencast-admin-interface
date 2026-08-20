@@ -91,10 +91,11 @@ const DropDown = <T, >({
 		required: boolean,
 	) => {
 		// Translate
-		// Translating is expensive, skip it if it is not required
-		if (!skipTranslate) {
-			unformattedOptions = unformattedOptions.map(option => ({ ...option, label: t(option.label as ParseKeys) }));
-		}
+		// Translating is expensive, skip it if it is not required.
+		// Either way, copy the array so the input is not transmuted later.
+		unformattedOptions = skipTranslate
+			? [...unformattedOptions]
+			: unformattedOptions.map(option => ({ ...option, label: t(option.label as ParseKeys) }));
 
 		// Add "No value" option
 		if (!required) {

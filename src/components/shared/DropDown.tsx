@@ -173,14 +173,23 @@ const DropDown = <T, >({
 		return [];
 	};
 
+	const debounceTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+	useEffect(() => {
+		return () => clearTimeout(debounceTimeoutRef.current);
+	}, []);
+
 	const loadOptionsAsync = (inputValue: string, callback: (options: DropDownOption<T>[]) => void) => {
-		const timeout = async () => {
-			callback(formatOptions(
-				fetchOptions ? await fetchOptions(inputValue) : filterOptions(inputValue),
-				required,
-			));
-		};
-		setTimeout(() => { timeout(); }, 1000);
+		clearTimeout(debounceTimeoutRef.current);
+		debounceTimeoutRef.current = setTimeout(() => {
+			const timeout = async () => {
+				callback(formatOptions(
+					fetchOptions ? await fetchOptions(inputValue) : filterOptions(inputValue),
+					required,
+				));
+			};
+			void timeout();
+		}, 1000);
 	};
 
 	const loadOptions = (

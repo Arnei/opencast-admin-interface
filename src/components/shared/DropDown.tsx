@@ -16,6 +16,9 @@ export type DropDownOption<T> = {
 	order?: number
 }
 
+// How long to wait after the user stops typing before firing a fetchOptions() search request.
+const SEARCH_DEBOUNCE_MS = 300;
+
 function MenuListRow({
 	index,
 	names,
@@ -189,7 +192,7 @@ const DropDown = <T, >({
 				));
 			};
 			void timeout();
-		}, 1000);
+		}, SEARCH_DEBOUNCE_MS);
 	};
 
 	const loadOptions = (

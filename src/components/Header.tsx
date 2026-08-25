@@ -7,6 +7,12 @@ import opencastLogo from "../img/opencast-white.svg?url";
 import { setSpecificServiceFilter } from "../slices/tableFilterSlice";
 import { getErrorCount, getHealthStatus } from "../selectors/healthSelectors";
 import {
+	getRegistrationLoaded,
+	getRegistration,
+	getAbleToRegister,
+	getAgreedLatestToU,
+} from "../selectors/registrationSelectors";
+import {
 	getOrgProperties,
 	getUserBasicInfo,
 	getUserInformation,
@@ -20,6 +26,11 @@ import HotKeyCheatSheet from "./shared/HotKeyCheatSheet";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useAppDispatch, useAppSelector } from "../store";
 import { HealthStatus, fetchHealthStatus } from "../slices/healthSlice";
+import {
+	fetchRegistration,
+	fetchLatestToU,
+	fetchIsUpToDate,
+} from "../slices/registrationSlice";
 import { UserInfoState } from "../slices/userInfoSlice";
 import { HiOutlineTranslate } from "react-icons/hi";
 import ButtonLikeAnchor from "./shared/ButtonLikeAnchor";
@@ -53,7 +64,11 @@ const Header = () => {
 
 	const healthStatus = useAppSelector(state => getHealthStatus(state));
 	const errorCounter = useAppSelector(state => getErrorCount(state));
+	const isAbleToRegister = useAppSelector(state => getAbleToRegister(state));
+	const agreedLatestToU = useAppSelector(state => getAgreedLatestToU(state));
 	const user = useAppSelector(state => getUserInformation(state));
+	const registrationLoaded = useAppSelector(state => getRegistrationLoaded(state));
+	const registration = useAppSelector(state => getRegistration(state));
 	const orgProperties = useAppSelector(state => getOrgProperties(state));
 	const displayTerms = (orgProperties["org.opencastproject.admin.display_terms"] || "false").toLowerCase() === "true";
 
@@ -63,6 +78,10 @@ const Header = () => {
 
 	const hideMenuHelp = () => {
 		setMenuHelp(false);
+	};
+
+	const hideNotificationMenu = () => {
+		setMenuNotify(false);
 	};
 
 	const showRegistrationModal = () => {
@@ -137,18 +156,24 @@ const Header = () => {
 	}, []);
 
 	useEffect(() => {
-  			if (!user) { return; }
+		dispatch(fetchRegistration());
+		dispatch(fetchLatestToU());
+		dispatch(fetchIsUpToDate());
+	}, [dispatch]);
 
-  			const isAdmin = user.isAdmin || user.isOrgAdmin;
-	        const isLocalhost = window.location.hostname === "localhost";
-  			const lastDismissed = localStorage.getItem("adopterModalDismissed");
-  			const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-  			const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
+	useEffect(() => {
+		if (!user) { return; }
 
-  			if (isAdmin && !isLocalhost && dismissedLongEnough) {
-  			  showRegistrationModal();
-  			}
-			}, [user]);
+		const isAdmin = user.isAdmin || user.isOrgAdmin;
+		const isLocalhost = window.location.hostname === "localhost";
+		const lastDismissed = localStorage.getItem("adopterModalDismissed");
+		const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+		const dismissedLongEnough = !lastDismissed || Date.now() - parseInt(lastDismissed) > THIRTY_DAYS;
+
+		if (isAdmin && !isLocalhost && dismissedLongEnough && registrationLoaded && registration == null) {
+		  showRegistrationModal();
+		}
+	}, [user, registration, registrationLoaded]);
 	return (
 		<>
 			<header className="primary-header">
@@ -208,7 +233,7 @@ const Header = () => {
 						>
 							<BaseButton onClick={() => setMenuNotify(!displayMenuNotify)} className="nav-dd-element" tooltipText={"SYSTEM_NOTIFICATIONS"} data-tooltip-hidden={displayMenuNotify}>
 								<LuBell className="header-icon"/>
-								{errorCounter !== 0 && (
+								{(errorCounter !== 0 || !agreedLatestToU || !isAbleToRegister) && (
 									<span id="error-count" className="badge">
 										{errorCounter}
 									</span>
@@ -218,6 +243,10 @@ const Header = () => {
 							{displayMenuNotify && (
 								<MenuNotify
 									healthStatus={healthStatus}
+									registering={isAbleToRegister}
+									updatedToU={agreedLatestToU}
+									showRegistrationModal={showRegistrationModal}
+									hideNotificationMenu={hideNotificationMenu}
 								/>
 							)}
 						</div>
@@ -319,9 +348,18 @@ const MenuLang = ({ handleChangeLanguage }: { handleChangeLanguage: (code: strin
 
 const MenuNotify = ({
 	healthStatus,
+	registering,
+	updatedToU,
+	showRegistrationModal,
+	hideNotificationMenu,
 }: {
 	healthStatus: HealthStatus[],
+	registering: boolean,
+	updatedToU: boolean,
+	showRegistrationModal: () => void,
+	hideNotificationMenu: () => void,
 }) => {
+	const { t } = useTranslation();
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
@@ -330,6 +368,13 @@ const MenuNotify = ({
 		await dispatch(setSpecificServiceFilter({ filter: "actions", filterValue: "true" }));
 		navigate("/systems/services");
 	};
+
+	// show Adopter Registration Modal and hide drop down
+	const showAdoptersRegistrationModal = () => {
+		showRegistrationModal();
+		hideNotificationMenu();
+	};
+
 
 	return (
 		<ul className="dropdown-ul">
@@ -354,6 +399,26 @@ const MenuNotify = ({
 					)}
 				</li>
 			))}
+			{!registering &&
+				<li>
+					<ButtonLikeAnchor
+						onClick={() => showAdoptersRegistrationModal()}
+					>
+						<span className="wide-text">{t("ADOPTER_REGISTRATION.NOTIFICATION.TYPE")}</span>
+						<span className="multi-value">{t("ADOPTER_REGISTRATION.NOTIFICATION.UNREGISTERED")}</span>
+					</ButtonLikeAnchor>
+				</li>
+			}
+			{registering && !updatedToU &&
+				<li>
+					<ButtonLikeAnchor
+						onClick={() => showAdoptersRegistrationModal()}
+					>
+						<span className="wide-text">{t("ADOPTER_REGISTRATION.NOTIFICATION.TYPE")}</span>
+						<span className="multi-value">{t("ADOPTER_REGISTRATION.NOTIFICATION.UPDATED_TOU")}</span>
+					</ButtonLikeAnchor>
+				</li>
+			}
 		</ul>
 	);
 };

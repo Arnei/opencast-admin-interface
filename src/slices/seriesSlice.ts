@@ -129,14 +129,14 @@ const initialState: SeriesState = {
 };
 
 // fetch series from server
-export const fetchSeries = createAppAsyncThunk("series/fetchSeries", async (_, { getState }) => {
+export const fetchSeries = createAppAsyncThunk("series/fetchSeries", async (_, { getState, signal }) => {
 	const state = getState();
 	const params = getURLParams(state, "series");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
 	// /series.json?sortorganizer={sortorganizer}&sort={sort}&filter={filter}&offset=0&limit=100
-	const res = await axios.get<FetchSeries>("/admin-ng/series/series.json", { params: params });
+	const res = await axios.get<FetchSeries>("/admin-ng/series/series.json", { params: params, signal });
 	return res.data;
 });
 
@@ -448,6 +448,9 @@ const seriesSlice = createSlice({
 				state.results = series.results;
 			})
 			.addCase(fetchSeries.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					return;
+				}
 				state.status = "failed";
 				state.error = action.error;
 			})

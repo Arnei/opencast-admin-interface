@@ -24,11 +24,14 @@ import {
 	selectRowById,
 	rowsSelectors,
 	resetTableProperties,
+	Resource,
 } from "../../slices/tableSlice";
 import {
+	cancelResourceFetch,
 	changeAllSelected,
 	changeRowSelection,
 	goToPage,
+	loadResourcePage,
 	updatePages,
 } from "../../thunks/tableThunks";
 import cn from "classnames";
@@ -56,10 +59,12 @@ export type TemplateMap<T> = {
  */
 const Table = <T extends Row, >({
 	templateMap,
+	resource,
 	fetchResource,
 	loadResourceIntoTable,
 }: {
 	templateMap: TemplateMap<T>
+	resource: Resource,
 	fetchResource: GenericAsyncThunk,
 	loadResourceIntoTable: () => AppThunk,
 }) => {
@@ -71,29 +76,24 @@ const Table = <T extends Row, >({
 	const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		// State variable for interrupting the load function
-		let allowLoadIntoTable = true;
-
 		// Clear table of previous data
 		dispatch(resetTableProperties());
 
 		// Load resource on mount
-		const loadResource = async () => {
-			// Fetching resources from server
-			await dispatch(fetchResource());
+		dispatch(loadResourcePage(resource, fetchResource, loadResourceIntoTable));
 
-			// Load resources into table
-			if (allowLoadIntoTable) {
-				dispatch(loadResourceIntoTable());
-			}
-		};
-		loadResource();
-
-		// Fetch resources every minute
-		const fetchResourceInterval = setInterval(() => { loadResource(); }, 5000);
+		// Poll for new data every 5 seconds. Auto-refresh yields (skips a tick)
+		// if a fetch triggered elsewhere (filters, pagination) is still in
+		// flight for this resource, rather than racing it.
+		const fetchResourceInterval = setInterval(() => {
+			dispatch(loadResourcePage(resource, fetchResource, loadResourceIntoTable, { auto: true }));
+		}, 5000);
 
 		return () => {
-			allowLoadIntoTable = false;
+			// Cancel whatever is in flight so a response can't arrive after
+			// unmount and load stale data into what may now be a different
+			// resource's table.
+			cancelResourceFetch(resource);
 			clearInterval(fetchResourceInterval);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps

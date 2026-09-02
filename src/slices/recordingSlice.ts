@@ -51,7 +51,7 @@ const initialState: RecordingState = {
 };
 
 // fetch recordings from server
-export const fetchRecordings = createAppAsyncThunk("recordings/fetchRecordings", async (flag: string | undefined, { getState }) => {
+export const fetchRecordings = createAppAsyncThunk("recordings/fetchRecordings", async (flag: string | undefined, { getState, signal }) => {
 	type Results = {
 		Name: string,
 		Status: string,
@@ -71,6 +71,7 @@ export const fetchRecordings = createAppAsyncThunk("recordings/fetchRecordings",
 	if (flag === "inputs") {
 		res = await axios.get<FetchRecordings>(
 			"/admin-ng/capture-agents/agents.json?inputs=true",
+			{ signal },
 			);
 	} else {
 		const state = getState();
@@ -79,6 +80,7 @@ export const fetchRecordings = createAppAsyncThunk("recordings/fetchRecordings",
 		// /agents.json?filter={filter}&limit=100&offset=0&inputs=false&sort={sort}
 		res = await axios.get<FetchRecordings>("/admin-ng/capture-agents/agents.json", {
 			params: params,
+			signal,
 		});
 	}
 
@@ -161,6 +163,9 @@ const recordingSlice = createSlice({
 				state.results = recordings.results;
 			})
 			.addCase(fetchRecordings.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					return;
+				}
 				state.status = "failed";
 				state.error = action.error;
 			});

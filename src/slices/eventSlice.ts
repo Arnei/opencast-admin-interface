@@ -248,7 +248,7 @@ export type FetchEvents = {
 };
 
 // fetch events from server
-export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, { getState }) => {
+export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, { getState, signal }) => {
 	const state = getState();
 	let params: ReturnType<typeof getURLParams> & { getComments?: boolean } = getURLParams(state, "events");
 
@@ -263,7 +263,7 @@ export const fetchEvents = createAppAsyncThunk("events/fetchEvents", async (_, {
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get<FetchEvents>("/admin-ng/event/events.json", { params: params });
+	const res = await axios.get<FetchEvents>("/admin-ng/event/events.json", { params: params, signal });
 	const response = res.data;
 
 	for (let i = 0; response.results.length > i; i++) {
@@ -1189,6 +1189,11 @@ const eventSlice = createSlice({
 				state.results = events.results;
 			})
 			.addCase(fetchEvents.rejected, (state, action) => {
+				// A superseded request being cancelled isn't a real failure;
+				// leave the table showing whatever a newer request loads.
+				if (action.meta.aborted) {
+					return;
+				}
 				state.status = "failed";
 				state.results = [];
 				state.error = action.error;

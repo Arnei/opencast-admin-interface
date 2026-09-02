@@ -35,10 +35,63 @@ import { fetchRecordings, setRecordingsColumns } from "../slices/recordingSlice"
 import { setGroupColumns } from "../slices/groupSlice";
 import { fetchAcls, setAclColumns } from "../slices/aclSlice";
 import { AppDispatch, AppThunk, RootState } from "../store";
+import { GenericAsyncThunk } from "../utils/utils";
+import { Resource } from "../slices/tableSlice";
 
 /**
  * This file contains methods/thunks used to manage the table in the main view and its state changes
  * */
+
+// Tracks the in-flight fetch (if any) per resource type, keyed by identity of
+// the dispatched thunk action so staleness can be checked without a separate
+// counter. Lives outside Redux since it is pure request-lifecycle bookkeeping,
+// not application state, and needs to be reachable from every call site that
+// can trigger a reload for a resource (auto-refresh, pagination, filters,
+// filter profiles) rather than just the component that happens to dispatch it.
+const inFlightRequests = new Map<Resource, { abort:() => void }>();
+
+/**
+ * Single entry point for fetching a resource and loading it into the table.
+ * Coordinates with any other in-flight fetch for the same resource:
+ * - `auto` (unattended, e.g. the polling interval) yields if a fetch is
+ *   already running, instead of piling up requests.
+ * - Anything else (user-initiated: filters, pagination, mount) always runs,
+ *   cancelling whatever was in flight so its response can no longer land
+ *   after this one and clobber it.
+ */
+export const loadResourcePage = (
+	resource: Resource,
+	fetchResource: GenericAsyncThunk,
+	loadResourceIntoTable: () => AppThunk,
+	opts: { auto?: boolean } = {},
+): AppThunk<Promise<void>> => async dispatch => {
+	const existing = inFlightRequests.get(resource);
+
+	if (opts.auto && existing) {
+		return;
+	}
+	existing?.abort();
+
+	const action = dispatch(fetchResource());
+	inFlightRequests.set(resource, action);
+
+	const result = await action;
+
+	if (inFlightRequests.get(resource) === action) {
+		inFlightRequests.delete(resource);
+	}
+
+	if (result.meta.requestStatus === "fulfilled") {
+		dispatch(loadResourceIntoTable());
+	}
+};
+
+// Cancels the in-flight fetch for a resource, if any. Used when a component
+// that owns a resource's polling unmounts, so a response that arrives after
+// unmount can't dispatch stale data into what is now a different resource.
+export const cancelResourceFetch = (resource: Resource) => {
+	inFlightRequests.get(resource)?.abort();
+};
 
 // Method to load events into the table
 export const loadEventsIntoTable = (): AppThunk => (dispatch, getState) => {
@@ -313,8 +366,43 @@ export const loadThemesIntoTable = (): AppThunk => (dispatch, getState) => {
 	dispatch(loadResourceIntoTable(tableData));
 };
 
-// Navigate between pages
-export const goToPage = (pageNumber: number) => async (dispatch: AppDispatch, getState: () => RootState) => {
+// Resolves the fetch/load-into-table pair for the table's current resource
+// type. Shared by every thunk below that needs to (re)load the current page.
+const currentResourceLoader = (state: RootState): {
+	resource: Resource,
+	fetchResource: GenericAsyncThunk,
+	loadResourceIntoTable: () => AppThunk,
+} => {
+	const resource = getResourceType(state);
+	switch (resource) {
+		case "events":
+			return { resource, fetchResource: fetchEvents, loadResourceIntoTable: loadEventsIntoTable };
+		case "series":
+			return { resource, fetchResource: fetchSeries, loadResourceIntoTable: loadSeriesIntoTable };
+		case "recordings":
+			return { resource, fetchResource: fetchRecordings as GenericAsyncThunk, loadResourceIntoTable: loadRecordingsIntoTable };
+		case "jobs":
+			return { resource, fetchResource: fetchJobs, loadResourceIntoTable: loadJobsIntoTable };
+		case "servers":
+			return { resource, fetchResource: fetchServers, loadResourceIntoTable: loadServersIntoTable };
+		case "services":
+			return { resource, fetchResource: fetchServices, loadResourceIntoTable: loadServicesIntoTable };
+		case "users":
+			return { resource, fetchResource: fetchUsers, loadResourceIntoTable: loadUsersIntoTable };
+		case "groups":
+			return { resource, fetchResource: fetchGroups, loadResourceIntoTable: loadGroupsIntoTable };
+		case "acls":
+			return { resource, fetchResource: fetchAcls, loadResourceIntoTable: loadAclsIntoTable };
+		case "themes":
+			return { resource, fetchResource: fetchThemes, loadResourceIntoTable: loadThemesIntoTable };
+	}
+};
+
+// Navigate between pages. This is also the one place all filter-driven
+// reloads (applying/removing a filter, picking a filter profile) go through:
+// they reset to page one and call this, instead of each separately
+// re-triggering their own fetch, which used to fire two requests per change.
+export const goToPage = (pageNumber: number): AppThunk<Promise<void>> => async (dispatch, getState) => {
 	dispatch(deselectAll());
 	dispatch(setOffset(pageNumber));
 
@@ -326,63 +414,12 @@ export const goToPage = (pageNumber: number) => async (dispatch: AppDispatch, ge
 		dispatch(setPageActive(offset ? pages[offset].number : pageNumber));
 	}
 
-	// Get resources of page and load them into table
-	switch (getResourceType(state)) {
-		case "events": {
-			await dispatch(fetchEvents());
-			dispatch(loadEventsIntoTable());
-			break;
-		}
-		case "series": {
-			await dispatch(fetchSeries());
-			dispatch(loadSeriesIntoTable());
-			break;
-		}
-		case "recordings": {
-			await dispatch(fetchRecordings());
-			dispatch(loadRecordingsIntoTable());
-			break;
-		}
-		case "jobs": {
-			await dispatch(fetchJobs());
-			dispatch(loadJobsIntoTable());
-			break;
-		}
-		case "servers": {
-			await dispatch(fetchServers());
-			dispatch(loadServersIntoTable());
-			break;
-		}
-		case "services": {
-			await dispatch(fetchServices());
-			dispatch(loadServicesIntoTable());
-			break;
-		}
-		case "users": {
-			await dispatch(fetchUsers());
-			dispatch(loadUsersIntoTable());
-			break;
-		}
-		case "groups": {
-			await dispatch(fetchGroups());
-			dispatch(loadGroupsIntoTable());
-			break;
-		}
-		case "acls": {
-			await dispatch(fetchAcls());
-			dispatch(loadAclsIntoTable());
-			break;
-		}
-		case "themes": {
-			await dispatch(fetchThemes());
-			dispatch(loadThemesIntoTable());
-			break;
-		}
-	}
+	const { resource, fetchResource, loadResourceIntoTable } = currentResourceLoader(getState());
+	await dispatch(loadResourcePage(resource, fetchResource, loadResourceIntoTable));
 };
 
 // Update pages for example if page size was changed
-export const updatePages = () => async (dispatch: AppDispatch, getState: () => RootState) => {
+export const updatePages = (): AppThunk<Promise<void>> => async (dispatch, getState) => {
 	const state = getState();
 
 	const pagination = getTablePagination(state);
@@ -394,59 +431,8 @@ export const updatePages = () => async (dispatch: AppDispatch, getState: () => R
 
 	dispatch(setPages(pages));
 
-	// Get resources of page and load them into table
-	switch (getResourceType(state)) {
-		case "events": {
-			await dispatch(fetchEvents());
-			dispatch(loadEventsIntoTable());
-			break;
-		}
-		case "series": {
-			await dispatch(fetchSeries());
-			dispatch(loadSeriesIntoTable());
-			break;
-		}
-		case "recordings": {
-			await dispatch(fetchRecordings());
-			dispatch(loadRecordingsIntoTable());
-			break;
-		}
-		case "jobs": {
-			await dispatch(fetchJobs());
-			dispatch(loadJobsIntoTable());
-			break;
-		}
-		case "servers": {
-			await dispatch(fetchServers());
-			dispatch(loadServersIntoTable());
-			break;
-		}
-		case "services": {
-			await dispatch(fetchServices());
-			dispatch(loadServicesIntoTable());
-			break;
-		}
-		case "users": {
-			await dispatch(fetchUsers());
-			dispatch(loadUsersIntoTable());
-			break;
-		}
-		case "groups": {
-			await dispatch(fetchGroups());
-			dispatch(loadGroupsIntoTable());
-			break;
-		}
-		case "acls": {
-			await dispatch(fetchAcls());
-			dispatch(loadAclsIntoTable());
-			break;
-		}
-		case "themes": {
-			await dispatch(fetchThemes());
-			dispatch(loadThemesIntoTable());
-			break;
-		}
-	}
+	const { resource, fetchResource, loadResourceIntoTable } = currentResourceLoader(getState());
+	await dispatch(loadResourcePage(resource, fetchResource, loadResourceIntoTable));
 };
 
 // Select all rows on table page

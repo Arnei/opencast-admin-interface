@@ -71,13 +71,13 @@ const initialState: UsersState = {
 };
 
 // fetch users from server
-export const fetchUsers = createAppAsyncThunk("users/fetchUsers", async (_, { getState }) => {
+export const fetchUsers = createAppAsyncThunk("users/fetchUsers", async (_, { getState, signal }) => {
 	const state = getState();
 	const params = getURLParams(state, "users");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
-	const res = await axios.get<FetchUsers>("/admin-ng/users/users.json", { params: params });
+	const res = await axios.get<FetchUsers>("/admin-ng/users/users.json", { params: params, signal });
 	return res.data;
 });
 
@@ -166,6 +166,9 @@ const usersSlice = createSlice({
 				state.results = users.results;
 			})
 			.addCase(fetchUsers.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					return;
+				}
 				state.status = "failed";
 				state.results = [];
 				state.error = action.error;

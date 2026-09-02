@@ -72,14 +72,14 @@ const initialState: ThemeState = {
 };
 
 // fetch themes from server
-export const fetchThemes = createAppAsyncThunk("theme/fetchThemes", async (_, { getState }) => {
+export const fetchThemes = createAppAsyncThunk("theme/fetchThemes", async (_, { getState, signal }) => {
 	const state = getState();
 	const params = getURLParams(state, "themes");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
   // /themes.json?limit=0&offset=0&filter={filter}&sort={sort}
-	const res = await axios.get<FetchThemes>("/admin-ng/themes/themes.json", { params: params });
+	const res = await axios.get<FetchThemes>("/admin-ng/themes/themes.json", { params: params, signal });
 	return res.data;
 });
 
@@ -169,6 +169,9 @@ const themeSlice = createSlice({
 				state.results = acls.results;
 			})
 			.addCase(fetchThemes.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					return;
+				}
 				state.status = "failed";
 				state.error = action.error;
 			});

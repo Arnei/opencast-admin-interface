@@ -56,14 +56,14 @@ const initialState: ServerState = {
 };
 
 // fetch servers from server
-export const fetchServers = createAppAsyncThunk("servers/fetchServers", async (_, { getState }) => {
+export const fetchServers = createAppAsyncThunk("servers/fetchServers", async (_, { getState, signal }) => {
 	const state = getState();
 	const params = getURLParams(state, "servers");
 	// Just make the async request here, and return the response.
 	// This will automatically dispatch a `pending` action first,
 	// and then `fulfilled` or `rejected` actions based on the promise.
   // /servers.json?limit=0&offset=0&filter={filter}&sort={sort}
-	const res = await axios.get<FetchServers>("/admin-ng/server/servers.json", { params: params });
+	const res = await axios.get<FetchServers>("/admin-ng/server/servers.json", { params: params, signal });
 	return res.data;
 });
 
@@ -113,6 +113,9 @@ const serverSlice = createSlice({
 				state.results = servers.results;
 			})
 			.addCase(fetchServers.rejected, (state, action) => {
+				if (action.meta.aborted) {
+					return;
+				}
 				state.status = "failed";
 				state.error = action.error;
 			});

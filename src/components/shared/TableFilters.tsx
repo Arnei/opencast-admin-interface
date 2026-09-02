@@ -19,9 +19,9 @@ import {
 import TableFilterProfiles from "./TableFilterProfiles";
 import { availableHotkeys } from "../../configs/hotkeysConfig";
 import { useHotkeys } from "react-hotkeys-hook";
-import { AppThunk, useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { renderValidDate } from "../../utils/dateUtils";
-import { GenericAsyncThunk, getCurrentLanguageInformation } from "../../utils/utils";
+import { getCurrentLanguageInformation } from "../../utils/utils";
 import DropDown from "./DropDown";
 import ButtonLikeAnchor from "./ButtonLikeAnchor";
 import { ParseKeys } from "i18next";
@@ -37,12 +37,8 @@ import i18n from "../../i18n/i18n";
  * This component renders the table filters in the upper right corner of the table
  */
 const TableFilters = ({
-	loadResource,
-	loadResourceIntoTable,
 	resource,
 }: {
-	loadResource: GenericAsyncThunk,
-	loadResourceIntoTable: () => AppThunk,
 	resource: Resource,
 }) => {
 	const { t } = useTranslation();
@@ -85,8 +81,7 @@ const TableFilters = ({
 		dispatch(resetFilterValues());
 
 		// Reload resources when filters are removed
-		await dispatch(loadResource());
-		dispatch(loadResourceIntoTable());
+		await dispatch(goToPage(0));
 	};
 
 	// Remove a certain filter
@@ -100,8 +95,7 @@ const TableFilters = ({
 		dispatch(editFilterValue({ filterName: filter.name, value: "", resource }));
 
 		// Reload resources when filter is removed
-		await dispatch(loadResource());
-		dispatch(loadResourceIntoTable());
+		await dispatch(goToPage(0));
 	};
 
 	const handleSearchChange = (value: string) => {
@@ -148,12 +142,8 @@ const TableFilters = ({
 	// simply by going to first page and then load resources.
 	// This helps increase performance by reducing the number of calls to load resources.
 	const applyFilterChangesDebounced = async () => {
-		console.log("Applying filter changes with value: " + itemValue);
-		// No matter what, we go to page one.
-		dispatch(goToPage(0));
-		// Reload of resource
-		await dispatch(loadResource());
-		dispatch(loadResourceIntoTable());
+		// No matter what, we go to page one, and reload the resource from there.
+		await dispatch(goToPage(0));
 	};
 
 	useEffect(() => {
@@ -216,9 +206,7 @@ const TableFilters = ({
 				setFilterSelector(false);
 				setSelectedFilter("");
 				// Reload of resource after going to very first page.
-				dispatch(goToPage(0));
-				await dispatch(loadResource());
-				dispatch(loadResourceIntoTable());
+				await dispatch(goToPage(0));
 			}
 		}
 	};
@@ -382,8 +370,6 @@ const TableFilters = ({
 							showFilterSettings={showFilterSettings}
 							setFilterSettings={setFilterSettings}
 							resource={resource}
-							loadResource={loadResource}
-							loadResourceIntoTable={loadResourceIntoTable}
 						/>
 					</div>
 				)}

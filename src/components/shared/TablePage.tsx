@@ -55,8 +55,6 @@ const TablePage = <T extends Row, >({
 
 						{/* Include filters component */}
 						<TableFilters
-							loadResource={fetchResource}
-							loadResourceIntoTable={loadResourceIntoTable}
 							resource={resource}
 						/>
 					</div>
@@ -66,6 +64,7 @@ const TablePage = <T extends Row, >({
 				{/* Include table component */}
 				<Table
 					templateMap={templateMap}
+					resource={resource}
 					fetchResource={fetchResource}
 					loadResourceIntoTable={loadResourceIntoTable}
 				/>

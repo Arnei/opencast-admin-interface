@@ -19,7 +19,7 @@ const EventDetailsPublicationTab = ({
 	const publications = useAppSelector(state => getPublications(state));
 
 	useEffect(() => {
-		dispatch(fetchEventPublications(eventId)).then(r => console.info(r));
+		dispatch(fetchEventPublications(eventId));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

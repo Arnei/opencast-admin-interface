@@ -163,9 +163,8 @@ const EventDetailsSchedulingTab = ({
 	const changeInputs = (deviceId: Recording["id"], setFieldValue: FormikHelpers<InitialValues>["setFieldValue"]) => {
 		const agent = getAgent(deviceId);
 		setFieldValue("captureAgent", deviceId);
-		// The inputs of an agent offering contents cannot be selected, so all of them are kept
-		setFieldValue("inputs", contentOverridesInputs(agent) ? getInputs(deviceId).map(input => input.id) : []);
-		// Like in the wizard, all options of the agent are selected
+		// Like in the wizard, all inputs and options of the agent are selected
+		setFieldValue("inputs", getInputs(deviceId).map(input => input.id));
 		for (const { field, list } of captureOptions) {
 			setFieldValue(field, agent?.[list]?.map(option => option.id) ?? []);
 		}
